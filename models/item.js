@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes)=>
     {
         itemName: Sequelize.STRING,
         itemPrice: Sequalize.DOUBLE,
-        ingredient[]: Sequalize.STRING,
+        ingredient: Sequalize.STRING,
         description: Sequalize.STRING,
         rating: Sequalize.INTEGER,
         foodId: Sequalize.DOUBLE
