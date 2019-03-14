@@ -1,12 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize({
-  database: 'turboyums',
-  host: '192.168.99.100',
-  username: 'root',
-  password: 'password',
-  dialect: 'mysql',
-  port: '3306'
-});
+const sequelize = require('./sequelizeConf.js');
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('user', {

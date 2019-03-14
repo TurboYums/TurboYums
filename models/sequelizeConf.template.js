@@ -3,7 +3,7 @@ const sequelize =
 
 module.exports = new Sequelize({
     database: 'turboyums',
-    host: '192.168.99.100',
+    host: 'localhost',
     username: 'root',
     password: 'password',
     dialect: 'mysql',
