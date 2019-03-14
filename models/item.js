@@ -1,5 +1,5 @@
-const sequelize = require('sequelize');
-const sequelize = require('sequelize');
+const Sequelize = require('sequelize');
+const sequelize = require('./sequelizeConf.js');
 
 module.exports = (sequelize, DataTypes)=>
 {
@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes)=>
         ingredient: Sequalize.STRING,
         description: Sequalize.STRING,
         rating: Sequalize.INTEGER,
-        foodId: Sequalize.DOUBLE
+        foodId: Sequalize.DOUBLE,
+        itemQuantity: Sequelize.INTEGER
     })
 }
 item.belongsToMany(ingredient);
