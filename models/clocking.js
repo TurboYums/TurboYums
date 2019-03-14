@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     username: Sequelize.STRING,
     timeIn: Sequelize.STRING,
     timeOut: Sequelize.STRING,
-    location: Sequelize.String
+    location: Sequelize.STRING
 
 	/*"Clock Table"
 	Foreign Key to User
