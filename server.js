@@ -18,17 +18,18 @@ app.get('/api/hello', (req, res) => {
 
 
 app.post('/api/world', (req, res) => {
-  res.send({ text: `I received your POST request. This is what you sent me: ${req.body.text}`});
+  res.send({ text: `I received your POST request. This is what you sent me: ${req.body.text}` });
 });
 
 app.post('/users/create', (req, res) => {
-  User.create({username: 'zmallah',
-    firstname: 'Ziad',
-    lastname: 'Mallah',
-    password: 'G0TurboYums!',
-    accountType: '0',
-   })
-  res.send({ text: `I received your POST request. This is what you sent me: ${req.body.text}`});
+  newUser = User.create({
+    username: req.body.username,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    password: req.body.password,
+    accountType: req.body.accountType,
+  })
+  res.send({ text: `Created User: ${req.body.text}` });
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
