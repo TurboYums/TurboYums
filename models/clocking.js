@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./sequelizeConf.js');
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('user', {
+  return sequelize.define('clocking', {
 
     username: Sequelize.STRING,
     firstname: Sequelize.STRING,
