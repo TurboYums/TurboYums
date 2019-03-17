@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     timeIn: Sequelize.STRING,
     timeOut: Sequelize.STRING,
     location: Sequelize.STRING,
-    status: Sequelize.STRING
+    status: Sequelize.STRING,
+    hoursWorked: Sequelize.DOUBLE,
+    wage: Sequelize.DOUBLE
 	/*"Clock Table"
 	Foreign Key to User
 	Time stamp in
