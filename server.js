@@ -17,9 +17,6 @@ app.get('/api/hello', (req, res) => {
 });
 
 
-app.post('/api/world', (req, res) => {
-  res.send({ text: `I received your POST request. This is what you sent me: ${req.body.text}` });
-});
 
 app.post('/users/create', (req, res) => {
   newUser = User.create({
