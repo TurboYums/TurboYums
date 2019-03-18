@@ -35,11 +35,16 @@ app.post('/users/create', (req, res) => {
 
 app.post('/users/addpoints', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    console.log("adding points to " + this.user)
-    user.addPoints(req.body.points);
+    console.log("adding points to " + user);
+    user.increment('rewardpoints', {by: req.body.rewardpoints});
+    
+    user.reload().then(() => {
+      res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+    })
+    
   })
 
-  res.send({ text: `Created User: ${req.body.username}` });
+ 
 })
 
 app.post('/paymentMethod/create', (req, res) => {
