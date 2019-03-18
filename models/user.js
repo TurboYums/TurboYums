@@ -13,13 +13,7 @@ User = sequelize.define('user', {
 
 })
 
-User.prototype.addPoints = function (points) {
-  console.log("adding points to " + this.username)
-  this.rewardpoints += points;
-}
 
 module.exports = (sequelize, DataTypes) => {
   return User;
 }
-
-

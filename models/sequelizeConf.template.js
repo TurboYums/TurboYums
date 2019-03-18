@@ -1,6 +1,4 @@
 const Sequelize = require('sequelize');
-const sequelize = 
-
 module.exports = new Sequelize({
     database: 'turboyums',
     host: 'localhost',
