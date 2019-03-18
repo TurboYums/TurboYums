@@ -35,7 +35,7 @@ app.post('/users/create', (req, res) => {
 
 app.post('/users/addpoints', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    console.log("adding points to " + user)
+    console.log("adding points to " + user);
     user.increment('rewardpoints', {by: req.body.rewardpoints});
     
     user.reload().then(() => {
