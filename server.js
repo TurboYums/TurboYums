@@ -28,12 +28,14 @@ app.post('/users/create', (req, res) => {
     lastname: req.body.lastname,
     password: req.body.password,
     accountType: req.body.accountType,
+    rewardpoints: 0
   })
-  res.send({ text: `Created User: ${req.body.username}` });
+  res.send({ text: `Created User: ` + newUser.username });
 })
 
 app.post('/users/addpoints', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("adding points to " + this.user)
     user.addPoints(req.body.points);
   })
 
