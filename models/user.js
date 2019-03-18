@@ -14,11 +14,11 @@ User = sequelize.define('user', {
   })
 
 User.prototype.addPoints = function (points){
-  this.rewardpoints+= points
+  this.rewardpoints+= points;
 }
 
 module.exports = (sequelize, DataTypes) => {
-  return User
+  return User;
 }
 
 

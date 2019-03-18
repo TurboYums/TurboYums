@@ -33,14 +33,11 @@ app.post('/users/create', (req, res) => {
 })
 
 app.post('/users/addpoints', (req, res) => {
-  User.findOne({ where: {username: ''} }).then(project => {
-})
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    user.addPoints(req.body.points);
+  })
 
-  
   res.send({ text: `Created User: ${req.body.username}` });
 })
-
-
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
