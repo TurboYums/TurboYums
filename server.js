@@ -52,7 +52,7 @@ app.post('/paymentMethod/create', (req, res) => {
     expDate:req.body.expDate,
     userId: req.body.userId
   })
-  res.send({ text: `Created newPaymentMethod: ` + newPaymentMethod.ID});
+  res.send({ text: `Payment method created, payment method: ` + newPaymentMethod.ID});
 })
 
 

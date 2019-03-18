@@ -10,7 +10,7 @@ const sequelize = require('./sequelizeConf.js');
       billingAddress: Sequelize.STRING, 
       cvv: Sequelize.INTEGER,
       expDate: Sequelize.DATE,
-      userId: Sequelize.STRING
+      userId: Sequelize.INTEGER
     
     })
     module.exports = (sequelize, DataTypes) => {
