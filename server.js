@@ -42,4 +42,18 @@ app.post('/users/addpoints', (req, res) => {
   res.send({ text: `Created User: ${req.body.username}` });
 })
 
+app.post('/paymentMethod/create', (req, res) => {
+  newPaymentMethod = paymentMethod.create({
+    type: req.body.type,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    billingAddress: req.body.billingAddress,
+    cvv: req.body.cvv,
+    expDate:req.body.expDate,
+    userId: req.body.userId
+  })
+  res.send({ text: `Created newPaymentMethod: ` + newPaymentMethod.ID});
+})
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
