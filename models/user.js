@@ -1,8 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelizeConf.js');
 
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('user', {
+User = sequelize.define('user', {
 
     username: Sequelize.STRING,
     firstname: Sequelize.STRING,
@@ -13,4 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     addressId: Sequelize.INTEGER
   
   })
+
+User.prototype.addPoints = function (points){
+  this.rewardpoints+= points
 }
+
+module.exports = (sequelize, DataTypes) => {
+  return User
+}
+
+

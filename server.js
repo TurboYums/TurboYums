@@ -29,7 +29,18 @@ app.post('/users/create', (req, res) => {
     password: req.body.password,
     accountType: req.body.accountType,
   })
-  res.send({ text: `Created User: ${req.body.text}` });
+  res.send({ text: `Created User: ${req.body.username}` });
 })
+
+app.post('/users/addpoints', (req, res) => {
+  User.findOne({ where: {username: ''} }).then(project => {
+})
+
+  
+  res.send({ text: `Created User: ${req.body.username}` });
+})
+
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
