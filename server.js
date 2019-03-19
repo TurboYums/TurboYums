@@ -14,6 +14,7 @@ app.get('/api/hello', (req, res) => {
 });
 
 const users = require('./api/users.js');
+const items = require('./api/items.js');
 const port = process.env.port || 5000;
 
 
@@ -36,18 +37,6 @@ api.post('/paymentMethod/create', (req, res) => {
 
   })
   res.send({ text: `Payment method created, payment method: ` + newPaymentMethod.ID});
-})
-app.post('/items/create', (req, res) => {
-  newItem = Item.create({
-    itemName: req.body.itemName,
-    itemPrice: req.body.itemPrice,
-    ingredient: req.body.ingredient,
-    description: req.body.description,
-    rating: req.body.rating,
-	foodID: req.body.foodId,
-    itemQuantity: req.body.itemQuantity
-  })
-  res.send({ text: `Created Item: ${req.body.itemName}` });
 })
 
 
