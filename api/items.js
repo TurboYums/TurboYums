@@ -3,7 +3,7 @@ const sequelize = require('../models/sequelizeConf.js');
 const Item = sequelize.import('../models/item.js');
 sequelize.sync();
 
-api.post('/items/create', (req, res) => {
+api.post('/api/items/create', (req, res) => {
   newItem = Item.create({
     itemName: req.body.itemName,
     itemPrice: req.body.itemPrice,
