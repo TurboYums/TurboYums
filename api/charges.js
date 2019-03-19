@@ -9,14 +9,7 @@ const Charge = sequelize.import('../models/charge.js');
 const User = sequelize.import('../models/user.js');
 
 api.post('/api/charges/create', (req, res) => {
-  stripe.tokens.create({
-    card: {
-      number: '4242424242424242',
-      exp_month: 12,
-      exp_year: 2020,
-      cvc: '123'
-    }
-  }, function(err, token) {
+  
     console.log(token);
     console.log(err);
     const charge = stripe.charges.create({

@@ -11,10 +11,10 @@ api.post('/api/sources/create', (req, res) => {
 
   stripe.tokens.create({
     card: {
-      number: '4242424242424242',
-      exp_month: 12,
-      exp_year: 2020,
-      cvc: '123'
+      number: req.body.number || '4242424242424242',
+      exp_month: req.body.exp_month | 12,
+      exp_year: req.body.exp_year | 2020,
+      cvc: req.body.cvc || '123'
     }
   }, function (err, token) {
     stripe.customers.createSource(
