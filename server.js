@@ -6,6 +6,7 @@ const port = process.env.port || 5000;
 
 sequelize.sync();
 
+
 api.post('/paymentMethod/create', (req, res) => {
   newPaymentMethod = paymentMethod.create({
     type: req.body.type,
