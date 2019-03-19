@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./sequelizeConf.js');
-
+const sequelize = require('./sequelize.js');
+const Source = sequelize.import('./source.js');
 
 Charge = sequelize.define('charge', {
 
-  id: Sequelize.STRING,
+  stripe_id: { type: Sequelize.STRING, unique: true },
   amount: Sequelize.INTEGER,
   balance_transaction: Sequelize.STRING,
   captured: Sequelize.BOOLEAN,
   created: Sequelize.DATE,
-  currency: Sequelize.INTEGER,
-  customer: Sequlize.STRING,
+  currency: Sequelize.STRING,
+  customer: Sequelize.STRING,
   description: Sequelize.STRING,
   failure_code: Sequelize.STRING,
   failure_message: Sequelize.STRING,
@@ -26,7 +26,9 @@ Charge = sequelize.define('charge', {
   statement_descriptor: Sequelize.STRING,
   status: Sequelize.STRING,
 })
-Charge.hasOne(Source);
+
+
+Charge.belongsTo(Source);
 
 module.exports = (sequelize, DataTypes) => {
   return Charge;

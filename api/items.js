@@ -1,5 +1,5 @@
 const api = require('./api.js');
-const sequelize = require('../models/sequelizeConf.js');
+const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
 sequelize.sync();
 

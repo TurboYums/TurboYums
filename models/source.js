@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./sequelizeConf.js');
+const sequelize = require('./sequelize.js');
+const User = sequelize.import('./user.js');
 
 
 Source = sequelize.define('source', {
@@ -7,7 +8,7 @@ Source = sequelize.define('source', {
   type: Sequelize.INTEGER,
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
-  id: Sequelize.STRING,
+  stripe_id: { type: Sequelize.STRING, unique: true },
   address_city: Sequelize.STRING,
   address_country: Sequelize.STRING,
   address_line1: Sequelize.STRING,
@@ -25,11 +26,12 @@ Source = sequelize.define('source', {
   fingerprint: Sequelize.STRING,
   funding: Sequelize.STRING,
   last4: Sequelize.STRING,
-  name: Sequelize.STRING,
   tokenization_method: Sequelize.STRING,
 
 })
-Source.hasOne(User);
+
+Source.belongsTo(User);
+
 
 module.exports = (sequelize, DataTypes) => {
   return Source;
