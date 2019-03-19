@@ -3,18 +3,23 @@ const config = require('../config.json');
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 
-const stripe = require('stripe')(config.stripe.YOUR_STRIPE_SECRET_KEY);
+const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 const Charge = sequelize.import('../models/charge.js');
-
+const User = sequelize.import('../models/user.js');
 api.post('/api/charges/create', (req, res) => {
   stripe.charges.create({
     amount: req.body.amount, // Unit: cents
     currency: req.body.currency,
     source: req.body.source_stripe_id,
     description: req.body.description,
+    customer: req.body.customer
+  }, function (err, charge) {
+    // asynchronously called
   }).then(newCharge => {
-    newCharge = Charge.create({
+
+    console.log(newCharge);
+    Charge.create({
       stripe_id: req.body.stripe_id,
       amount: req.body.amount,
       balance_transaction: req.body.balance_transaction,
@@ -36,9 +41,19 @@ api.post('/api/charges/create', (req, res) => {
       source_transfer: req.body.source_transfer,
       statement_descriptor: req.body.statement_descriptor,
       status: req.body.status,
-      source_stripe_id: req.body.source_stripe
+      source_stripe_id: req.body.source_stripe_id,
+      customer: req.body.customer
+    }).then(newChargeModel => {
+      console.log("seraching for " + req.body.customer);
+      User.findOne({ where: { stripe_id: req.body.customer } }).then(user => {
+        console.log("adding points to " + user.stripe_id);
+        user.increment('rewardpoints', { by: 1 });
+        user.reload().then(() => {
+          res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+        })
+      })
     })
-    res.status(200).json(newCharge)
+
   }
   );
 })

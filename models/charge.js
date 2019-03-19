@@ -4,12 +4,12 @@ const Source = sequelize.import('./source.js');
 
 Charge = sequelize.define('charge', {
 
-  stripe_id: Sequelize.STRING,
+  stripe_id: { type: Sequelize.STRING, unique: true },
   amount: Sequelize.INTEGER,
   balance_transaction: Sequelize.STRING,
   captured: Sequelize.BOOLEAN,
   created: Sequelize.DATE,
-  currency: Sequelize.INTEGER,
+  currency: Sequelize.STRING,
   customer: Sequelize.STRING,
   description: Sequelize.STRING,
   failure_code: Sequelize.STRING,
@@ -28,7 +28,7 @@ Charge = sequelize.define('charge', {
 })
 
 
-Charge.belongsTo(Source, {foreignKey: 'source_stripe_id', sourceKey: 'stripe_id'});
+Charge.belongsTo(Source);
 
 module.exports = (sequelize, DataTypes) => {
   return Charge;

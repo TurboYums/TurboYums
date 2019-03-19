@@ -14,5 +14,9 @@
     },
     "api": {
         "port" : 5000
+    },
+    "rewards": {
+        "requiredCountForReward" : 5,
+        "rewardValue" : 1000
     }
 }

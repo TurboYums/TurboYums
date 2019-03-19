@@ -3,7 +3,7 @@ const config = require('../config.json');
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 
-const stripe = require('stripe')(config.stripe.YOUR_STRIPE_SECRET_KEY);
+const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 const Source = sequelize.import('../models/source.js');
 

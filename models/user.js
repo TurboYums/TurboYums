@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./sequelize.js');
 
 User = sequelize.define('user', {
-  username: Sequelize.STRING,
+  username: { type: Sequelize.STRING, unique: true },
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   password: Sequelize.STRING,
@@ -10,7 +10,7 @@ User = sequelize.define('user', {
   accountType: Sequelize.INTEGER,
   addressId: Sequelize.INTEGER,
   email: Sequelize.STRING,
-  stripe_id: Sequelize.STRING,
+  stripe_id: { type: Sequelize.STRING, unique: true },
 })
 
 module.exports = (sequelize, DataTypes) => {
