@@ -1,30 +1,37 @@
 const api = require('./api.js');
-const sequelize = require('../models/sequelizeConf.js');
+const sequelize = require('../models/sequelize.js');
 const User = sequelize.import('../models/user.js');
-sequelize.sync();
+const stripe = require("stripe")("sk_test_ax5U7BaES7zRx9h4ackw974v");
 
 api.post('/api/users/create', (req, res) => {
-    newUser = User.create({
+  stripe.customers.create({
+    email: req.body.email,
+  }).then(customer => {
+    User.create({
       username: req.body.username,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       password: req.body.password,
       accountType: req.body.accountType,
-      rewardpoints: 0
+      rewardpoints: 0,
+      email: req.body.email,
+      stripe_id: `${customer.id}`
+    }).then(newUser => {
+      res.send({ text: `Created User:  ${newUser.username}` });
     })
-    res.send({ text: `Created User:  ${newUser.username}`});
+    
   })
-  
-  api.post('/api/users/addpoints', (req, res) => {
-    User.findOne({ where: { username: req.body.username } }).then(user => {
-      console.log("adding points to " + user);
-      user.increment('rewardpoints', {by: req.body.rewardpoints});
-      
-      user.reload().then(() => {
-        res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
-      })
-      
+})
+
+api.post('/api/users/addpoints', (req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("adding points to " + user);
+    user.increment('rewardpoints', { by: req.body.rewardpoints });
+
+    user.reload().then(() => {
+      res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
     })
-  
-   
+
   })
+
+})

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./sequelizeConf.js');
-
+const sequelize = require('./sequelize.js');
+const Source = sequelize.import('./source.js');
 
 Charge = sequelize.define('charge', {
 
@@ -26,7 +26,9 @@ Charge = sequelize.define('charge', {
   statement_descriptor: Sequelize.STRING,
   status: Sequelize.STRING,
 })
-Charge.hasOne(Source);
+
+
+Charge.belongsTo(Source, {foreignKey: 'source_stripe_id', sourceKey: 'stripe_id'});
 
 module.exports = (sequelize, DataTypes) => {
   return Charge;
