@@ -3,22 +3,17 @@ const sequelize = require('./sequelizeConf.js');
 
 User = sequelize.define('user', {
 
-    username: Sequelize.STRING,
-    firstname: Sequelize.STRING,
-    lastname: Sequelize.STRING,
-    password: Sequelize.STRING,
-    rewardpoints: Sequelize.INTEGER,
-    accountType: Sequelize.INTEGER,
-    addressId: Sequelize.INTEGER
-  
-  })
+  username: Sequelize.STRING,
+  firstname: Sequelize.STRING,
+  lastname: Sequelize.STRING,
+  password: Sequelize.STRING,
+  rewardpoints: Sequelize.INTEGER,
+  accountType: Sequelize.INTEGER,
+  addressId: Sequelize.INTEGER
 
-User.prototype.addPoints = function (points){
-  this.rewardpoints+= points
-}
+})
+
 
 module.exports = (sequelize, DataTypes) => {
-  return User
+  return User;
 }
-
-
