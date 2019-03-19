@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Clock-In or Out</h1>
+
+<button onclick="clockIn()">Clock In</button>
+<button onclick="clockOut()">Clock Out</button>
+
+<p id="in"></p>
+<p id = "out"></p>
+<p id="dateTime"></p>
+
+<script>
+function clockIn() {
+    document.getElementById("in").innerHTML = "Clocked in";
+    var d = new Date();
+    document.getElementById("dateTime").innerHTML = d;
+}
+</script>
+<script>
+    function clockOut() {
+      document.getElementById("out").innerHTML = "Clocked out";
+      var d = new Date();
+      document.getElementById("dateTime").innerHTML = d;
+    }
+    </script>
+<head>
+    <script>
+        function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+  }
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+  }
+
+        </script>
+</head>
+<body onload="startTime()">
+
+    <div id="txt"></div>
+    </body>
+    
+
+</body>
+</html>

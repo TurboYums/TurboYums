@@ -9,7 +9,10 @@ User = sequelize.define('user', {
   password: Sequelize.STRING,
   rewardpoints: Sequelize.INTEGER,
   accountType: Sequelize.INTEGER,
-  addressId: Sequelize.INTEGER
+  addressId: Sequelize.INTEGER,
+  hoursWorked: Sequelize.INTEGER,
+  status: Sequelize.INTEGER,
+  totalHoursWorked: Sequelize.INTEGER
 
 })
 

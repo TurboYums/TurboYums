@@ -4,27 +4,45 @@ const User = sequelize.import('../models/user.js');
 sequelize.sync();
 
 api.post('/api/users/create', (req, res) => {
-    newUser = User.create({
-      username: req.body.username,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      password: req.body.password,
-      accountType: req.body.accountType,
-      rewardpoints: 0
-    })
-    res.send({ text: `Created User:  ${newUser.username}`});
+  newUser = User.create({
+    username: req.body.username,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    password: req.body.password,
+    accountType: req.body.accountType,
+    rewardpoints: 0,
+    hoursWorked: 0,
+    status: 0,
+    totalHoursWorked: 0
   })
-  
-  api.post('/api/users/addpoints', (req, res) => {
-    User.findOne({ where: { username: req.body.username } }).then(user => {
-      console.log("adding points to " + user);
-      user.increment('rewardpoints', {by: req.body.rewardpoints});
-      
+  res.send({ text: `Created User:  ${req.body.username}` });
+})
+
+api.post('/api/users/addpoints', (req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("adding points to " + user);
+    user.increment('rewardpoints', { by: req.body.rewardpoints });
+
+    user.reload().then(() => {
+      res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+    })
+
+  })
+
+})
+
+api.post('/api/users/addhours', (req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("adding hours to " + user);
+    user.increment('totalHoursWorked', { by: req.body.hoursWorked });
+    user.hoursWorked = req.body.hoursWorked;
+    user.save().then(() => {
       user.reload().then(() => {
-        res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+        res.send({ text: `Gave user: ${req.body.username} , ${user.hoursWorked}` });
       })
-      
-    })
-  
-   
+    });
   })
+})
+
+
+
