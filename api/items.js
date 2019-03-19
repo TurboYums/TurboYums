@@ -1,7 +1,7 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
-sequelize.sync();
+
 
 api.post('/api/items/create', (req, res) => {
   newItem = Item.create({
