@@ -4,13 +4,13 @@ const sequelize = require('./sequelizeConf.js');
 
 Charge = sequelize.define('charge', {
 
-  id: Sequelize.STRING,
+  stripe_id: Sequelize.STRING,
   amount: Sequelize.INTEGER,
   balance_transaction: Sequelize.STRING,
   captured: Sequelize.BOOLEAN,
   created: Sequelize.DATE,
   currency: Sequelize.INTEGER,
-  customer: Sequlize.STRING,
+  customer: Sequelize.STRING,
   description: Sequelize.STRING,
   failure_code: Sequelize.STRING,
   failure_message: Sequelize.STRING,
