@@ -44,5 +44,28 @@ api.post('/api/users/addhours', (req, res) => {
   })
 })
 
+api.post('/api/users/clockIn', (req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("clocking in " + user);
+    user.status = '1';
+    user.save().then(() => {
+      user.reload().then(() => {
+        res.send({ text: `Clocked in: ${req.body.username} , ${user.status}` });
+      })
+    });
+  })
+})
+
+api.post('/api/users/clockOut', (req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log("clocking out " + user);
+    user.status = '0';
+    user.save().then(() => {
+      user.reload().then(() => {
+        res.send({ text: `Clocked out: ${req.body.username} , ${user.status}` });
+      })
+    });
+  })
+})
 
 
