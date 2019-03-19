@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes)=>
         description: Sequalize.STRING,
         rating: Sequalize.INTEGER,
         foodId: Sequalize.DOUBLE,
-        itemQuantity: Sequelize.INTEGER
+        itemQuantity: Sequalize.INTEGER
     })
 }
 item.belongsToMany(ingredient);
