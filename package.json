@@ -12,7 +12,7 @@
     "sequelize": "^4.43.0",
     "yarn": "^1.13.0",
     "mysql2": "^1.5.2",
-    "nodemon":"^1.18.10"
+    "nodemon": "^1.18.10"
   },
   "devDependencies": {
     "concurrently": "^4.0.1"
