@@ -7,7 +7,6 @@ Ensure you have all proper packages installed
     yarn install
 ```
 
-
 Docker should also be installed and running
 
 - if you are in MacOS, install docker desktop
@@ -20,7 +19,7 @@ Docker should also be installed and running
 
 - if you are on a linux machine, follow install directions for your distribution
 
-Once you have a docker instance configured, it is important to create a sequelizeConf.js from the template included in this repository at sequelizeConf.template.js, modify the ip address and other fields as necessary.
+Once you have a docker instance configured, it is important to create a `sequelizeConf.js` from the template included in this repository at `./models/sequelizeConf.template.js`, modify the ip address and other fields as necessary.
 
 To run the MySQL server in a docker container
 
