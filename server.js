@@ -1,15 +1,15 @@
 const api = require('./api/api.js');
 const sequelize = require('./models/sequelizeConf.js');
 const User = sequelize.import('./models/user.js');
-
+var bodyParser = require('body-parser');
 const Item = sequelize.import('./models/item.js');
 sequelize.sync();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+api.use(bodyParser.json());
+api.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.get('/api/hello', (req, res) => {
+api.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
 
@@ -28,7 +28,7 @@ api.post('/paymentMethod/create', (req, res) => {
     lastname: req.body.lastname,
 
     password: req.body.password,
-    accountType: req.body.accountType
+    accountType: req.body.accountType,
 
     billingAddress: req.body.billingAddress,
     cvv: req.body.cvv,
