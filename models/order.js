@@ -12,5 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     return Order;
 }
 
-//item.belongsToMany(orderedItems);
-//orderedItems.belongsToMany(item);
+item.belongsToMany(orderedItems);
+orderedItems.belongsToMany(item);
