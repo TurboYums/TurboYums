@@ -11,8 +11,9 @@ User = sequelize.define('user', {
   addressId: Sequelize.INTEGER,
   hoursWorked: Sequelize.INTEGER,
   status: Sequelize.INTEGER,
-  totalHoursWorked: Sequelize.INTEGER
-
+  totalHoursWorked: Sequelize.INTEGER,
+  email: Sequelize.STRING,
+  stripe_id: { type: Sequelize.STRING, primaryKey: true },
 })
 
 module.exports = (sequelize, DataTypes) => {

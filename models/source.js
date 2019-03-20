@@ -8,7 +8,7 @@ Source = sequelize.define('source', {
   type: Sequelize.INTEGER,
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
-  stripe_id: { type: Sequelize.STRING, unique: true },
+  stripe_id: { type: Sequelize.STRING, primaryKey: true },
   address_city: Sequelize.STRING,
   address_country: Sequelize.STRING,
   address_line1: Sequelize.STRING,
@@ -30,7 +30,7 @@ Source = sequelize.define('source', {
 
 })
 
-Source.belongsTo(User);
+Source.belongsTo(User, { foreignKey: 'user_stripe_id', sourceKey: 'stripe_id' });
 
 
 module.exports = (sequelize, DataTypes) => {

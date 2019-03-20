@@ -4,7 +4,7 @@ const Source = sequelize.import('./source.js');
 
 Charge = sequelize.define('charge', {
 
-  stripe_id: { type: Sequelize.STRING, unique: true },
+  stripe_id: { type: Sequelize.STRING, primaryKey: true },
   amount: Sequelize.INTEGER,
   balance_transaction: Sequelize.STRING,
   captured: Sequelize.BOOLEAN,
@@ -27,8 +27,7 @@ Charge = sequelize.define('charge', {
   status: Sequelize.STRING,
 })
 
-
-Charge.belongsTo(Source);
+Charge.belongsTo(Source, { foreignKey: 'source_stripe_id', sourceKey: 'stripe_id' });
 
 module.exports = (sequelize, DataTypes) => {
   return Charge;
