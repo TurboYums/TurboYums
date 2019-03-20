@@ -10,7 +10,6 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mysql2": "^1.5.2",
-
     "nodemon": "^1.18.10",
     "react-native-stripe": "^1.2.2",
     "sequelize": "^4.43.0",
