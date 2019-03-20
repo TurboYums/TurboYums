@@ -1,7 +1,7 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelizeConf.js');
 const User = sequelize.import('../models/user.js');
-
+const config = require('../config.json');
 const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 api.post('/api/users/create', (req, res) => {
