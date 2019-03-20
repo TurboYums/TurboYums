@@ -15,5 +15,5 @@ const sequelize = require('./sequelize.js');
 module.exports = (sequelize, DataTypes) => {
   return Item;
 }
-//item.belongsToMany(ingredient);
-//ingredient.belongsToMany(item);
+item.belongsToMany(ingredient);
+ingredient.belongsToMany(item);
