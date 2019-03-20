@@ -9,8 +9,6 @@ api.post('/api/items/create', (req, res) => {
     ingredient: req.body.ingredient,
     description: req.body.description,
     rating: req.body.rating,
-    foodID: req.body.foodId,
-    itemQuantity: req.body.itemQuantity
   })
   res.send({ text: `Created Item: ${req.body.itemName}` });
 })
