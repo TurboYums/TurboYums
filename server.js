@@ -1,24 +1,14 @@
+//Import our general api and sequelize
 const api = require('./api/api.js');
-const sequelize = require('./models/sequelizeConf.js');
-const User = sequelize.import('./models/user.js');
-const users = require('./api/users.js');
-const port = process.env.port || 5000;
+const sequelize = require('./models/sequelize.js');
 
+//import api elements
+const users = require('./api/users.js');
+const charges = require('./api/charges.js');
+const sources = require('./api/sources.js');
+const items = require('./api/items.js')
+
+//sync sequelize
 sequelize.sync();
 
-
-api.post('/paymentMethod/create', (req, res) => {
-  newPaymentMethod = paymentMethod.create({
-    type: req.body.type,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    billingAddress: req.body.billingAddress,
-    cvv: req.body.cvv,
-    expDate:req.body.expDate,
-    userId: req.body.userId
-  })
-  res.send({ text: `Payment method created, payment method: ` + newPaymentMethod.ID});
-})
-
-
-api.listen(port, () => console.log(`Listening on port ${port}`));
+api.listen(api.port, () => console.log(`Listening on port ${api.port}`));

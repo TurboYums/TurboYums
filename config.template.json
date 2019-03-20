@@ -1,0 +1,22 @@
+{
+    "mysql" : {
+        "database": "turboyums",
+        "host": "localhost",
+        "username": "root",
+        "password": "password",
+        "dialect": "mysql",
+        "port": "3306"
+    },
+    "stripe": {
+        "STRIPE_SECRET_KEY" : "REPLACE WITH YOUR KEY",
+        "STRIPE_PUBLIC_KEY" : "REPLACE WITH YOUR KEY",
+        "currency" : "usd"
+    },
+    "api": {
+        "port" : 5000
+    },
+    "rewards": {
+        "requiredCountForReward" : 5,
+        "rewardValue" : 1000
+    }
+}

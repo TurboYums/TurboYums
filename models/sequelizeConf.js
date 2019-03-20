@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = new Sequelize({
     database: 'turboyums',
-    host: 'localhost',
+    host: '192.168.99.100',
     username: 'root',
     password: 'password',
     dialect: 'mysql',

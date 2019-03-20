@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./sequelizeConf.js');
+const sequelize = require('./sequelize.js');
 
 User = sequelize.define('user', {
-
-  username: Sequelize.STRING,
+  username: { type: Sequelize.STRING, unique: true },
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   password: Sequelize.STRING,
@@ -15,7 +14,6 @@ User = sequelize.define('user', {
   totalHoursWorked: Sequelize.INTEGER
 
 })
-
 
 module.exports = (sequelize, DataTypes) => {
   return User;
