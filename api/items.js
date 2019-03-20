@@ -1,7 +1,6 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
-sequelize.sync();
 
 api.post('/api/items/create', (req, res) => {
   newItem = Item.create({
@@ -10,10 +9,9 @@ api.post('/api/items/create', (req, res) => {
     ingredient: req.body.ingredient,
     description: req.body.description,
     rating: req.body.rating,
-	foodID: req.body.foodId,
+    foodID: req.body.foodId,
     itemQuantity: req.body.itemQuantity
   })
   res.send({ text: `Created Item: ${req.body.itemName}` });
 })
 
-  
