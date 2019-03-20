@@ -7,33 +7,34 @@ const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 const Source = sequelize.import('../models/source.js');
 
-api.post('/sources/create', (req, res) => {
-  stripe.customers.createSource(req.body.user_stripe_id, {
-    source: req.body.source_stripe_id
+api.post('/api/sources/create', (req, res) => {
+
+  stripe.tokens.create({
+    card: {
+      number: req.body.number || '4242424242424242',
+      exp_month: req.body.exp_month | 12,
+      exp_year: req.body.exp_year | 2020,
+      cvc: req.body.cvc || '123'
+    }
+  }, function (err, token) {
+    stripe.customers.createSource(
+      req.body.user_stripe_id,
+      { source: token.id },
+      function (err, card) {
+        Source.create({
+          stripe_id: card.id,
+          user_stripe_id: req.body.user_stripe_id,
+
+          type: req.body.type,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          billingAddress: req.body.billingAddress,
+          cvv: req.body.cvv,
+          expDate: req.body.expDate,
+        }).then(newSource => {
+          res.send({ text: `Payment method created, payment method: ` + newSource.stripe_id });
+        })
+      }
+    )
   })
-
-  Source.create({
-      source_stripe_id: req.body.stripe_id,
-      user_stripe_id: req.body.user_stripe_id,
-
-      type: req.body.type,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      billingAddress: req.body.billingAddress,
-      cvv: req.body.cvv,
-      expDate: req.body.expDate,
-  }).then(newSource => {
-    res.send({ text: `Payment method created, payment method: ` + newSource.source_stripe_id });
-  })
-
 })
-
-api.post('/api/payemnts/doPayments', (req, res) => {
-  return stripe.charges
-    .create({
-      amount: req.body.amount, // Unit: cents
-      currency: 'usd',
-      source: req.body.tokenId,
-      description: 'Test payment',
-    }).then(result => res.status(200).json(result));
-});
