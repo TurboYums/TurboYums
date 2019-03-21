@@ -57,16 +57,6 @@ api.post('/api/charges/create', (req, res) => {
           res.send({ user: user, charge: newChargeModel });
         })
       })
-<<<<<<< HEAD
-    }
-    );
-  });
-  
- 
-//})
-
-=======
     })
   })
 });
->>>>>>> master
