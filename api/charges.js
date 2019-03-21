@@ -18,7 +18,7 @@ api.post('/api/charges/create', (req, res) => {
     customer: req.body.customer
   }, function (err, newCharge) {
     Charge.create({
-      stripe_id: newCharge.id,
+      stripe_id: newCharge.stripe_id,
       amount: req.body.amount,
       balance_transaction: req.body.balance_transaction,
       captured: req.body.captured,

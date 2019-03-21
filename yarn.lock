@@ -1442,6 +1442,7 @@ nan@2.13.1, nan@^2.9.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.1.tgz#a15bee3790bde247e8f38f1d446edcdaeb05f2dd"
   integrity sha512-I6YB/YEuDeUZMmhscXKxGgZlFnhsn5y0hgOZBadkzfTRrZBtJDZeg6eQf7PYMIEclwmorTKK8GztsyOUSVBREA==
 
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -1968,7 +1969,11 @@ rxjs@^6.3.3:
   dependencies:
     tslib "^1.9.0"
 
+<<<<<<< HEAD
+safe-buffer@5.1.2, safe-buffer@^5.0.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+=======
 safe-buffer@5.1.2, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+>>>>>>> payment
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
@@ -2271,6 +2276,8 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
+<<<<<<< HEAD
+=======
 stripe@^6.27.0:
   version "6.27.0"
   resolved "https://registry.yarnpkg.com/stripe/-/stripe-6.27.0.tgz#e3146b3a9f277f4349695481b2367eb7a7a87232"
@@ -2281,6 +2288,7 @@ stripe@^6.27.0:
     safe-buffer "^5.1.1"
     uuid "^3.3.2"
 
+>>>>>>> payment
 supports-color@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.5.0.tgz#be7a0de484dec5c5cddf8b3d59125044912f635b"
@@ -2335,11 +2343,14 @@ timed-out@^4.0.0:
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   integrity sha1-8y6srFoXW+ol1/q1Zas+2HQe9W8=
 
+<<<<<<< HEAD
+=======
 tipsi-stripe@^7.4.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-7.4.0.tgz#ddea184becad2e72b163f38ece561e87cd65cb70"
   integrity sha512-GM9K10ahkcw42awSFsF/CHJnzmqEwzpR2Rr4ejy6g4TChYp+w2q0UNmPowvK+OmdPFNFK75D1SWJHTjsouS+pg==
 
+>>>>>>> payment
 to-object-path@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/to-object-path/-/to-object-path-0.3.0.tgz#297588b7b0e7e0ac08e04e672f85c1f4999e17af"
