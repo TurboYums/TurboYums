@@ -1,16 +1,18 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelizeConf.js');
 
-Clocking = sequelize.define('clocking', {
+module.exports = (sequelize, DataTypes) => {
+  return sequelize.define('clocking', {
 
     username: Sequelize.STRING,
-    time: Sequelize.STRING,
-    location: Sequelize.STRING,
-    hoursWorked: Sequelize.INTEGER,
-    status: Sequelize.INTEGER,
-    totalHoursWorked: Sequelize.INTEGER
-  })
+    timeIn: Sequelize.STRING,
+    timeOut: Sequelize.STRING,
+    location: Sequelize.STRING
 
-  module.exports = (sequelize, DataTypes) => {
-    return Clocking;
-  }
+	/*"Clock Table"
+	Foreign Key to User
+	Time stamp in
+	Time stamp out
+	*/
+  })
+}
