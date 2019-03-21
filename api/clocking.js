@@ -15,13 +15,3 @@ api.post('/api/clocking/create', (req, res) => {
     res.send({ text: `Clocked In Employee:  ${newClocking.username}`});
   })
 
-api.post('/api/clocking/addhours', (req, res) => {
-    Clocking.findOne({ where: { username: req.body.username } }).then(clocking => {
-      console.log("adding hours to " + clocking);
-      clocking.increment('totalHoursWorked', {by: req.body.hoursWorked});
-      
-      clocking.reload().then(() => {
-        res.send({ text: `Gave user: ${req.body.username} , ${clocking.totalHoursWorked}` });
-      })
-    })
-  })
