@@ -15,7 +15,7 @@ api.post('/api/users/create', (req, res) => {
     hoursWorked: 0,
     status: 0,
     totalHoursWorked: 0,
-    stripe_id: req.body.stripe_id
+    stripe_id: `${customer.id}`
   })
   res.send({ text: `Created User:  ${req.body.username}` });
 })
