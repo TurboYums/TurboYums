@@ -5,19 +5,26 @@ const config = require('../config.json');
 const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 api.post('/api/users/create', (req, res) => {
-  newUser = User.create({
-    username: req.body.username,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    password: req.body.password,
-    accountType: req.body.accountType,
-    rewardpoints: 0,
-    hoursWorked: 0,
-    status: 0,
-    totalHoursWorked: 0,
-    stripe_id: `${customer.id}`
+  stripe.customers.create({
+    email: req.body.email,
+  }).then(customer => {
+    User.create({
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      password: req.body.password,
+      accountType: req.body.accountType,
+      rewardpoints: 0,
+      email: req.body.email,
+      hoursWorked: 0,
+      status: 0,
+      totalHoursWorked: 0,
+      stripe_id: `${customer.id}`
+    }).then(newUser => {
+      res.send({ text: `Created User:  ${newUser.username}` });
+    })
+
   })
-  res.send({ text: `Created User:  ${req.body.username}` });
 })
 
 api.post('/api/users/addpoints', (req, res) => {
