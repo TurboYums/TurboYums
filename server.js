@@ -1,13 +1,36 @@
-//Import our general api and sequelize
-const api = require('./api/api.js');
-const sequelize = require('./models/sequelize.js');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-//import api elements
-const users = require('./api/users.js');
-const charges = require('./api/charges.js');
-const sources = require('./api/sources.js');
-const items = require('./api/items.js');
-//sync sequelize
+const app = express();
+const port = process.env.PORT || 5000;
+
+const sequelize = require('./models/sequelizeConf.js');
+const User = sequelize.import('./models/user.js');
 sequelize.sync();
 
-api.listen(api.port, () => console.log(`Listening on port ${api.port}`));
+app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.get('/api/hello', (req, res) => {
+  res.send({ express: 'Hello From Express' });
+});
+
+
+app.post('/api/world', (req, res) => {
+  res.send({ text: `I received your POST request. This is what you sent me: ${req.body.text}` });
+});
+
+app.post('/users/create', (req, res) => {
+  newUser = User.create({
+    username: req.body.username,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    password: req.body.password,
+    accountType: req.body.accountType,
+  })
+  res.send({ text: `Created User: ${req.body.text}` });
+})
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
