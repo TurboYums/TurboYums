@@ -7,6 +7,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mysql2": "^1.5.2",
@@ -16,7 +17,6 @@
     "stripe": "^6.27.0",
     "tipsi-stripe": "^7.4.0",
     "yarn": "^1.13.0"
-
   },
   "devDependencies": {
     "concurrently": "^4.0.1"
