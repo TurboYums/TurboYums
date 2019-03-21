@@ -6,8 +6,7 @@ const sequelize = require('./models/sequelize.js');
 const users = require('./api/users.js');
 const charges = require('./api/charges.js');
 const sources = require('./api/sources.js');
-const items = require('./api/items.js')
-
+const items = require('./api/items.js');
 //sync sequelize
 sequelize.sync();
 
