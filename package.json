@@ -11,12 +11,13 @@
     "express": "^4.16.4",
     "mysql2": "^1.5.2",
     "nodemon": "^1.18.10",
+    "react-native-gesture-handler": "^1.1.0",
     "react-native-stripe": "^1.2.2",
+    "react-navigation": "^3.5.1",
     "sequelize": "^4.43.0",
     "stripe": "^6.27.0",
     "tipsi-stripe": "^7.4.0",
     "yarn": "^1.13.0"
-
   },
   "devDependencies": {
     "concurrently": "^4.0.1"
