@@ -48,18 +48,16 @@ class ClockInOutScreen extends React.Component {
       <View style={styles.container}>
         <View>
           <ImageBackground source={{ uri: 'https://cdn.shopify.com/s/files/1/2398/3757/products/Pizza-Cloth-Front_1024x1024.jpg?v=1512582067' }} style={{ width: '100%', height: '100%' }}>
-            <TouchableNativeFeedback onPress={this._onPressButton}
-              background={TouchableNativeFeedback.SelectableBackground()}>
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>Clock In</Text>
-              </View>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={this._onPressButton2}
-              background={TouchableNativeFeedback.SelectableBackground()}>
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>Clock Out</Text>
-              </View>
-            </TouchableNativeFeedback>
+            <TouchableOpacity
+              style={styles.button}
+              onPress = {this._onPressButton}>
+              <Text style={styles.buttonText}> Clock In </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress = {this._onPressButton2}>
+              <Text style={styles.buttonText}> Clock Out </Text>
+            </TouchableOpacity>
           </ImageBackground>
         </View>
       </View>

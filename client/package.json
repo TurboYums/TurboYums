@@ -12,8 +12,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-navigation": "^3.5.1",
-    "tipsi-stripe": "^7.4.0",
-    "ts-pnp": "^1.0.1"
+    "tipsi-stripe": "^7.4.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
