@@ -45,9 +45,16 @@ api.post('/api/charges/create', (req, res) => {
       console.log("seraching for " + req.body.customer);
       User.findOne({ where: { stripe_id: req.body.customer } }).then(user => {
         console.log("adding points to " + user.stripe_id);
-        user.increment('rewardpoints', { by: 1 });
+        earnedRewards = config.rewards.rewardEarnedPerTransaction + Math.floor(config.rewards.rewardEarnedPerDollarSpent * newChargeModel.amount * 100);  
+        user.increment('rewardpoints', { by: earnedRewards});
         user.reload().then(() => {
-          res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+          if(user.rewardpoints >= config.requiredCountForReward){
+            user.increment('rewardBalance', {by: config.rewards.rewardValue});
+            user.rewardpoints = 0;
+            user.save().then(() => {
+              res.send({ user: user, charge: newChargeModel });});
+          }
+          res.send({ user: user, charge: newChargeModel });
         })
       })
     })
