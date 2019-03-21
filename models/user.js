@@ -13,7 +13,7 @@ User = sequelize.define('user', {
   status: Sequelize.INTEGER,
   totalHoursWorked: Sequelize.INTEGER,
   email: Sequelize.STRING,
-  stripe_id: { type: Sequelize.STRING, primaryKey: true },
+  stripe_id: { type: Sequelize.STRING, primaryKey: true }
 })
 
 module.exports = (sequelize, DataTypes) => {
