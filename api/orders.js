@@ -23,3 +23,13 @@ api.post('/api/order/add', (req, res) => {
     })
   })
 })
+// remove an item from order
+/*api.post('/api/order/remove', (req, res) => {
+  Order.findOne({ where: { id: req.body.orderId } }).then(order => {
+    Item.findOne({ where: { id: req.body.itemId } }).then(item => {
+      console.log(order);
+      console.log(item);
+      order.removeItem(item);
+    })
+  })
+})*/

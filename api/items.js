@@ -12,4 +12,9 @@ api.post('/api/items/create', (req, res) => {
   })
   res.send({ text: `Created Item: ${req.body.itemName}` });
 })
-
+//filter
+/*api.post('/api/items/filter', (req, res) => {
+    Item.findAll({ where: { id: req.body.itemId } }).then(item => {
+      console.log(item);
+    })
+})*/
