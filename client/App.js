@@ -27,17 +27,18 @@ class HomeScreen extends React.Component {
         <View>
           <ImageBackground source={{ uri: 'https://foodrevolution.org/wp-content/uploads/2018/04/blog-featured-diabetes-20180406-1330.jpg' }} style={{ width: '100%', height: '100%' }}>
             <Text style={styles.text}>
-              Type in username and password to log-in:
+              Login with your Username and Password:
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="username"
+              placeholder="   Username"
               autoCapitalize="none"
               onChangeText={this.handleusername} />
 
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="Password"
+              secureTextEntry={true}
+              placeholder="   Password"
               autoCapitalize="none"
               onChangeText={this.handlePassword} />
 
