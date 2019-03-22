@@ -30,11 +30,13 @@ api.post('/api/users/login', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
     bcrypt.compare(req.body.password, user.password, function (err, success) {
       if (success) {
+        console.log(user + 'signed in successfully');
         res.send({
           user: user,
-          loginvalid: true
+          loginValid: true
         })
       } else {
+        console.log(user + 'failed');
         res.send({
           loginValid: false
         })

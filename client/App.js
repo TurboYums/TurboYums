@@ -3,19 +3,21 @@ import { Button, View, Text } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, StyleSheet, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
+const API_URL = 'http://192.168.1.254:5000/';
+
 class HomeScreen extends React.Component {
   state = {
-    email: '',
+    username: '',
     password: ''
   }
-  handleEmail = (text) => {
-    this.setState({ email: text })
+  handleusername = (text) => {
+    this.setState({ username: text })
   }
   handlePassword = (text) => {
     this.setState({ password: text })
   }
-  login = (email, word) => {
-    alert('email: ' + email + ' password: ' + password)
+  login = (username, word) => {
+    alert('username: ' + username + ' password: ' + password)
   }
   render() {
     return (
@@ -23,13 +25,13 @@ class HomeScreen extends React.Component {
         <View>
           <ImageBackground source={{ uri: 'https://foodrevolution.org/wp-content/uploads/2018/04/blog-featured-diabetes-20180406-1330.jpg' }} style={{ width: '100%', height: '100%' }}>
             <Text style={styles.text}>
-              Type in e-mail and password to log-in:
+              Type in username and password to log-in:
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="Email"
+              placeholder="username"
               autoCapitalize="none"
-              onChangeText={this.handleEmail} />
+              onChangeText={this.handleusername} />
 
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
@@ -40,20 +42,35 @@ class HomeScreen extends React.Component {
             <TouchableOpacity
               style={styles.submitButton}
               onPress={() =>{
-                fetch('http://localhost:5000/api/users/login', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: this.state.email,
-                  password: this.state.password,
-                }),
-              }).then(res =>{
-                this.props.navigation.navigate('ClockInOut');
-              });
-                
+                if(!this.state.username || !this.state.password){
+                  Alert.alert('Please enter a username and password.');
+                }else{
+                  fetch(API_URL + 'api/users/login', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      username: this.state.username,
+                      password: this.state.password,
+                    }),
+                  }).then((res) => res.json()).then(resJson => {
+                    if(resJson.loginValid){
+                      switch(resJson.user.accountType){
+                        //employee is 0
+                        case 0:
+                          this.props.navigation.navigate('ClockInOut');
+                          break;
+                        //customer is 1
+                        case 1:
+                          Alert.alert('We have not yet implemented the customer interface!');
+                      }
+                    }else{
+                      Alert.alert('Incorrect Username or Password.');
+                    }
+                  });
+                }
               } }>
               <Text style={styles.submitButtonText}> SUBMIT </Text>
             </TouchableOpacity>
