@@ -4,7 +4,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation'; // 
 import { Alert, AppRegistry, StyleSheet, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
 
-const API_URL = 'http://192.168.1.5:5000/';
+const API_URL = 'http://192.168.1.23:5000/';
 let currentUser = ' ';
 
 class HomeScreen extends React.Component {
