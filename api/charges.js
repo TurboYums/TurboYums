@@ -7,20 +7,18 @@ const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 const Charge = sequelize.import('../models/charge.js');
 const User = sequelize.import('../models/user.js');
+
 api.post('/api/charges/create', (req, res) => {
-  stripe.charges.create({
+
+  const charge = stripe.charges.create({
     amount: req.body.amount, // Unit: cents
     currency: req.body.currency,
-    source: req.body.source_stripe_id,
+    source: req.body.token,
     description: req.body.description,
     customer: req.body.customer
-  }, function (err, charge) {
-    // asynchronously called
-  }).then(newCharge => {
-
-    console.log(newCharge);
+  }, function (err, newCharge) {
     Charge.create({
-      stripe_id: req.body.stripe_id,
+      stripe_id: newCharge.id,
       amount: req.body.amount,
       balance_transaction: req.body.balance_transaction,
       captured: req.body.captured,
@@ -47,14 +45,18 @@ api.post('/api/charges/create', (req, res) => {
       console.log("seraching for " + req.body.customer);
       User.findOne({ where: { stripe_id: req.body.customer } }).then(user => {
         console.log("adding points to " + user.stripe_id);
-        user.increment('rewardpoints', { by: 1 });
+        earnedRewards = config.rewards.rewardEarnedPerTransaction + Math.floor(config.rewards.rewardEarnedPerDollarSpent * newChargeModel.amount * 100);  
+        user.increment('rewardpoints', { by: earnedRewards});
         user.reload().then(() => {
-          res.send({ text: `Gave user: ${req.body.username} , ${user.rewardpoints}` });
+          if(user.rewardpoints >= config.requiredCountForReward){
+            user.increment('rewardBalance', {by: config.rewards.rewardValue});
+            user.rewardpoints = 0;
+            user.save().then(() => {
+              res.send({ user: user, charge: newChargeModel });});
+          }
+          res.send({ user: user, charge: newChargeModel });
         })
       })
     })
-
-  }
-  );
-})
-
+  })
+});

@@ -4,11 +4,10 @@ const User = sequelize.import('./user.js');
 
 
 Source = sequelize.define('source', {
-
   type: Sequelize.INTEGER,
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
-  stripe_id: { type: Sequelize.STRING, unique: true },
+  stripe_id: { type: Sequelize.STRING, primaryKey: true },
   address_city: Sequelize.STRING,
   address_country: Sequelize.STRING,
   address_line1: Sequelize.STRING,
@@ -27,10 +26,9 @@ Source = sequelize.define('source', {
   funding: Sequelize.STRING,
   last4: Sequelize.STRING,
   tokenization_method: Sequelize.STRING,
-
 })
 
-Source.belongsTo(User);
+Source.belongsTo(User, { foreignKey: 'user_stripe_id', sourceKey: 'stripe_id' });
 
 
 module.exports = (sequelize, DataTypes) => {

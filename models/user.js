@@ -10,7 +10,7 @@ User = sequelize.define('user', {
   accountType: Sequelize.INTEGER,
   addressId: Sequelize.INTEGER,
   email: Sequelize.STRING,
-  stripe_id: { type: Sequelize.STRING, unique: true },
+  stripe_id: { type: Sequelize.STRING, primaryKey: true },
 })
 
 module.exports = (sequelize, DataTypes) => {
