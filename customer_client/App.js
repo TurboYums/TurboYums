@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, View, Text,ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, StyleSheet, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { Alert, AppRegistry, Image,ImageBackground,Platform, StyleSheet, TouchableNativeFeedback, TextInput, TouchableOpacity } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import MenuItem from './components/MenuItem'
 class HomeScreen extends React.Component {
@@ -40,22 +40,9 @@ class HomeScreen extends React.Component {
 
             <TouchableOpacity
               style={styles.submitButton}
-              onPress={() =>{
-                fetch('http://localhost:5000/api/users/login', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: this.state.email,
-                  password: this.state.password,
-                }),
-              }).then(res =>{
+              onPress={() =>{ //temporarily deleted to skip sign in
                 this.props.navigation.navigate('DineInOut');
-              });
-                
-              } }>
+              }}>
               <Text style={styles.submitButtonText}> SUBMIT </Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -107,22 +94,32 @@ class MenuScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <ScrollView>
+      <View>
+        <ScrollView>
+          <View>
+          <Text style={styles.headerText}>Menu</Text>
+          </View>
+          <View style={styles.container}>
+            <MenuItem
+              title='Pizza'
+              price='$6'
+              description='Prepared in Brick Oven. NY Style!'
+              source={require('./assets/pizza.jpg')}
+            />
+            <MenuItem
+              title='Burgers'
+              price='$10'
+              description='Served With Fries'
+              source={require('./assets/burger.jpg')}
+            />
+          </View>
+        </ScrollView>
         <View style={styles.container}>
-          <MenuItem
-            title='Pizza'
-            price='$6'
-            description='Prepared in Brick Oven. NY Style!'
-            source={require('./assets/pizza.jpg')}
-          />
-          <MenuItem
-            title='Burgers'
-            price='$10'
-            description='Served With Fries'
-            source={require('./assets/burger.jpg')}
-          />
-        </View>
-      </ScrollView>
+          <TouchableOpacity activeOpacity={1} onPress={this.FloatingButtonEvent} style={styles.TouchableOpacityStyle} >
+            <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+          </TouchableOpacity>
+          </View>
+      </View>
     );
   }
 }
@@ -177,7 +174,27 @@ const styles = StyleSheet.create({
   buttonText: {
     padding: 20,
     color: 'black'
-  }
+  },
+  headerText: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+    fontWeight: 'bold'
+  },
+  TouchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+  FloatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 70,
+    height: 70,
+  },
 })
 
 
