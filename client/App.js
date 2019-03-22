@@ -60,7 +60,7 @@ class HomeScreen extends React.Component {
                   }).then((res) => res.json()).then(resJson => {
                     if(resJson.loginValid){
                       switch(resJson.user.accountType){
-                        //employee is 0
+                        //employee is 0 
                         case 0:
                           currentUser = this.state.username;
                           this.props.navigation.navigate('ClockInOut');

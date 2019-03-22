@@ -77,6 +77,7 @@ api.post('/api/users/addhours', (req, res) => {
 api.post('/api/users/clockIn', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
     if(!user.status){
+      
       user.status = 1;
       user.save().then(() => {
         user.reload().then(() => {
