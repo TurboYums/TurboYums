@@ -86,12 +86,6 @@ class HomeScreen extends React.Component {
 }
 
 class ClockInOutScreen extends React.Component {
-  _onPressButton() {
-    Alert.alert('You clocked in!')
-  }
-  _onPressButton2() {
-    Alert.alert('You clocked out!')
-  }
   render() {
     return (
       <View style={styles.container}>
