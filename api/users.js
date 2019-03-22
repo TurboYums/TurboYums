@@ -18,7 +18,10 @@ api.post('/api/users/create', (req, res) => {
         accountType: req.body.accountType,
         rewardpoints: 0,
         email: req.body.email,
-        stripe_id: `${customer.id}`
+        stripe_id: `${customer.id}`,
+        status: 0,
+        hoursWorked: 0,
+        totalHoursWorked: 0
       }).then(newUser => {
         res.send({ text: `Created User:  ${newUser.username}` });
       })
@@ -73,26 +76,53 @@ api.post('/api/users/addhours', (req, res) => {
 
 api.post('/api/users/clockIn', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    console.log("clocking in " + user);
-    user.status = '1';
-    user.save().then(() => {
-      user.reload().then(() => {
-        res.send({ text: `Clocked in: ${req.body.username} , ${user.status}` });
-      })
-    });
+    if(!user.status){
+      user.status = 1;
+      user.save().then(() => {
+        user.reload().then(() => {
+          res.send({
+            user: user,
+            clockInSuccess: true
+          })
+        })
+      });  
+    } else{
+      user.save().then(() => {
+        user.reload().then(() => {
+          res.send({
+            user: user,
+            clockInSuccess: false
+          })
+        })
+      });
+      
+    }
   })
 })
 
 api.post('/api/users/clockOut', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    console.log("clocking out " + user);
-    user.status = '0';
-    user.save().then(() => {
-      user.reload().then(() => {
-        res.send({ text: `Clocked out: ${req.body.username} , ${user.status}` });
-      })
-    });
+    if(user.status){
+      user.status = 0;
+      user.save().then(() => {
+        user.reload().then(() => {
+          res.send({
+            user: user,
+            clockOutSuccess: true
+          })
+        })
+      });  
+    } else{
+      user.save().then(() => {
+        user.reload().then(() => {
+          res.send({
+            user: user,
+            clockOutSuccess: false
+          })
+        })
+      });
+      
+    }
   })
 })
-
 

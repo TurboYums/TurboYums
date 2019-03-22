@@ -3,7 +3,9 @@ import { Button, View, Text } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, StyleSheet, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
-const API_URL = 'http://192.168.1.254:5000/';
+
+const API_URL = 'http://192.168.1.5:5000/';
+let currentUser = ' ';
 
 class HomeScreen extends React.Component {
   state = {
@@ -60,10 +62,12 @@ class HomeScreen extends React.Component {
                       switch(resJson.user.accountType){
                         //employee is 0
                         case 0:
+                          currentUser = this.state.username;
                           this.props.navigation.navigate('ClockInOut');
                           break;
                         //customer is 1
                         case 1:
+                          currentUser = this.state.username;
                           Alert.alert('We have not yet implemented the customer interface!');
                       }
                     }else{
@@ -95,12 +99,48 @@ class ClockInOutScreen extends React.Component {
           <ImageBackground source={{ uri: 'https://cdn.shopify.com/s/files/1/2398/3757/products/Pizza-Cloth-Front_1024x1024.jpg?v=1512582067' }} style={{ width: '100%', height: '100%' }}>
             <TouchableOpacity
               style={styles.button}
-              onPress = {this._onPressButton}>
+              onPress={() =>{
+                  fetch(API_URL + 'api/users/clockIn', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      username: currentUser,
+                    }),
+                  }).then((res) => res.json()).then(resJson => {
+                    if(resJson.clockInSuccess){
+                      Alert.alert("Successfully Clocked In: " + currentUser);
+                    } else{
+                      Alert.alert(currentUser + " is already Clocked In!");
+                    }
+                  });
+                }
+              } >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress = {this._onPressButton2}>
+              onPress={() =>{
+                fetch(API_URL + 'api/users/clockOut', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    username: currentUser,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if(resJson.clockOutSuccess){
+                    Alert.alert("Successfully Clocked Out: " + currentUser);
+                  } else{
+                    Alert.alert(currentUser + " is already Clocked Out!");
+                  }
+                });
+              }
+            } >
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
           </ImageBackground>
