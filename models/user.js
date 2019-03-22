@@ -10,6 +10,9 @@ User = sequelize.define('user', {
   accountType: Sequelize.INTEGER,
   addressId: Sequelize.INTEGER,
   email: Sequelize.STRING,
+  status: Sequelize.INTEGER,
+  hoursWorked: Sequelize.INTEGER,
+  totalHoursWorked: Sequelize.INTEGER,
   stripe_id: { type: Sequelize.STRING, primaryKey: true },
 })
 
