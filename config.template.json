@@ -19,6 +19,6 @@
         "requiredCountForReward" : 5,
         "rewardEarnedPerTransaction" : 1,
         "rewardEarnedPerDollarSpent" : 0,
-        "rewardValue" : 5
+        "rewardValue" : 1000
     }
 }

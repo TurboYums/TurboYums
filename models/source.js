@@ -4,7 +4,6 @@ const User = sequelize.import('./user.js');
 
 
 Source = sequelize.define('source', {
-
   type: Sequelize.INTEGER,
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
@@ -27,7 +26,6 @@ Source = sequelize.define('source', {
   funding: Sequelize.STRING,
   last4: Sequelize.STRING,
   tokenization_method: Sequelize.STRING,
-
 })
 
 Source.belongsTo(User, { foreignKey: 'user_stripe_id', sourceKey: 'stripe_id' });
