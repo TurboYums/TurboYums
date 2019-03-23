@@ -21,7 +21,11 @@ api.post('/api/users/create', (req, res) => {
         stripe_id: `${customer.id}`,
         status: 0,
         hoursWorked: 0,
-        totalHoursWorked: 0
+        totalHoursWorked: 0,
+        minutesIn: 0,
+        hoursIn: 0,
+        minutesOut: 0,
+        hoursOut: 0
       }).then(newUser => {
         
         res.send({ 
@@ -87,12 +91,12 @@ var hoursOut;
 
 api.post('/api/users/clockIn', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
+    today = new Date();
     if (!user.status) {
       user.status = 1;
-      today = new Date();
-      minutesIn = today.getMinutes();
-      hoursIn = today.getHours();
-
+      user.minutesIn = today.getMinutes();
+      user.hoursIn = today.getHours();
+      console.log(user.hoursIn, user.minutesIn);
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -114,29 +118,27 @@ api.post('/api/users/clockIn', (req, res) => {
     }
   })
 })
-
 api.post('/api/users/clockOut', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
+
     if (user.status) {
       user.status = 0;
-      minutesOut = today.getMinutes();
-      hoursOut = today.getHours();
-
-      if (minutesIn > minutesOut) {
-        minutesIn = 60 - minutesIn;
-        totalMinutes = (minutesIn + minutesOut) / 60;
-        totalHours = hoursOut - (hoursIn + 1);
+      today2 = new Date();
+      user.minutesOut = today2.getMinutes();
+      user.hoursOut = today2.getHours();
+      console.log(user.hoursIn, user.minutesIn, user.hoursOut, user.minutesOut);
+      if (user.minutesIn > user.minutesOut) {
+        minutesIn = 60 - user.minutesIn;
+        totalMinutes = (minutesIn + user.minutesOut) / 60;
+        totalHours = user.hoursOut - (user.hoursIn + 1);
         hoursWorked = totalHours + totalMinutes;
       } else {
-        totalMinutes = (minutesOut - minutesIn) / 60;
-        totalHours = hoursOut - hoursIn;
+        totalMinutes = (user.minutesOut - user.minutesIn) / 60;
+        totalHours = user.hoursOut - user.hoursIn;
         hoursWorked = totalHours + totalMinutes;
       }
-
       user.hoursWorked = hoursWorked;
-
       user.increment('totalHoursWorked', { by: user.hoursWorked });
-
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
