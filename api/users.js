@@ -143,6 +143,8 @@ api.post('/api/users/clockOut', (req, res) => {
         user.reload().then(() => {
           res.send({
             user: user,
+            sessionHours: user.hoursWorked,
+            totalHours: user.totalHoursWorked,
             clockOutSuccess: true
           })
         })
