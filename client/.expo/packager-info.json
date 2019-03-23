@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 23107,
+  "expoServerNgrokUrl": "https://dh-8pt.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.dh-8pt.anonymous.client.exp.direct",
+  "ngrokPid": 23125,
   "webpackServerPort": null,
   "devToolsPort": 19002
 }
