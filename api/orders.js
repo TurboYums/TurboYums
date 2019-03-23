@@ -7,7 +7,7 @@ const Item = sequelize.import('../models/item.js');
 api.post('/api/order/create', (req, res) => {
   Order.create({
     totalPrice: req.body.totalPrice,
-    specialReuest: req.body.specialRequest,
+    specialRequest: req.body.specialRequest,
     userId: req.body.userId
   }).then(newOrder => {
     res.send(newOrder);
