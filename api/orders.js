@@ -8,7 +8,7 @@ api.post('/api/order/create', (req, res) => {
   Order.create({
     totalPrice: req.body.totalPrice,
     specialRequest: req.body.specialRequest,
-    userId: req.body.userId
+    userId: req.body.userId 
   }).then(newOrder => {
     res.send(newOrder);
   })
@@ -20,6 +20,8 @@ api.post('/api/order/add', (req, res) => {
       console.log(order);
       console.log(item);
       order.addItem(item);
+      order.increment('totalPrice', {by:item.itemPrice});
+      res.send({ text: `Item Added:  ${item.itemName}` });
     })
   })
 })
@@ -30,6 +32,7 @@ api.post('/api/order/add', (req, res) => {
       console.log(order);
       console.log(item);
       order.removeItem(item);
+      order.decrement('totalPrice', {by:item.itemPrice});
     })
   })
 })*/
