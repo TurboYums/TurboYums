@@ -23,7 +23,11 @@ api.post('/api/users/create', (req, res) => {
         hoursWorked: 0,
         totalHoursWorked: 0
       }).then(newUser => {
-        res.send({ text: `Created User:  ${newUser.username}` });
+        
+        res.send({ 
+          creationSuccess: true,
+          text: `Created User:  ${newUser.username}` 
+        });
       })
     })
   })
