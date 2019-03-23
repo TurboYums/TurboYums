@@ -205,7 +205,6 @@ class LogInScreen extends React.Component {
                     switch (resJson.user.accountType) {
                       //employee is 0 
                       case 0:
-                        currentUser = this.state.username;
                         this.props.navigation.navigate('ClockInOut');
                         break;
                       //customer is 1
@@ -227,57 +226,126 @@ class LogInScreen extends React.Component {
   }
 }
 
+
 class ClockInOutScreen extends React.Component {
+  state = {
+    compHours: ''
+  }
   render() {
     return (
       <View style={styles.container}>
         <View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              fetch(API_URL + 'api/users/clockIn', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: currentUser,
-                }),
-              }).then((res) => res.json()).then(resJson => {
-                if (resJson.clockInSuccess) {
-                  Alert.alert("Successfully Clocked In: " + currentUser);
-                } else {
-                  Alert.alert(currentUser + " is already Clocked In!");
+          <ImageBackground source={{ uri: 'https://cdn.shopify.com/s/files/1/2398/3757/products/Pizza-Cloth-Front_1024x1024.jpg?v=1512582067' }} style={{ width: '100%', height: '100%' }}>
+          <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: "  editable={false} ref = {component=>this._MyComponent=component}/>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                  fetch(API_URL + 'api/users/clockIn', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      username: currentUser.username,
+                    }),
+                  }).then((res) => res.json()).then(resJson => {
+                  var today = new Date();
+                  var currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                  var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+                    if(resJson.clockInSuccess){
+                      Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
+
+                    } else{
+
+                      Alert.alert(currentUser + " is already Clocked In!");
+                    }
+                  });
                 }
-              });
-            }
+              } >
+              <Text style={styles.buttonText}> Clock In </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                fetch(API_URL + 'api/users/clockOut', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    username: currentUser.username,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  var today = new Date();
+                  var currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                  var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                  if(resJson.clockOutSuccess){ 
+                    this.state.compHours = resJson.totalHours;
+                    this._MyComponent.setNativeProps({text:'Total Hours Worked This Pay Period: ' + this.state.compHours});
+                    Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime+ '\nShift Length: ' + resJson.sessionHours);
+                  
+                  } else{
+                    Alert.alert(currentUser + " is already Clocked Out!");
+                  }
+                });
+              }
             } >
-            <Text style={styles.buttonText}> Clock In </Text>
-          </TouchableOpacity>
+              <Text style={styles.buttonText}> Clock Out </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                this.props.navigation.navigate('EmployeePortal');
+              }
+              } >
+              <Text style={styles.buttonText}> Employee Portal </Text>
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+      </View>
+    );
+  }
+}
+
+class EmployeePortalScreen extends React.Component {
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View>
+          <ImageBackground source={require('./assets/WIP.png')} style={{ width: '100%', height: '100%' }}>
+            
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              fetch(API_URL + 'api/users/clockOut', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: currentUser.username,
-                }),
-              }).then((res) => res.json()).then(resJson => {
-                if (resJson.clockOutSuccess) {
-                  Alert.alert("Successfully Clocked Out: " + currentUser.username);
-                } else {
-                  Alert.alert(currentUser.username + " is already Clocked Out!");
-                }
-              });
-            }
+              style={styles.logInMenuButton}
+              onPress={() =>{
+                Alert.alert('We have not yet implemented the Table interface!')
+              }
             } >
-            <Text style={styles.buttonText}> Clock Out </Text>
+              <Text style={styles.buttonText}> View Tables </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                Alert.alert('We have not yet implemented the Schedule interface!');
+              }
+            } >
+              <Text style={styles.buttonText}> View Schedule </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                Alert.alert('We have not yet implemented the Staff interface!');
+              }
+            } >
+              <Text style={styles.buttonText}> View Staff </Text>
+          </TouchableOpacity>
+
+          </ImageBackground>
         </View>
       </View>
     );
@@ -441,7 +509,8 @@ const RootStack = createStackNavigator(
     ClockInOut: ClockInOutScreen,
     Payment: PaymentScreen,
     Receipt: ReceiptScreen,
-    SignUp: SignUpScreen
+    SignUp: SignUpScreen,
+    EmployeePortal: EmployeePortalScreen
   },
   {
     initialRouteName: 'Welcome',
@@ -488,6 +557,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     borderColor: '#f7df1e',
+    borderWidth: 1
+  },
+  hourViewer: {
+    margin: 15,
+    backgroundColor: 'transparent',
+    height: 40,
+    borderColor: 'transparent',
     borderWidth: 1
   },
   submitButton: {
