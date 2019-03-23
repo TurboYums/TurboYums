@@ -40,3 +40,9 @@ api.post('/api/sources/create', (req, res) => {
     )
   })
 })
+
+api.post('/api/sources/get', (req, res) => {
+  Source.findAll({ where: { user_stripe_id: req.body.user.stripe_id } }).then(sources => {
+    res.send({sources: sources});;
+  })
+})
