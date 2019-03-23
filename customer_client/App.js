@@ -1,14 +1,19 @@
 import React from 'react';
-import { Button, View, Text,ScrollView } from 'react-native';
+import { Button, FlatList,View, Text,ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, StyleSheet, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { Alert, AppRegistry, Image,ImageBackground,Platform, StyleSheet, TouchableNativeFeedback, TextInput, TouchableOpacity } from 'react-native';
+import { ListItem ,Icon} from 'react-native-elements';
 import MenuItem from './components/MenuItem'
+import { Ionicons } from '@expo/vector-icons';
+// import console = require('console');
+
+
 class HomeScreen extends React.Component {
   state = {
     email: '',
     password: ''
   }
+
   handleEmail = (text) => {
     this.setState({ email: text })
   }
@@ -40,22 +45,9 @@ class HomeScreen extends React.Component {
 
             <TouchableOpacity
               style={styles.submitButton}
-              onPress={() =>{
-                fetch('http://localhost:5000/api/users/login', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: this.state.email,
-                  password: this.state.password,
-                }),
-              }).then(res =>{
-                this.props.navigation.navigate('DineInOut');
-              });
-                
-              } }>
+              onPress={() =>{ //temporarily deleted to skip sign in
+                this.props.navigation.navigate('DineInOut',{order:[]});
+              }}>
               <Text style={styles.submitButtonText}> SUBMIT </Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -67,27 +59,45 @@ class HomeScreen extends React.Component {
 
 class DineInOutScreen extends React.Component {
 
-  _onPressButton(navigate) {
+  _onPressButton(navigate,state,takeOutStatus) {
     // const { navigate } = this.props.navigation;
     // Alert.alert('You clocked in!')
-    navigate('Menu')
+    // var{order} = this.props.navigation.state.params
+    // Alert.alert('Navigation'+order)
+    // navigate.state.setParams({order:order})
+    // console.log("22")
+    // console.log(state.params)
+    // console.log(state.params.order.length)
+    if(!state.params.order.length){
+      // console.log('AQUI')
+      navigate('Menu',{order:[],takeOut:takeOutStatus});
+    }else{
+      navigate('Menu',{order:[...state.params.order,1], takeOut:takeOutStatus});
+    }
+    
   }
-
 
   render() {
     const { navigate } = this.props.navigation;
+    const {state} = this.props.navigation.state
+    console.log("HEREEE")
+    console.log(this.props.navigation.state)
+    
+    // console.log(state.order)
+    // alert(this.props.navigation.state.st)
+    // var {order} = this.props.navigation.state.params;
     return (
       <View style={styles.container}>
         <View>
           <ImageBackground source={{ uri: 'https://png.pngtree.com/element_origin_min_pic/16/10/20/12580841f85545d.jpg' }} style={{ width: '100%', height: '100%' }}>
             <TouchableOpacity
               style={styles.button}
-              onPress = {()=>{this._onPressButton(navigate)}}>
+              onPress = {()=>{this._onPressButton(navigate,this.props.navigation.state,0)}}>
               <Text style={styles.buttonText}> Dine In </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress = {()=>{this._onPressButton(navigate)}}>
+              onPress = {()=>{this._onPressButton(navigate,this.props.navigation.state,1)}}>
               <Text style={styles.buttonText}> Take Out </Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -98,31 +108,328 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
-  _onPressButton(navigate) {
-    Alert.alert('Thanks for Ordering Pizza')
+  static navigationOptions = {
+    title: 'Menu',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onPressButtonPizza(navigate,state) {
+    console.log("PIZZA CAT")
+    console.log(state)
+    navigate("Pizza",{order:state.params.order, takeOut:state.params.takeOut})
+
+    
+    // Alert.alert('Thanks for Ordering Pizza')
+    // print('here')
   }
-  _onPressButton2(navigate) {
-    Alert.alert('Thanks for Ordering Burgers')
+  _onPressButtonBurger(navigate,state) {
+    console.log(state)
+    navigate("Burger",{order:state.params.order, takeOut:state.params.takeOut})
+    
+    // Alert.alert('Thanks for Ordering Burgers')
   }
+  _onPressButtonDrinks(navigate,state) {
+    console.log(state)
+    navigate("Drinks",{order:state.params.order, takeOut:state.params.takeOut})
+    // Alert.alert('Thanks for Ordering Drinks')
+  }
+  _onConfirm(navigate,state){
+    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    console.log("ARRIVED")
+    console.log(this.props.navigation.state)
+    const {order_count} = this.props.navigation.state.params.order.length || '0'
+    const {order_message}="Order Count is:"+order_count
+    return (
+      <View>
+        <ScrollView>
+          <View style={styles.container}>
+              <Text>{this.order_message}</Text>
+              <Text>{order_message}</Text>
+          </View>
+          <View style={styles.container}>
+            <TouchableOpacity onPress={()=>{this._onPressButtonPizza(navigate,this.props.navigation.state)}}>
+            <MenuItem 
+              title='Pizza'
+              description='Choose a Pizza. Prepared in Brick Oven. NY Style!'
+              source={require('./assets/pizza.jpg')}
+              onPress = {()=>{this._onPressButtonPizza(navigate,this.props.navigation.state)}}
+            />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress = {()=>{this._onPressButtonBurger(navigate,this.props.navigation.state)}}>
+            <MenuItem
+              title='Burgers'
+              description='Choose a Burger. Served With Fries'
+              source={require('./assets/burger.jpg')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity  onPress = {()=>{this._onPressButtonDrinks(navigate,this.props.navigation.state)}}>
+            <MenuItem
+              title='Drinks'
+              description='Choose a Drink. Quench your thirst!'
+              source={require('./assets/drinks.jpg')}
+              onPress = {()=>{this._onPressButtonDrinks(navigate,this.props.navigation.state)}}
+            />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <View style={styles.container}>
+      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
+          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+}
+
+class PizzaScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Pizza',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onButtonAdd(navigate,state,title,price) {
+    console.log("Menu")
+    console.log(state)
+
+    if(!state.params.order.length){
+      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
+    }else{
+      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
+    }
+  
+  }
+  _onConfirm(navigate,state){
+    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    console.log("ARRIVED @ 2")
+    console.log(this.props.navigation.state)
+    return (
+      <View style={{flex: 1}}>
+      <View style={styles.MenuSplashStyle}>
+        <Image source={require('./assets/pizzaSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
+      </View>
+      <ScrollView style={styles.MenuListStyle}>
+        <View style={styles.container}>
+        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Margherita Pizza",'2')}}>
+          <MenuItem
+            title='Margherita Pizza'
+            price='$6'
+            description='Click to Add'
+            source={require('./assets/pizza.jpg')}
+          />
+          </TouchableOpacity>
+          
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza",'3')}}>
+          <MenuItem
+            title='Pepporoni Pizza'
+            price='$10'
+            // description='Served With Fries'
+            source={require('./assets/pep-pizza.jpg')}
+          />
+          </TouchableOpacity>
+
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza",'3')}}>
+          <MenuItem
+            title='Veggie Lovers Pizza'
+            price='$5'
+            // description='Quench your thirst!'
+            source={require('./assets/veggie_lovers.jpg')}
+          />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
+          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+
+    </View>
+    );
+  }
+}
+
+class BurgerScreen extends React.Component {
+  
+  static navigationOptions = {
+    title: 'Burger',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onButtonAdd(navigate,state,title,price) {
+    console.log("Menu")
+    console.log(state)
+
+    if(!state.params.order.length){
+      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
+    }else{
+      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
+    }
+  
+  }
+  _onConfirm(navigate,state){
+    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
+  }
+  
+
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <ScrollView>
+      <View style={{flex: 1}}>
+        <View style={styles.MenuSplashStyle}>
+          <Image source={require('./assets/burgerSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
+        </View>
+        <ScrollView style={styles.MenuListStyle}>
+          <View style={styles.container}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Hamburger",'8')}}>
+            <MenuItem
+              title='Hamburger'
+              price='$8'
+              // description='Prepared in Brick Oven. NY Style!'
+              source={require('./assets/hamburger.jpg')}
+            />
+            </TouchableOpacity>
+            
+            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Burger",'6')}}>
+            <MenuItem
+              title='Blackbean Burger Veggie'
+              price='$6'
+              // description='Served With Fries'
+              source={require('./assets/blackbean.jpeg')}
+            />
+            </TouchableOpacity>
+
+            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"CheeseBurger",'7')}}>
+            <MenuItem
+              title='Cheeseburger'
+              price='$7'
+              // description='Quench your thirst!'
+              source={require('./assets/cheeseburger.jpg')}
+            />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      
+        <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
+          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+class DrinkScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Drinks',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+
+  _onButtonAdd(navigate,state,title,price) {
+    console.log("Menu")
+    console.log(state)
+
+    if(!state.params.order.length){
+      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
+    }else{
+      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
+    }
+  }
+
+  _onConfirm(navigate,state){
+    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
+  }
+  
+  
+
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View style={{flex: 1}}>
+      <View style={styles.MenuSplashStyle}>
+        <Image source={require('./assets/DrinksSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
+      </View>
+      <ScrollView style={styles.MenuListStyle}>
         <View style={styles.container}>
+        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Milkshake",'3')}}>
           <MenuItem
-            title='Pizza'
+            title='Milkshake'
             price='$6'
-            description='Prepared in Brick Oven. NY Style!'
-            source={require('./assets/pizza.jpg')}
+            // description='Prepared in Brick Oven. NY Style!'
+            source={require('./assets/milkshake.jpg')}
           />
+          </TouchableOpacity>
+
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Soda",'2')}}>
           <MenuItem
-            title='Burgers'
+            title='Soda'
             price='$10'
-            description='Served With Fries'
-            source={require('./assets/burger.jpg')}
+            // description='Served With Fries'
+            source={require('./assets/soda.jpeg')}
           />
+          </TouchableOpacity>
+
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Lemonade",'2.50')}}>
+          <MenuItem
+            title='Lemonade'
+            price='$5'
+            // description='Quench your thirst!'
+            source={require('./assets/lemonade.jpg')}
+          />
+          </TouchableOpacity>
+
         </View>
       </ScrollView>
+      <View>
+      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
+          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+      </TouchableOpacity>
+      </View>
+
+    </View>
+    );
+  }
+}
+class SummaryScreen extends React.Component {
+  render() {
+    return(
+    <View>
+      <Text>Summary</Text>
+    </View>
     );
   }
 }
@@ -131,7 +438,11 @@ const RootStack = createStackNavigator(
   {
     Home: HomeScreen,
     DineInOut: DineInOutScreen,
-    Menu: MenuScreen
+    Menu: MenuScreen,
+    Pizza:PizzaScreen,
+    Burger:BurgerScreen,
+    Drinks:DrinkScreen,
+    Summary:SummaryScreen,
   },
   {
     initialRouteName: 'Home',
@@ -177,7 +488,33 @@ const styles = StyleSheet.create({
   buttonText: {
     padding: 20,
     color: 'black'
-  }
+  },
+  headerText: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+    fontWeight: 'bold'
+  },
+  TouchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+  FloatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 100,
+    height: 100,
+  },
+  MenuSplashStyle: {
+      flex:1
+  },
+  MenuListStyle: {
+    flex:4
+}
 })
 
 
