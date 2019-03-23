@@ -21,9 +21,17 @@ api.post('/api/users/create', (req, res) => {
         stripe_id: `${customer.id}`,
         status: 0,
         hoursWorked: 0,
-        totalHoursWorked: 0
+        totalHoursWorked: 0,
+        minutesIn: 0,
+        hoursIn: 0,
+        minutesOut: 0,
+        hoursOut: 0
       }).then(newUser => {
-        res.send({ text: `Created User:  ${newUser.username}` });
+        
+        res.send({ 
+          creationSuccess: true,
+          text: `Created User:  ${newUser.username}` 
+        });
       })
     })
   })
@@ -74,11 +82,21 @@ api.post('/api/users/addhours', (req, res) => {
   })
 })
 
+
+today = new Date();
+var minutesIn;
+var hoursIn;
+var minutesOut;
+var hoursOut;
+
 api.post('/api/users/clockIn', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    if(!user.status){
-      
+    today = new Date();
+    if (!user.status) {
       user.status = 1;
+      user.minutesIn = today.getMinutes();
+      user.hoursIn = today.getHours();
+      console.log(user.hoursIn, user.minutesIn);
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -86,8 +104,8 @@ api.post('/api/users/clockIn', (req, res) => {
             clockInSuccess: true
           })
         })
-      });  
-    } else{
+      });
+    } else {
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -96,24 +114,42 @@ api.post('/api/users/clockIn', (req, res) => {
           })
         })
       });
-      
+
     }
   })
 })
-
 api.post('/api/users/clockOut', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    if(user.status){
+
+    if (user.status) {
       user.status = 0;
+      today2 = new Date();
+      user.minutesOut = today2.getMinutes();
+      user.hoursOut = today2.getHours();
+      console.log(user.hoursIn, user.minutesIn, user.hoursOut, user.minutesOut);
+      if (user.minutesIn > user.minutesOut) {
+        minutesIn = 60 - user.minutesIn;
+        totalMinutes = (minutesIn + user.minutesOut) / 60;
+        totalHours = user.hoursOut - (user.hoursIn + 1);
+        hoursWorked = totalHours + totalMinutes;
+      } else {
+        totalMinutes = (user.minutesOut - user.minutesIn) / 60;
+        totalHours = user.hoursOut - user.hoursIn;
+        hoursWorked = totalHours + totalMinutes;
+      }
+      user.hoursWorked = hoursWorked;
+      user.increment('totalHoursWorked', { by: user.hoursWorked });
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
             user: user,
+            sessionHours: user.hoursWorked,
+            totalHours: user.totalHoursWorked,
             clockOutSuccess: true
           })
         })
-      });  
-    } else{
+      });
+    } else {
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -122,7 +158,7 @@ api.post('/api/users/clockOut', (req, res) => {
           })
         })
       });
-      
+
     }
   })
 })
