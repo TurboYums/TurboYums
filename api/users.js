@@ -74,11 +74,21 @@ api.post('/api/users/addhours', (req, res) => {
   })
 })
 
+
+today = new Date();
+var minutesIn;
+var hoursIn;
+var minutesOut;
+var hoursOut;
+
 api.post('/api/users/clockIn', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    if(!user.status){
-      
+    if (!user.status) {
       user.status = 1;
+      today = new Date();
+      minutesIn = today.getMinutes();
+      hoursIn = today.getHours();
+
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -86,8 +96,8 @@ api.post('/api/users/clockIn', (req, res) => {
             clockInSuccess: true
           })
         })
-      });  
-    } else{
+      });
+    } else {
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -96,15 +106,33 @@ api.post('/api/users/clockIn', (req, res) => {
           })
         })
       });
-      
+
     }
   })
 })
 
 api.post('/api/users/clockOut', (req, res) => {
   User.findOne({ where: { username: req.body.username } }).then(user => {
-    if(user.status){
+    if (user.status) {
       user.status = 0;
+      minutesOut = today.getMinutes();
+      hoursOut = today.getHours();
+
+      if (minutesIn > minutesOut) {
+        minutesIn = 60 - minutesIn;
+        totalMinutes = (minutesIn + minutesOut) / 60;
+        totalHours = hoursOut - (hoursIn + 1);
+        hoursWorked = totalHours + totalMinutes;
+      } else {
+        totalMinutes = (minutesOut - minutesIn) / 60;
+        totalHours = hoursOut - hoursIn;
+        hoursWorked = totalHours + totalMinutes;
+      }
+
+      user.hoursWorked = hoursWorked;
+
+      user.increment('totalHoursWorked', { by: user.hoursWorked });
+
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -112,8 +140,8 @@ api.post('/api/users/clockOut', (req, res) => {
             clockOutSuccess: true
           })
         })
-      });  
-    } else{
+      });
+    } else {
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -122,7 +150,7 @@ api.post('/api/users/clockOut', (req, res) => {
           })
         })
       });
-      
+
     }
   })
 })
