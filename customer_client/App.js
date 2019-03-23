@@ -2,8 +2,11 @@ import React from 'react';
 import { Button, View, Text,ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image,ImageBackground,Platform, StyleSheet, TouchableNativeFeedback, TextInput, TouchableOpacity } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem ,Icon} from 'react-native-elements';
 import MenuItem from './components/MenuItem'
+import { Ionicons } from '@expo/vector-icons';
+
+
 class HomeScreen extends React.Component {
   state = {
     email: '',
@@ -85,6 +88,87 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Menu',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onPressButtonPizza(navigate) {
+    navigate("Pizza")
+    // Alert.alert('Thanks for Ordering Pizza')
+    // print('here')
+  }
+  _onPressButtonBurger(navigate) {
+    navigate("Burger")
+    // Alert.alert('Thanks for Ordering Burgers')
+  }
+  _onPressButtonDrinks(navigate) {
+    navigate("Drinks")
+    // Alert.alert('Thanks for Ordering Drinks')
+  }
+  
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <ScrollView>
+          <View style={styles.container}>
+            <TouchableOpacity onPress={()=>{this._onPressButtonPizza(navigate)}}>
+            <MenuItem 
+              title='Pizza'
+              description='Choose a Pizza. Prepared in Brick Oven. NY Style!'
+              source={require('./assets/pizza.jpg')}
+              onPress = {()=>{this._onPressButtonPizza(navigate)}}
+            />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress = {()=>{this._onPressButtonBurger(navigate)}}>
+            <MenuItem
+              title='Burgers'
+              description='Choose a Burger. Served With Fries'
+              source={require('./assets/burger.jpg')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity  onPress = {()=>{this._onPressButtonDrinks(navigate)}}>
+            <MenuItem
+              title='Drinks'
+              description='Choose a Drink. Quench your thirst!'
+              source={require('./assets/drinks.jpg')}
+              onPress = {()=>{this._onPressButtonDrinks(navigate)}}
+            />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity activeOpacity={1} onPress={this.FloatingButtonEvent} style={styles.TouchableOpacityStyle} >
+            <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+          </TouchableOpacity>
+          </View>
+      </View>
+    );
+  }
+}
+
+class PizzaScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Pizza',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
   _onPressButton(navigate) {
     Alert.alert('Thanks for Ordering Pizza')
   }
@@ -96,9 +180,6 @@ class MenuScreen extends React.Component {
     return (
       <View>
         <ScrollView>
-          <View>
-          <Text style={styles.headerText}>Menu</Text>
-          </View>
           <View style={styles.container}>
             <MenuItem
               title='Pizza'
@@ -112,6 +193,13 @@ class MenuScreen extends React.Component {
               description='Served With Fries'
               source={require('./assets/burger.jpg')}
             />
+            <MenuItem
+              title='Drinks'
+              price='$2'
+              description='Quench your thirst!'
+              source={require('./assets/drinks.jpg')}
+            />
+            
           </View>
         </ScrollView>
         <View style={styles.container}>
@@ -124,11 +212,127 @@ class MenuScreen extends React.Component {
   }
 }
 
+class BurgerScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Burger',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onPressButton(navigate) {
+    Alert.alert('Thanks for Ordering Pizza')
+  }
+  _onPressButton2(navigate) {
+    Alert.alert('Thanks for Ordering Burgers')
+  }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <ScrollView>
+          <View style={styles.container}>
+            <MenuItem
+              title='Pizza'
+              price='$6'
+              description='Prepared in Brick Oven. NY Style!'
+              source={require('./assets/pizza.jpg')}
+            />
+            <MenuItem
+              title='Burgers'
+              price='$10'
+              description='Served With Fries'
+              source={require('./assets/burger.jpg')}
+            />
+            <MenuItem
+              title='Drinks'
+              price='$2'
+              description='Quench your thirst!'
+              source={require('./assets/drinks.jpg')}
+            />
+            
+          </View>
+        </ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity activeOpacity={1} onPress={this.FloatingButtonEvent} style={styles.TouchableOpacityStyle} >
+            <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+          </TouchableOpacity>
+          </View>
+      </View>
+    );
+  }
+}
+
+class DrinkScreen extends React.Component {
+ 
+  static navigationOptions = {
+    title: 'Drinks',
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    // headerRight: <Button>'Cart'</Button>
+  };
+  _onPressButton(navigate) {
+    Alert.alert('Thanks for Ordering Pizza')
+  }
+  _onPressButton2(navigate) {
+    Alert.alert('Thanks for Ordering Burgers')
+  }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <ScrollView>
+          <View style={styles.container}>
+            <MenuItem
+              title='Pizza'
+              price='$6'
+              description='Prepared in Brick Oven. NY Style!'
+              source={require('./assets/pizza.jpg')}
+            />
+            <MenuItem
+              title='Burgers'
+              price='$10'
+              description='Served With Fries'
+              source={require('./assets/burger.jpg')}
+            />
+            <MenuItem
+              title='Drinks'
+              price='$2'
+              description='Quench your thirst!'
+              source={require('./assets/drinks.jpg')}
+            />
+            
+          </View>
+        </ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity activeOpacity={1} onPress={this.FloatingButtonEvent} style={styles.TouchableOpacityStyle} >
+            <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
+          </TouchableOpacity>
+          </View>
+      </View>
+    );
+  }
+}
+
+
 const RootStack = createStackNavigator(
   {
     Home: HomeScreen,
     DineInOut: DineInOutScreen,
-    Menu: MenuScreen
+    Menu: MenuScreen,
+    Pizza:PizzaScreen,
+    Burger:BurgerScreen,
+    Drinks:DrinkScreen
   },
   {
     initialRouteName: 'Home',
@@ -192,8 +396,8 @@ const styles = StyleSheet.create({
   },
   FloatingButtonStyle: {
     resizeMode: 'contain',
-    width: 70,
-    height: 70,
+    width: 100,
+    height: 100,
   },
 })
 
