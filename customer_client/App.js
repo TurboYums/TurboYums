@@ -268,7 +268,7 @@ class PizzaScreen extends React.Component {
         },
         body: JSON.stringify({
           orderId: "1",
-          itemId: itemId
+          //itemId: itemId
         }),
       }).then((res) => res.json()).then(resJson => {
         // if(resJson.creationSuccess){
