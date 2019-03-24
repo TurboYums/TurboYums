@@ -10,7 +10,7 @@ api.post('/api/order/create', (req, res) => {
     specialRequest: req.body.specialRequest,
     userId: req.body.userId 
   }).then(newOrder => {
-    res.send(newOrder);
+    res.send({order:newOrder});
   })
 })
 

@@ -7,9 +7,10 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 // import console = require('console');
 
-const API_URL = 'http://192.168.1.159:5000/';
+const API_URL = 'http://192.168.1.4:5000/';
 
 let currentUser = ' ';
+let orderId = '';
 
 class HomeScreen extends React.Component {
   state = {
@@ -86,13 +87,7 @@ class DineInOutScreen extends React.Component {
 
         }),
       }).then((res) => res.json()).then(resJson => {
-        // if(resJson.creationSuccess){
-        //   Alert.alert('Succesfully Added an Item');
-        //   // this.props.navigation.navigate('LogIn');
-        // }else{
-        //   Alert.alert('Error Adding Item!');
-        //   // this.props.navigation.navigate('Welcome');
-        // }
+         orderId=resJson.order.id;
       });
     
     
@@ -234,54 +229,46 @@ class PizzaScreen extends React.Component {
     },
     // headerRight: <Button>'Cart'</Button>
   };
-  _onButtonAdd(navigate,state,title,price) {
+  _onButtonAdd(navigate,state,title,price) {//on button start
     console.log("Menu")
     console.log(state)
 
-    if(!title||!price){
+    if(!title||!price){//if start
       Alert.alert('Please select an item to order');
-    }else{
-      fetch(API_URL + 'api/items/create', {
+    }else{//if end else start
+      fetch(API_URL + 'api/items/create', {//fetch start
         method: 'POST',
-        headers: {
+        headers: {//header start
           Accept: 'application/json',
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+        },//header end
+        body: JSON.stringify({//body start
           itemName: title,
           itemPrice: price,
-        }),
-      }).then((res) => res.json()).then(resJson => {
-        console.log('ITEM ID:')
-        console.log(resJson.itemId)
-      });
-    }
-
-    if(!title||!price){
-      Alert.alert('Please select an item to order');
-    }else{
-      fetch(API_URL + 'api/order/add', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          orderId: "1",
-          itemId: itemId
-        }),
-      }).then((res) => res.json()).then(resJson => {
-        // if(resJson.creationSuccess){
-        //   Alert.alert('Succesfully Added an Item');
-        //   // this.props.navigation.navigate('LogIn');
-        // }else{
-        //   Alert.alert('Error Adding Item!');
-        //   // this.props.navigation.navigate('Welcome');
-        // }
-      });
-    }
-
-
+        }),//body end
+      }).then((res) => res.json()).then(resJson => { //fetch end and json start
+        fetch(API_URL + 'api/order/add', {//fetch start
+          method: 'POST',
+          headers: {//header start
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },//header end
+          body: JSON.stringify({//body start
+            orderId: orderId,
+            itemId: resJson.item.id
+          }),//body end
+        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
+          // if(resJson.creationSuccess){
+          //   Alert.alert('Succesfully Added an Item');
+          //   // this.props.navigation.navigate('LogIn');
+          // }else{
+          //   Alert.alert('Error Adding Item!');
+          //   // this.props.navigation.navigate('Welcome');
+          // }
+        });//json end2
+        })//json end
+    }//else end
+    
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
     }else{
@@ -355,33 +342,45 @@ class BurgerScreen extends React.Component {
     },
     // headerRight: <Button>'Cart'</Button>
   };
-  _onButtonAdd(navigate,state,title,price) {
+  _onButtonAdd(navigate,state,title,price) {//on button start
     console.log("Menu")
     console.log(state)
 
-    if(!title||!price){
+    if(!title||!price){//if start
       Alert.alert('Please select an item to order');
-    }else{
-      fetch(API_URL + 'api/items/create', {
+    }else{//if end else start
+      fetch(API_URL + 'api/items/create', {//fetch start
         method: 'POST',
-        headers: {
+        headers: {//header start
           Accept: 'application/json',
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+        },//header end
+        body: JSON.stringify({//body start
           itemName: title,
           itemPrice: price,
-        }),
-      }).then((res) => res.json()).then(resJson => {
-        // if(resJson.creationSuccess){
-        //   Alert.alert('Succesfully Added an Item');
-        //   // this.props.navigation.navigate('LogIn');
-        // }else{
-        //   Alert.alert('Error Adding Item!');
-        //   // this.props.navigation.navigate('Welcome');
-        // }
-      });
-    }
+        }),//body end
+      }).then((res) => res.json()).then(resJson => { //fetch end and json start
+        fetch(API_URL + 'api/order/add', {//fetch start
+          method: 'POST',
+          headers: {//header start
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },//header end
+          body: JSON.stringify({//body start
+            orderId: orderId,
+            itemId: resJson.item.id
+          }),//body end
+        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
+          // if(resJson.creationSuccess){
+          //   Alert.alert('Succesfully Added an Item');
+          //   // this.props.navigation.navigate('LogIn');
+          // }else{
+          //   Alert.alert('Error Adding Item!');
+          //   // this.props.navigation.navigate('Welcome');
+          // }
+        });//json end2
+        })//json end
+    }//else end
     
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
@@ -455,39 +454,52 @@ class DrinkScreen extends React.Component {
     // headerRight: <Button>'Cart'</Button>
   };
 
-  _onButtonAdd(navigate,state,title,price) {
+  _onButtonAdd(navigate,state,title,price) {//on button start
     console.log("Menu")
     console.log(state)
 
-    if(!title||!price){
+    if(!title||!price){//if start
       Alert.alert('Please select an item to order');
-    }else{
-      fetch(API_URL + 'api/items/create', {
+    }else{//if end else start
+      fetch(API_URL + 'api/items/create', {//fetch start
         method: 'POST',
-        headers: {
+        headers: {//header start
           Accept: 'application/json',
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+        },//header end
+        body: JSON.stringify({//body start
           itemName: title,
           itemPrice: price,
-        }),
-      }).then((res) => res.json()).then(resJson => {
-        // if(resJson.creationSuccess){
-        //   Alert.alert('Succesfully Added an Item');
-        //   // this.props.navigation.navigate('LogIn');
-        // }else{
-        //   Alert.alert('Error Adding Item!');
-        //   // this.props.navigation.navigate('Welcome');
-        // }
-      });
-    }
-
+        }),//body end
+      }).then((res) => res.json()).then(resJson => { //fetch end and json start
+        fetch(API_URL + 'api/order/add', {//fetch start
+          method: 'POST',
+          headers: {//header start
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },//header end
+          body: JSON.stringify({//body start
+            orderId: orderId,
+            itemId: resJson.item.id
+          }),//body end
+        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
+          // if(resJson.creationSuccess){
+          //   Alert.alert('Succesfully Added an Item');
+          //   // this.props.navigation.navigate('LogIn');
+          // }else{
+          //   Alert.alert('Error Adding Item!');
+          //   // this.props.navigation.navigate('Welcome');
+          // }
+        });//json end2
+        })//json end
+    }//else end
+    
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
     }else{
       navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
     }
+  
   }
 
   _onConfirm(navigate,state){
