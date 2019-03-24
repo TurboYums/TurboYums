@@ -321,7 +321,7 @@ class EmployeePortalScreen extends React.Component {
           <ImageBackground source={require('./assets/WIP.png')} style={{ width: '100%', height: '100%' }}>
             
           <TouchableOpacity
-              style={styles.logInMenuButton}
+              style={styles.empMenuButton}
               onPress={() =>{
                 Alert.alert('We have not yet implemented the Table interface!')
               }
@@ -345,6 +345,14 @@ class EmployeePortalScreen extends React.Component {
               }
             } >
               <Text style={styles.buttonText}> View Staff </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+              style={styles.button}
+              onPress={() =>{
+                Alert.alert('We have not yet implemented the Menu interface!');
+              }
+            } >
+              <Text style={styles.buttonText}> View Menu </Text>
           </TouchableOpacity>
 
           </ImageBackground>
@@ -410,6 +418,15 @@ const styles = StyleSheet.create({
 
   logInMenuButton: {
     marginTop: 270,
+    marginLeft: 50,
+    marginBottom: 30,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: 'yellow',
+    justifyContent: 'center',
+  },
+  empMenuButton: {
+    marginTop: 230,
     marginLeft: 50,
     marginBottom: 30,
     width: 260,
