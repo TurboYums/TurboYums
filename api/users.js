@@ -1,6 +1,7 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const User = sequelize.import('../models/user.js');
+const ClockLog = sequelize.import('../models/ClockLog.js');
 const config = require('../config.json');
 const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 const bcrypt = require('bcrypt');
@@ -97,6 +98,18 @@ api.post('/api/users/clockIn', (req, res) => {
       user.minutesIn = today.getMinutes();
       user.hoursIn = today.getHours();
       console.log(user.hoursIn, user.minutesIn);
+
+      var today = new Date();
+      var currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var fullTime = currDate + ' ' + currTime;
+      ClockLog.create({
+        username: user.username,
+        timeClockedIn: fullTime,
+        timeClockedOut: "0",
+        hoursWorked: 0,
+      })
+      
       user.save().then(() => {
         user.reload().then(() => {
           res.send({
@@ -105,6 +118,7 @@ api.post('/api/users/clockIn', (req, res) => {
           })
         })
       });
+
     } else {
       user.save().then(() => {
         user.reload().then(() => {
@@ -119,6 +133,7 @@ api.post('/api/users/clockIn', (req, res) => {
   })
 })
 api.post('/api/users/clockOut', (req, res) => {
+  var employee = req.body.username;
   User.findOne({ where: { username: req.body.username } }).then(user => {
 
     if (user.status) {
@@ -126,7 +141,10 @@ api.post('/api/users/clockOut', (req, res) => {
       today2 = new Date();
       user.minutesOut = today2.getMinutes();
       user.hoursOut = today2.getHours();
-      console.log(user.hoursIn, user.minutesIn, user.hoursOut, user.minutesOut);
+      var currDate2 = today2.getFullYear()+'-'+(today2.getMonth()+1)+'-'+today2.getDate();
+      var currTime2 = today2.getHours() + ":" + today2.getMinutes() + ":" + today2.getSeconds();
+      var fullTime2 = currDate2 + ' ' + currTime2;
+        console.log(user.hoursIn, user.minutesIn, user.hoursOut, user.minutesOut);
       if (user.minutesIn > user.minutesOut) {
         minutesIn = 60 - user.minutesIn;
         totalMinutes = (minutesIn + user.minutesOut) / 60;
@@ -137,6 +155,11 @@ api.post('/api/users/clockOut', (req, res) => {
         totalHours = user.hoursOut - user.hoursIn;
         hoursWorked = totalHours + totalMinutes;
       }
+      ClockLog.findOne({ where: { username: employee, timeClockedOut: 0} }).then(clockLog => {
+        clockLog.hoursWorked = hoursWorked;
+        clockLog.timeClockedOut = fullTime2;
+        clockLog.save().then(() =>{clockLog.reload()});
+      })
       user.hoursWorked = hoursWorked;
       user.increment('totalHoursWorked', { by: user.hoursWorked });
       user.save().then(() => {
@@ -149,6 +172,8 @@ api.post('/api/users/clockOut', (req, res) => {
           })
         })
       });
+
+  
     } else {
       user.save().then(() => {
         user.reload().then(() => {
