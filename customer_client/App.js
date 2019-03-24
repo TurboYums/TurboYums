@@ -449,13 +449,13 @@ class SummaryScreen extends React.Component {
               renderItem = {this.renderItem}
           />
       </View>
-      {/* <TouchableOpacity
+      <TouchableOpacity
               style={styles.submitButton}
               onPress={() =>{ 
                 this.props.navigation.navigate('DineInOut',{order:[]});
               }}>
-              <Text style={styles.submitButtonText}> Remove Item </Text>
-            </TouchableOpacity> */}
+              <Text style={styles.submitButtonText}> Submit Item </Text>
+      </TouchableOpacity>
     </View>
     
     );
