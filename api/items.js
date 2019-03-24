@@ -1,10 +1,6 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
-<<<<<<< HEAD
-
-=======
->>>>>>> Order and Item changes
 
 api.post('/api/items/create', (req, res) => {
   newItem = Item.create({
@@ -13,9 +9,12 @@ api.post('/api/items/create', (req, res) => {
     ingredient: req.body.ingredient,
     description: req.body.description,
     rating: req.body.rating,
-    foodID: req.body.foodId,
-    itemQuantity: req.body.itemQuantity
   })
   res.send({ text: `Created Item: ${req.body.itemName}` });
 })
-
+//filter
+/*api.post('/api/items/filter', (req, res) => {
+    Item.findAll({ where: { id: req.body.itemId } }).then(item => {
+      console.log(item);
+    })
+})*/
