@@ -1,13 +1,17 @@
 import React from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, FlatList, View, Text, ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import MenuItem from './components/MenuItem'
+import { Ionicons } from '@expo/vector-icons';
+import { unregisterTaskAsync } from 'expo-background-fetch';
 
-
-const API_URL = 'http://192.168.1.253:5000/';
-let currentUser = ' ';
-let orderId = '';
+const API_URL = 'http://192.168.1.14:5000/';
+let currentUser = '';
+let order = '';
 let token = '';
+let items = '';
+let currentItem = '';
 
 class WelcomeScreen extends React.Component {
 
@@ -237,39 +241,39 @@ class ClockInOutScreen extends React.Component {
       <View style={styles.container}>
         <View>
           <ImageBackground source={{ uri: 'https://cdn.shopify.com/s/files/1/2398/3757/products/Pizza-Cloth-Front_1024x1024.jpg?v=1512582067' }} style={{ width: '100%', height: '100%' }}>
-          <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: "  editable={false} ref = {component=>this._MyComponent=component}/>
+            <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: " editable={false} ref={component => this._MyComponent = component} />
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
-                  fetch(API_URL + 'api/users/clockIn', {
-                    method: 'POST',
-                    headers: {
-                      Accept: 'application/json',
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      username: currentUser.username,
-                    }),
-                  }).then((res) => res.json()).then(resJson => {
+              onPress={() => {
+                fetch(API_URL + 'api/users/clockIn', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    username: currentUser.username,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
                   var today = new Date();
-                  var currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                  var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                   var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
-                    if(resJson.clockInSuccess){
-                      Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
+                  if (resJson.clockInSuccess) {
+                    Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
 
-                    } else{
+                  } else {
 
-                      Alert.alert(currentUser + " is already Clocked In!");
-                    }
-                  });
-                }
+                    Alert.alert(currentUser + " is already Clocked In!");
+                  }
+                });
+              }
               } >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
+              onPress={() => {
                 fetch(API_URL + 'api/users/clockOut', {
                   method: 'POST',
                   headers: {
@@ -281,24 +285,24 @@ class ClockInOutScreen extends React.Component {
                   }),
                 }).then((res) => res.json()).then(resJson => {
                   var today = new Date();
-                  var currDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                  var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                   var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                  if(resJson.clockOutSuccess){ 
+                  if (resJson.clockOutSuccess) {
                     this.state.compHours = resJson.totalHours;
-                    this._MyComponent.setNativeProps({text:'Total Hours Worked This Pay Period: ' + this.state.compHours});
-                    Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime+ '\nShift Length: ' + resJson.sessionHours);
-                  
-                  } else{
+                    this._MyComponent.setNativeProps({ text: 'Total Hours Worked This Pay Period: ' + this.state.compHours });
+                    Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime + '\nShift Length: ' + resJson.sessionHours);
+
+                  } else {
                     Alert.alert(currentUser + " is already Clocked Out!");
                   }
                 });
               }
-            } >
+              } >
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
+              onPress={() => {
                 this.props.navigation.navigate('EmployeePortal');
               }
               } >
@@ -318,41 +322,41 @@ class EmployeePortalScreen extends React.Component {
       <View style={styles.container}>
         <View>
           <ImageBackground source={require('./assets/WIP.png')} style={{ width: '100%', height: '100%' }}>
-            
-          <TouchableOpacity
+
+            <TouchableOpacity
               style={styles.empMenuButton}
-              onPress={() =>{
+              onPress={() => {
                 Alert.alert('We have not yet implemented the Table interface!')
               }
-            } >
+              } >
               <Text style={styles.buttonText}> View Tables </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
 
-          <TouchableOpacity
+            <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
+              onPress={() => {
                 Alert.alert('We have not yet implemented the Schedule interface!');
               }
-            } >
+              } >
               <Text style={styles.buttonText}> View Schedule </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
 
-          <TouchableOpacity
+            <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
+              onPress={() => {
                 Alert.alert('We have not yet implemented the Staff interface!');
               }
-            } >
+              } >
               <Text style={styles.buttonText}> View Staff </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.button}
-              onPress={() =>{
+              onPress={() => {
                 Alert.alert('We have not yet implemented the Menu interface!');
               }
-            } >
+              } >
               <Text style={styles.buttonText}> View Menu </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
 
           </ImageBackground>
         </View>
@@ -454,10 +458,10 @@ class PaymentScreen extends React.Component {
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        amount: '5544',
+                        amount: order.totalPrice,
                         currency: 'usd',
                         source: resJson.source,
-                        description: 'The charge for this one',
+                        description: 'Charge for order #' + order.id,
                         customer: currentUser.stripe_id
                       }),
                     }).then((res) => res.json()).then(resJson => {
@@ -476,6 +480,57 @@ class PaymentScreen extends React.Component {
 }
 
 class ReceiptScreen extends React.Component {
+  keyExtractor = (item, index) => index.toString()
+  renderItem = ({ item }) => (
+    <ListItem
+      title={item.title}
+      subtitle={item.price}
+    />
+  )
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      items: null
+    };
+  }
+
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({order: resJson.order})
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({items: items});;
+      }
+  
+    })
+    
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -483,26 +538,25 @@ class ReceiptScreen extends React.Component {
           <Text style={styles.text}>
             Receipt:
           </Text>
-
-
         </View>
-        <SectionList
-          sections={[
-            { title: 'Pizza', data: ['3.00'] },
-            { title: 'French Toast', data: ['8.00'] },
-          ]}
-          renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
-          renderSectionHeader={({ section }) => <Text style={styles.sectionHeader}>{section.title}</Text>}
-          keyExtractor={(item, index) => index}
-        />
+        <View>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + "       $" + item.itemPrice / 100} </Text>}
+            sections={items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </View>
+        <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
+        <Text style={styles.receiptFooter}>Tax: ${order.totalPrice * .07 / 100}</Text>
+        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
         <View>
           <Text style={styles.text}>
-          You have: {currentUser.rewardpoints}
+            You have: {currentUser.rewardpoints}
           </Text>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
-    
+
             }}>
             <Text style={styles.submitButtonText}> SUBMIT </Text>
           </TouchableOpacity>
@@ -515,64 +569,63 @@ class ReceiptScreen extends React.Component {
 
 class DineInOutScreen extends React.Component {
 
-  _onPressButton(navigate,state,takeOutStatus) {
-    // const { navigate } = this.props.navigation;
-    // Alert.alert('You clocked in!')
-    // var{order} = this.props.navigation.state.params
-    // Alert.alert('Navigation'+order)
-    // navigate.state.setParams({order:order})
-    // console.log("22")
-    // console.log(state.params)
-    // console.log(state.params.order.length)
+  _onPressButton(navigate) {
+    fetch(API_URL + 'api/order/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPrice: '0',
+        specialRequest: 'None',
+        userId: '1'
 
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order;
+    });
 
-      fetch(API_URL + 'api/order/create', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          totalPrice:'0',
-          specialRequest:'None',
-          userId:'1'
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items;
+      items = []
 
-        }),
-      }).then((res) => res.json()).then(resJson => {
-         orderId=resJson.order.id;
-      });
-    
-    
-    if(!state.params.order.length){
-      // console.log('AQUI')
-      navigate('Menu',{order:[],takeOut:takeOutStatus});
-    }else{
-      navigate('Menu',{order:[...state.params.order,1], takeOut:takeOutStatus});
-    }
-    
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.navigate('Menu');
+    });
   }
 
   render() {
     const { navigate } = this.props.navigation;
-    const {state} = this.props.navigation.state
+    const { state } = this.props.navigation.state
     console.log("HEREEE")
     console.log(this.props.navigation.state)
-    
-    // console.log(state.order)
-    // alert(this.props.navigation.state.st)
-    // var {order} = this.props.navigation.state.params;
     return (
       <View style={styles.container}>
         <View>
           <ImageBackground source={{ uri: 'https://png.pngtree.com/element_origin_min_pic/16/10/20/12580841f85545d.jpg' }} style={{ width: '100%', height: '100%' }}>
             <TouchableOpacity
               style={styles.button}
-              onPress = {()=>{this._onPressButton(navigate,this.props.navigation.state,0)}}>
+              onPress={() => { this._onPressButton() }}>
               <Text style={styles.buttonText}> Dine In </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress = {()=>{this._onPressButton(navigate,this.props.navigation.state,1)}}>
+              onPress={() => { this._onPressButton() }}>
               <Text style={styles.buttonText}> Take Out </Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -594,84 +647,73 @@ class MenuScreen extends React.Component {
     },
     // headerRight: <Button>'Cart'</Button>
   };
-  _onPressButtonPizza(navigate,state) {
-    console.log("PIZZA CAT")
-    console.log(state)
-    navigate("Pizza",{order:state.params.order, takeOut:state.params.takeOut})
 
-    
-    // Alert.alert('Thanks for Ordering Pizza')
-    // print('here')
+
+  _onConfirm(navigate, state) {
+    navigate('Summary')
   }
-  _onPressButtonBurger(navigate,state) {
-    console.log(state)
-    navigate("Burger",{order:state.params.order, takeOut:state.params.takeOut})
-    
-    // Alert.alert('Thanks for Ordering Burgers')
-  }
-  _onPressButtonDrinks(navigate,state) {
-    console.log(state)
-    navigate("Drinks",{order:state.params.order, takeOut:state.params.takeOut})
-    // Alert.alert('Thanks for Ordering Drinks')
-  }
-  _onConfirm(navigate,state){
-    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
   }
 
+  _onPressOrder = (item) => {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
+    });
+  }
   render() {
     const { navigate } = this.props.navigation;
     console.log("ARRIVED")
     console.log(this.props.navigation.state)
-    const {order_count} = this.props.navigation.state.params.order.length || '0'
-    const {order_message}="Order Count is:"+order_count
+    const { order_count } = 0
+    const { order_message } = "Order Count is:" + order_count
     return (
       <View>
-        <ScrollView>
-          <View style={styles.container}>
-              <Text>{this.order_message}</Text>
-              <Text>{order_message}</Text>
-          </View>
-          <View style={styles.container}>
-            <TouchableOpacity onPress={()=>{this._onPressButtonPizza(navigate,this.props.navigation.state)}}>
-            <MenuItem 
-              title='Pizza'
-              description='Choose a Pizza. Prepared in Brick Oven. NY Style!'
-              source={require('./assets/pizza.jpg')}
-              onPress = {()=>{this._onPressButtonPizza(navigate,this.props.navigation.state)}}
-            />
-            </TouchableOpacity>
+        <SectionList
+          renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + item.itemPrice / 100} </Text>}
+          renderSectionHeader={({ section: { category } }) => (
+            <Text style={styles.sectionHeader}>{category}</Text>
+          )}
+          sections={items}
+          keyExtractor={(item, index) => item + index}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => { this._onPressOrder() }}>
+          <Text style={styles.buttonText}> View Order </Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity onPress = {()=>{this._onPressButtonBurger(navigate,this.props.navigation.state)}}>
-            <MenuItem
-              title='Burgers'
-              description='Choose a Burger. Served With Fries'
-              source={require('./assets/burger.jpg')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity  onPress = {()=>{this._onPressButtonDrinks(navigate,this.props.navigation.state)}}>
-            <MenuItem
-              title='Drinks'
-              description='Choose a Drink. Quench your thirst!'
-              source={require('./assets/drinks.jpg')}
-              onPress = {()=>{this._onPressButtonDrinks(navigate,this.props.navigation.state)}}
-            />
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-        <View style={styles.container}>
-      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
-          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
-      </TouchableOpacity>
-        </View>
       </View>
     );
   }
 }
 
-class PizzaScreen extends React.Component {
- 
+class ViewItemScreen extends React.Component {
   static navigationOptions = {
-    title: 'Pizza',
+    title: 'ViewItem',
     headerStyle: {
       backgroundColor: '#f4511e',
     },
@@ -681,333 +723,52 @@ class PizzaScreen extends React.Component {
     },
     // headerRight: <Button>'Cart'</Button>
   };
-  _onButtonAdd(navigate,state,title,price) {//on button start
-    console.log("Menu")
-    console.log(state)
+  _onPressAddOrder = () => {
+    fetch(API_URL + 'api/order/add', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
 
-    if(!title||!price){//if start
-      Alert.alert('Please select an item to order');
-    }else{//if end else start
-      fetch(API_URL + 'api/items/create', {//fetch start
-        method: 'POST',
-        headers: {//header start
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },//header end
-        body: JSON.stringify({//body start
-          itemName: title,
-          itemPrice: price,
-        }),//body end
-      }).then((res) => res.json()).then(resJson => { //fetch end and json start
-        fetch(API_URL + 'api/order/add', {//fetch start
-          method: 'POST',
-          headers: {//header start
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },//header end
-          body: JSON.stringify({//body start
-            orderId: orderId,
-            itemId: resJson.item.id
-          }),//body end
-        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
-          // if(resJson.creationSuccess){
-          //   Alert.alert('Succesfully Added an Item');
-          //   // this.props.navigation.navigate('LogIn');
-          // }else{
-          //   Alert.alert('Error Adding Item!');
-          //   // this.props.navigation.navigate('Welcome');
-          // }
-        });//json end2
-        })//json end
-    }//else end
-    
-    if(!state.params.order.length){
-      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
-    }else{
-      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
-    }
-  
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+
   }
-  _onConfirm(navigate,state){
-    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
-  }
-
-  render() {
-    const { navigate } = this.props.navigation;
-    console.log("ARRIVED @ 2")
-    console.log(this.props.navigation.state)
-    return (
-      <View style={{flex: 1}}>
-      <View style={styles.MenuSplashStyle}>
-        <Image source={require('./assets/pizzaSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
-      </View>
-      <ScrollView style={styles.MenuListStyle}>
-        <View style={styles.container}>
-        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Margherita Pizza","2")}}>
-          <MenuItem
-            title='Margherita Pizza'
-            price='$6'
-            description='Click to Add'
-            source={require('./assets/pizza.jpg')}
-          />
-          </TouchableOpacity>
-          
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza","3")}}>
-          <MenuItem
-            title='Pepporoni Pizza'
-            price='$10'
-            // description='Served With Fries'
-            source={require('./assets/pep-pizza.jpg')}
-          />
-          </TouchableOpacity>
-
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Pizza","3")}}>
-          <MenuItem
-            title='Veggie Lovers Pizza'
-            price='$5'
-            // description='Quench your thirst!'
-            source={require('./assets/veggie_lovers.jpg')}
-          />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
-          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
-      </TouchableOpacity>
-
-    </View>
-    );
-  }
-}
-
-class BurgerScreen extends React.Component {
-  
-  static navigationOptions = {
-    title: 'Burger',
-    headerStyle: {
-      backgroundColor: '#f4511e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    // headerRight: <Button>'Cart'</Button>
-  };
-  _onButtonAdd(navigate,state,title,price) {//on button start
-    console.log("Menu")
-    console.log(state)
-
-    if(!title||!price){//if start
-      Alert.alert('Please select an item to order');
-    }else{//if end else start
-      fetch(API_URL + 'api/items/create', {//fetch start
-        method: 'POST',
-        headers: {//header start
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },//header end
-        body: JSON.stringify({//body start
-          itemName: title,
-          itemPrice: price,
-        }),//body end
-      }).then((res) => res.json()).then(resJson => { //fetch end and json start
-        fetch(API_URL + 'api/order/add', {//fetch start
-          method: 'POST',
-          headers: {//header start
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },//header end
-          body: JSON.stringify({//body start
-            orderId: orderId,
-            itemId: resJson.item.id
-          }),//body end
-        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
-          // if(resJson.creationSuccess){
-          //   Alert.alert('Succesfully Added an Item');
-          //   // this.props.navigation.navigate('LogIn');
-          // }else{
-          //   Alert.alert('Error Adding Item!');
-          //   // this.props.navigation.navigate('Welcome');
-          // }
-        });//json end2
-        })//json end
-    }//else end
-    
-    if(!state.params.order.length){
-      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
-    }else{
-      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
-    }
-  
-  }
-  _onConfirm(navigate,state){
-    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
-  }
-  
-
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={{flex: 1}}>
-        <View style={styles.MenuSplashStyle}>
-          <Image source={require('./assets/burgerSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
-        </View>
-        <ScrollView style={styles.MenuListStyle}>
-          <View style={styles.container}>
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Hamburger","8")}}>
-            <MenuItem
-              title='Hamburger'
-              price='$8'
-              // description='Prepared in Brick Oven. NY Style!'
-              source={require('./assets/hamburger.jpg')}
-            />
-            </TouchableOpacity>
-            
-            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Burger","6")}}>
-            <MenuItem
-              title='Blackbean Burger Veggie'
-              price='$6'
-              // description='Served With Fries'
-              source={require('./assets/blackbean.jpeg')}
-            />
-            </TouchableOpacity>
-
-            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"CheeseBurger","7")}}>
-            <MenuItem
-              title='Cheeseburger'
-              price='$7'
-              // description='Quench your thirst!'
-              source={require('./assets/cheeseburger.jpg')}
-            />
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      
-        <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
-          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
-      </TouchableOpacity>
-      </View>
-    );
-  }
-}
-
-class DrinkScreen extends React.Component {
- 
-  static navigationOptions = {
-    title: 'Drinks',
-    headerStyle: {
-      backgroundColor: '#f4511e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    // headerRight: <Button>'Cart'</Button>
-  };
-
-  _onButtonAdd(navigate,state,title,price) {//on button start
-    console.log("Menu")
-    console.log(state)
-
-    if(!title||!price){//if start
-      Alert.alert('Please select an item to order');
-    }else{//if end else start
-      fetch(API_URL + 'api/items/create', {//fetch start
-        method: 'POST',
-        headers: {//header start
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },//header end
-        body: JSON.stringify({//body start
-          itemName: title,
-          itemPrice: price,
-        }),//body end
-      }).then((res) => res.json()).then(resJson => { //fetch end and json start
-        fetch(API_URL + 'api/order/add', {//fetch start
-          method: 'POST',
-          headers: {//header start
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },//header end
-          body: JSON.stringify({//body start
-            orderId: orderId,
-            itemId: resJson.item.id
-          }),//body end
-        }).then((res) => res.json()).then(resJson => {//fetch end and json start2
-          // if(resJson.creationSuccess){
-          //   Alert.alert('Succesfully Added an Item');
-          //   // this.props.navigation.navigate('LogIn');
-          // }else{
-          //   Alert.alert('Error Adding Item!');
-          //   // this.props.navigation.navigate('Welcome');
-          // }
-        });//json end2
-        })//json end
-    }//else end
-    
-    if(!state.params.order.length){
-      navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
-    }else{
-      navigate('Menu',{order:[...state.params.order,{title:title, price:price}], takeOut:state.params.takeOut});
-    }
-  
-  }
-
-  _onConfirm(navigate,state){
-    navigate('Summary',{order:state.params.order, takeOut:state.params.takeOut})
-  }
-  
-  
-
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <View style={{flex: 1}}>
-      <View style={styles.MenuSplashStyle}>
-        <Image source={require('./assets/DrinksSplash.jpg')} style={{resizeMode:'contain', width:'100%',height:'100%'}}></Image>
-      </View>
-      <ScrollView style={styles.MenuListStyle}>
-        <View style={styles.container}>
-        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Milkshake","3")}}>
-          <MenuItem
-            title="Milkshake"
-            price='$6'
-            // description='Prepared in Brick Oven. NY Style!'
-            source={require('./assets/milkshake.jpg')}
-          />
-          </TouchableOpacity>
-
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Soda","2")}}>
-          <MenuItem
-            title='Soda'
-            price='$10'
-            // description='Served With Fries'
-            source={require('./assets/soda.jpeg')}
-          />
-          </TouchableOpacity>
-
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Lemonade","2.50")}}>
-          <MenuItem
-            title='Lemonade'
-            price='$5'
-            // description='Quench your thirst!'
-            source={require('./assets/lemonade.jpg')}
-          />
-          </TouchableOpacity>
-
-        </View>
-      </ScrollView>
       <View>
-      <TouchableOpacity activeOpacity={1} onPress= {()=>{this._onConfirm(navigate,this.props.navigation.state)}} style={styles.TouchableOpacityStyle} >
-          <Image source={require('./assets/confirm.png')}  style={styles.FloatingButtonStyle} />
-      </TouchableOpacity>
+        <Text style={styles.itemTitle}>{currentItem.itemName}</Text>
+        <Text style={styles.itemPrice}>{'Price: $' + currentItem.itemPrice / 100}</Text>
+        <Text style={styles.itemPrice}>{'Description: ' + currentItem.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressAddOrder() }}>
+          <Text style={styles.submitButtonText}> Add To Order </Text>
+        </TouchableOpacity>
       </View>
-
-    </View>
     );
   }
 }
+
 class SummaryScreen extends React.Component {
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
@@ -1016,37 +777,79 @@ class SummaryScreen extends React.Component {
       subtitle={item.price}
     />
   )
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      items: null
+    };
+  }
 
-  render() {
-    console.log('SUMMARY')
-    console.log(this.props.navigation.state.params.order)
-    var orderData = this.props.navigation.state.params.order;
-    console.log('LOG')
-    console.log(orderData)
-    return(
-    <View>
-      <Text>Summary</Text>
-      <View>
-        <FlatList 
-              keyExtractor= {this.keyExtractor}
-              data={this.props.navigation.state.params.order}
-              renderItem = {this.renderItem}
-          />
-      </View>
-      <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() =>{ 
-                this.props.navigation.navigate('DineInOut',{order:[]});
-              }}>
-              <Text style={styles.submitButtonText}> Submit Item </Text>
-      </TouchableOpacity>
-    </View>
-    
-    );
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({order: resJson.order})
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({items: items});;
+      }
+  
+    })
     
   }
-}
 
+  render() {
+
+    return (
+      <View>
+        <Text>Order Summary: </Text>
+        <View>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + "       $" + item.itemPrice / 100} </Text>}
+            sections={items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </View>
+        <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
+        <Text style={styles.receiptFooter}>Tax: ${order.totalPrice * .07 / 100}</Text>
+        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
+
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => {
+            this.props.navigation.navigate('Payment', { order: [] });
+          }}>
+          <Text style={styles.submitButtonText}> Pay </Text>
+        </TouchableOpacity>
+      </View>
+
+    );
+
+  }
+}
 
 const RootStack = createStackNavigator(
   {
@@ -1059,10 +862,8 @@ const RootStack = createStackNavigator(
     EmployeePortal: EmployeePortalScreen,
     DineInOut: DineInOutScreen,
     Menu: MenuScreen,
-    Pizza:PizzaScreen,
-    Burger:BurgerScreen,
-    Drinks:DrinkScreen,
-    Summary:SummaryScreen,
+    Summary: SummaryScreen,
+    ViewItem: ViewItemScreen,
   },
   {
     initialRouteName: 'Welcome',
@@ -1085,6 +886,36 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
     backgroundColor: 'rgba(247,247,247,1.0)',
+  },
+  menuItem: {
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 18,
+    textAlign: 'left',
+  },
+  itemTitle: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+    textAlign: 'left',
+  },
+  itemPrice: {
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 18,
+    textAlign: 'left',
+  },
+  receiptFooter: {
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    textAlign: 'right',
   },
   item: {
     padding: 10,
@@ -1135,7 +966,6 @@ const styles = StyleSheet.create({
     width: 260,
     alignItems: 'center',
     backgroundColor: 'yellow',
-    justifyContent: 'center',
   },
   empMenuButton: {
     marginTop: 230,
