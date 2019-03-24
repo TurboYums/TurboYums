@@ -321,7 +321,11 @@ class BurgerScreen extends React.Component {
           Alert.alert('Error Adding Item!');
           // this.props.navigation.navigate('Welcome');
         }
-      });
+      }).catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+         // ADD THIS THROW error
+          throw error;
+        });
     }
     
     if(!state.params.order.length){
