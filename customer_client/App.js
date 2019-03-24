@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, FlatList,ListView,View, Text,ScrollView } from 'react-native';
+import { Button, FlatList,View, Text,ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image,ImageBackground,Platform, StyleSheet, TouchableNativeFeedback, TextInput, TouchableOpacity } from 'react-native';
-import {ListItem ,Icon} from 'react-native-elements';
-import List from 'react-native-elements'
+import {ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 // import console = require('console');
@@ -46,7 +45,7 @@ class HomeScreen extends React.Component {
 
             <TouchableOpacity
               style={styles.submitButton}
-              onPress={() =>{ //temporarily deleted to skip sign in
+              onPress={() =>{ 
                 this.props.navigation.navigate('DineInOut',{order:[]});
               }}>
               <Text style={styles.submitButtonText}> SUBMIT </Text>
@@ -233,7 +232,7 @@ class PizzaScreen extends React.Component {
       </View>
       <ScrollView style={styles.MenuListStyle}>
         <View style={styles.container}>
-        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Margherita Pizza",'2')}}>
+        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Margherita Pizza","2")}}>
           <MenuItem
             title='Margherita Pizza'
             price='$6'
@@ -242,7 +241,7 @@ class PizzaScreen extends React.Component {
           />
           </TouchableOpacity>
           
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza",'3')}}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza","3")}}>
           <MenuItem
             title='Pepporoni Pizza'
             price='$10'
@@ -251,7 +250,7 @@ class PizzaScreen extends React.Component {
           />
           </TouchableOpacity>
 
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Pepporoni Pizza",'3')}}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Pizza","3")}}>
           <MenuItem
             title='Veggie Lovers Pizza'
             price='$5'
@@ -309,7 +308,7 @@ class BurgerScreen extends React.Component {
         </View>
         <ScrollView style={styles.MenuListStyle}>
           <View style={styles.container}>
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Hamburger",'8')}}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Hamburger","8")}}>
             <MenuItem
               title='Hamburger'
               price='$8'
@@ -318,7 +317,7 @@ class BurgerScreen extends React.Component {
             />
             </TouchableOpacity>
             
-            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Burger",'6')}}>
+            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Veggie Burger","6")}}>
             <MenuItem
               title='Blackbean Burger Veggie'
               price='$6'
@@ -327,7 +326,7 @@ class BurgerScreen extends React.Component {
             />
             </TouchableOpacity>
 
-            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"CheeseBurger",'7')}}>
+            <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"CheeseBurger","7")}}>
             <MenuItem
               title='Cheeseburger'
               price='$7'
@@ -386,16 +385,16 @@ class DrinkScreen extends React.Component {
       </View>
       <ScrollView style={styles.MenuListStyle}>
         <View style={styles.container}>
-        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Milkshake",'3')}}>
+        <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Milkshake","3")}}>
           <MenuItem
-            title='Milkshake'
+            title="Milkshake"
             price='$6'
             // description='Prepared in Brick Oven. NY Style!'
             source={require('./assets/milkshake.jpg')}
           />
           </TouchableOpacity>
 
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Soda",'2')}}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Soda","2")}}>
           <MenuItem
             title='Soda'
             price='$10'
@@ -404,7 +403,7 @@ class DrinkScreen extends React.Component {
           />
           </TouchableOpacity>
 
-          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Lemonade",'2.50')}}>
+          <TouchableOpacity  onPress = {()=>{this._onButtonAdd(navigate,this.props.navigation.state,"Lemonade","2.50")}}>
           <MenuItem
             title='Lemonade'
             price='$5'
@@ -426,6 +425,13 @@ class DrinkScreen extends React.Component {
   }
 }
 class SummaryScreen extends React.Component {
+  keyExtractor = (item, index) => index.toString()
+  renderItem = ({ item }) => (
+    <ListItem
+      title={item.title}
+      subtitle={item.price}
+    />
+  )
 
   render() {
     console.log('SUMMARY')
@@ -436,18 +442,13 @@ class SummaryScreen extends React.Component {
     return(
     <View>
       <Text>Summary</Text>
-      <List>
+      <View>
         <FlatList 
+              keyExtractor= {this.keyExtractor}
               data={this.props.navigation.state.params.order}
-              renderItem={({ item }) => (
-              <ListItem
-                roundAvatar
-                title={item.title}
-                subtitle={item.price}
-              />
-            )}
+              renderItem = {this.renderItem}
           />
-      </List>
+      </View>
       <TouchableOpacity
               style={styles.submitButton}
               onPress={() =>{ 
