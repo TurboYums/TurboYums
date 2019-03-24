@@ -289,6 +289,30 @@ class BurgerScreen extends React.Component {
     console.log("Menu")
     console.log(state)
 
+    if(!title||!price){
+      Alert.alert('Please select an item to order');
+    }else{
+      fetch(API_URL + 'api/orders/add', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: state.params.order.title,
+          price: state.params.order.price,
+        }),
+      }).then((res) => res.json()).then(resJson => {
+        if(resJson.creationSuccess){
+          Alert.alert('Succesfully Added an Item');
+          // this.props.navigation.navigate('LogIn');
+        }else{
+          Alert.alert('Error Adding Item!');
+          // this.props.navigation.navigate('Welcome');
+        }
+      });
+    }
+    
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
     }else{
@@ -554,3 +578,5 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
+//////////////////----------------menu code above----------//////////////////////////////////////////////
+
