@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, FlatList,View, Text,ScrollView } from 'react-native';
+import { Button, FlatList,ListView,View, Text,ScrollView } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image,ImageBackground,Platform, StyleSheet, TouchableNativeFeedback, TextInput, TouchableOpacity } from 'react-native';
-import { ListItem ,Icon} from 'react-native-elements';
+import {ListItem ,Icon} from 'react-native-elements';
+import List from 'react-native-elements'
 import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 // import console = require('console');
@@ -425,12 +426,39 @@ class DrinkScreen extends React.Component {
   }
 }
 class SummaryScreen extends React.Component {
+
   render() {
+    console.log('SUMMARY')
+    console.log(this.props.navigation.state.params.order)
+    var orderData = this.props.navigation.state.params.order;
+    console.log('LOG')
+    console.log(orderData)
     return(
     <View>
       <Text>Summary</Text>
+      <List>
+        <FlatList 
+              data={this.props.navigation.state.params.order}
+              renderItem={({ item }) => (
+              <ListItem
+                roundAvatar
+                title={item.title}
+                subtitle={item.price}
+              />
+            )}
+          />
+      </List>
+      <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() =>{ 
+                this.props.navigation.navigate('DineInOut',{order:[]});
+              }}>
+              <Text style={styles.submitButtonText}> Remove Item </Text>
+            </TouchableOpacity>
     </View>
+    
     );
+    
   }
 }
 
