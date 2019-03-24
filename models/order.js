@@ -1,14 +1,16 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./sequelizeConf.js');
+const sequelize = require('./sequelize.js');
 
-module.exports = (sequelize, DataTypes)=>
-{
-    return sequelize.define('order',
-    {
-        totalPrice: Sequelize.DOUBLE,
-        orderedItems: Sequelize.STRING,
-        specialReuest: Sequelize.STRING
-    })
+const Item = sequelize.import('../models/item.js');
+const OrderItem = sequelize.import('../models/orderitem.js');
+
+Order = sequelize.define('order', {
+  totalPrice: Sequelize.DOUBLE,
+  specialReuest: Sequelize.STRING
+})
+
+Order.belongsTo(User);
+Order.belongsToMany(Item, { through: {model: OrderItem, unique: false}});
+module.exports = (sequelize, DataTypes) => {
+  return Order;
 }
-item.belongsToMany(orderedItems);
-orderedItems.belongsToMany(item);
