@@ -212,6 +212,17 @@ class PizzaScreen extends React.Component {
     console.log("Menu")
     console.log(state)
 
+    // fetch(API_URL + 'api/orders/add', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+        
+    //   })
+    // })
+
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
     }else{
