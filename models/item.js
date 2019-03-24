@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize.js');
+const Order = sequelize.import('../models/order.js');
 
 Item = sequelize.define('item', {
   itemName: Sequelize.STRING,
