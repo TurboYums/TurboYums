@@ -7,6 +7,8 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 // import console = require('console');
 
+const API_URL = 'http://192.168.1.4:5000/';
+let currentUser = ' ';
 
 class HomeScreen extends React.Component {
   state = {
