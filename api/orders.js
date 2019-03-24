@@ -17,11 +17,9 @@ api.post('/api/order/create', (req, res) => {
 api.post('/api/order/add', (req, res) => {
   Order.findOne({ where: { id: req.body.orderId } }).then(order => {
     Item.findOne({ where: { id: req.body.itemId } }).then(item => {
-      console.log(order);
-      console.log(item);
       order.addItem(item);
       order.increment('totalPrice', {by:item.itemPrice});
-      res.send({ text: `Item Added:  ${item.itemName}` });
+      res.send({ text: `Item Added:  ${item.itemName}`});
     })
   })
 })

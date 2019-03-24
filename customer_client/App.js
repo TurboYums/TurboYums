@@ -7,7 +7,8 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 // import console = require('console');
 
-const API_URL = 'http://192.168.1.4:5000/';
+const API_URL = 'http://192.168.1.159:5000/';
+
 let currentUser = ' ';
 
 class HomeScreen extends React.Component {
@@ -70,6 +71,31 @@ class DineInOutScreen extends React.Component {
     // console.log("22")
     // console.log(state.params)
     // console.log(state.params.order.length)
+
+
+      fetch(API_URL + 'api/order/create', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          totalPrice:'0',
+          specialRequest:'None',
+          userId:'1'
+
+        }),
+      }).then((res) => res.json()).then(resJson => {
+        // if(resJson.creationSuccess){
+        //   Alert.alert('Succesfully Added an Item');
+        //   // this.props.navigation.navigate('LogIn');
+        // }else{
+        //   Alert.alert('Error Adding Item!');
+        //   // this.props.navigation.navigate('Welcome');
+        // }
+      });
+    
+    
     if(!state.params.order.length){
       // console.log('AQUI')
       navigate('Menu',{order:[],takeOut:takeOutStatus});
@@ -212,16 +238,49 @@ class PizzaScreen extends React.Component {
     console.log("Menu")
     console.log(state)
 
-    // fetch(API_URL + 'api/orders/add', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-        
-    //   })
-    // })
+    if(!title||!price){
+      Alert.alert('Please select an item to order');
+    }else{
+      fetch(API_URL + 'api/items/create', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          itemName: title,
+          itemPrice: price,
+        }),
+      }).then((res) => res.json()).then(resJson => {
+        console.log('ITEM ID:')
+        console.log(resJson.itemId)
+      });
+    }
+
+    if(!title||!price){
+      Alert.alert('Please select an item to order');
+    }else{
+      fetch(API_URL + 'api/order/add', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: "1",
+          itemId: itemId
+        }),
+      }).then((res) => res.json()).then(resJson => {
+        // if(resJson.creationSuccess){
+        //   Alert.alert('Succesfully Added an Item');
+        //   // this.props.navigation.navigate('LogIn');
+        // }else{
+        //   Alert.alert('Error Adding Item!');
+        //   // this.props.navigation.navigate('Welcome');
+        // }
+      });
+    }
+
 
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});
@@ -303,29 +362,25 @@ class BurgerScreen extends React.Component {
     if(!title||!price){
       Alert.alert('Please select an item to order');
     }else{
-      fetch(API_URL + 'api/orders/add', {
+      fetch(API_URL + 'api/items/create', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: state.params.order.title,
-          price: state.params.order.price,
+          itemName: title,
+          itemPrice: price,
         }),
       }).then((res) => res.json()).then(resJson => {
-        if(resJson.creationSuccess){
-          Alert.alert('Succesfully Added an Item');
-          // this.props.navigation.navigate('LogIn');
-        }else{
-          Alert.alert('Error Adding Item!');
-          // this.props.navigation.navigate('Welcome');
-        }
-      }).catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
-         // ADD THIS THROW error
-          throw error;
-        });
+        // if(resJson.creationSuccess){
+        //   Alert.alert('Succesfully Added an Item');
+        //   // this.props.navigation.navigate('LogIn');
+        // }else{
+        //   Alert.alert('Error Adding Item!');
+        //   // this.props.navigation.navigate('Welcome');
+        // }
+      });
     }
     
     if(!state.params.order.length){
@@ -403,6 +458,30 @@ class DrinkScreen extends React.Component {
   _onButtonAdd(navigate,state,title,price) {
     console.log("Menu")
     console.log(state)
+
+    if(!title||!price){
+      Alert.alert('Please select an item to order');
+    }else{
+      fetch(API_URL + 'api/items/create', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          itemName: title,
+          itemPrice: price,
+        }),
+      }).then((res) => res.json()).then(resJson => {
+        // if(resJson.creationSuccess){
+        //   Alert.alert('Succesfully Added an Item');
+        //   // this.props.navigation.navigate('LogIn');
+        // }else{
+        //   Alert.alert('Error Adding Item!');
+        //   // this.props.navigation.navigate('Welcome');
+        // }
+      });
+    }
 
     if(!state.params.order.length){
       navigate('Menu',{order: [{title:title, price:price}],takeOut:state.params.takeOut});

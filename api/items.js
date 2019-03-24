@@ -10,7 +10,12 @@ api.post('/api/items/create', (req, res) => {
     description: req.body.description,
     rating: req.body.rating,
   })
-  res.send({ text: `Created Item: ${req.body.itemName}` });
+  res.send({ text: `Created Item: ${req.body.itemName}`});
+})
+
+api.get('/api/items/get', (req,res)=>{
+  item = Item.findOne({where: { itemName: req.body.itemName }}) 
+  res.send(item.itemId) 
 })
 //filter
 /*api.post('/api/items/filter', (req, res) => {
