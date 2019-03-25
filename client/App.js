@@ -476,7 +476,7 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Menu interface!');
+                this.props.navigation.navigate('Menu');
               }
               } >
               <Text style={styles.buttonText}> View Menu </Text>
