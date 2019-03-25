@@ -6,6 +6,12 @@ ClockLog = sequelize.define('clockLog', {
   timeClockedIn: Sequelize.STRING,
   timeClockedOut: Sequelize.STRING,
   hoursWorked: Sequelize.INTEGER,
+  latitudeClockedIn: Sequelize.STRING,
+  longitudeClockedIn: Sequelize.STRING,
+  latitudeClockedOut: Sequelize.STRING,
+  longitudeClockedOut: Sequelize.STRING,
+  ipClockedIn: Sequelize.STRING,
+  ipClockedOut: Sequelize.STRING
 })
 
 module.exports = (sequelize, DataTypes) => {

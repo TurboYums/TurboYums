@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
+import { Button,ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
@@ -322,7 +322,80 @@ class ClockInOutScreen extends React.Component {
     headerTintColor: '#000000',
   };
   state = {
-    compHours: ''
+    compHours: '',
+    latitude: null,
+    longitude: null,
+    animating: true
+  }
+
+  _clockIn = () => {
+    this.setState({animating: true });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        fetch(API_URL + 'api/users/clockIn', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: currentUser.username,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          var today = new Date();
+          var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+          var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+          if (resJson.clockInSuccess) {
+            Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
+
+          } else {
+            Alert.alert(currentUser + " is already Clocked In!");
+          }
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
+    );
+    this.setState({animating: false });
+  }
+
+  _clockOut = () => {
+    this.setState({animating: true });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        fetch(API_URL + 'api/users/clockOut', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: currentUser.username,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          var today = new Date();
+          var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+          var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+          if (resJson.clockOutSuccess) {
+            this.state.compHours = resJson.totalHours;
+            this._MyComponent.setNativeProps({ text: 'Total Hours Worked This Pay Period: ' + this.state.compHours });
+            Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime + '\nShift Length: ' + resJson.sessionHours);
+
+          } else {
+            Alert.alert(currentUser + " is already Clocked Out!");
+          }
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
+    );
+
+    this.setState({animating: false });
   }
   render() {
     return (
@@ -332,62 +405,16 @@ class ClockInOutScreen extends React.Component {
             <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: " editable={false} ref={component => this._MyComponent = component} />
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                fetch(API_URL + 'api/users/clockIn', {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    username: currentUser.username,
-                  }),
-                }).then((res) => res.json()).then(resJson => {
-                  var today = new Date();
-                  var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                  var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
-                  if (resJson.clockInSuccess) {
-                    Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
-
-                  } else {
-
-                    Alert.alert(currentUser + " is already Clocked In!");
-                  }
-                });
-              }
-              } >
+              onPress={() => {this._clockIn()}} >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
+            
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                fetch(API_URL + 'api/users/clockOut', {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    username: currentUser.username,
-                  }),
-                }).then((res) => res.json()).then(resJson => {
-                  var today = new Date();
-                  var currDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                  var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                  if (resJson.clockOutSuccess) {
-                    this.state.compHours = resJson.totalHours;
-                    this._MyComponent.setNativeProps({ text: 'Total Hours Worked This Pay Period: ' + this.state.compHours });
-                    Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime + '\nShift Length: ' + resJson.sessionHours);
-
-                  } else {
-                    Alert.alert(currentUser + " is already Clocked Out!");
-                  }
-                });
-              }
-              } >
+              onPress={() => {this._clockOut()}} >
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
+        
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -396,6 +423,7 @@ class ClockInOutScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> Employee Portal </Text>
             </TouchableOpacity>
+            <ActivityIndicator animating={this.state.animating} size="large" color="#fff44f" />
           </ImageBackground>
         </View>
       </View>
@@ -412,6 +440,7 @@ class EmployeePortalScreen extends React.Component {
     },
     headerTintColor: '#000000',
   };
+  
   render() {
     return (
       <View style={styles.container}>
@@ -452,7 +481,7 @@ class EmployeePortalScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-
+            
           </ImageBackground>
         </View>
       </View>

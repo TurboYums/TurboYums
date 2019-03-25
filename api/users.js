@@ -113,6 +113,9 @@ api.post('/api/users/clockIn', (req, res) => {
         timeClockedIn: fullTime,
         timeClockedOut: "0",
         hoursWorked: 0,
+        latitudeClockedIn: req.body.latitude,
+        longitudeClockedIn: req.body.longitude,
+        ipClockedIn: req.ip.replace('::ffff:', '')
       })
       
       user.save().then(() => {
@@ -163,6 +166,9 @@ api.post('/api/users/clockOut', (req, res) => {
       ClockLog.findOne({ where: { username: employee, timeClockedOut: 0} }).then(clockLog => {
         clockLog.hoursWorked = hoursWorked;
         clockLog.timeClockedOut = fullTime2;
+        clockLog.ipClockedOut = req.ip.replace('::ffff:', '')
+        clockLog.latitudeClockedOut = req.body.latitude,
+        clockLog.longitudeClockedOut = req.body.longitude,
         clockLog.save().then(() =>{clockLog.reload()});
       })
       user.hoursWorked = hoursWorked;
