@@ -16,28 +16,46 @@ let currentItem = '';
 class WelcomeScreen extends React.Component {
 
   render() {
+    const shadowStyle={
+      shadowOpacity:.25
+    }
     return (
-      <View /*style={styles.container}*/ style={{ backgroundColor: '#FFF44F'}}>
+      <View style={styles.container}>
         <View>
-          <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-                        <TouchableOpacity
-              style={styles.logInMenuButton}
-              onPress={() => {
-                this.props.navigation.navigate('LogIn');
-              }
-              } >
-              <Text style={styles.buttonText}> Login </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                this.props.navigation.navigate('SignUp');
-              }
-              } >
-              <Text style={styles.buttonText}> Sign Up </Text>
-            </TouchableOpacity>
-
+          <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%'}}>
+            <View style={[styles.viewStyle,shadowStyle]}>
+            <View style={styles.item}>
+             
+                  <TouchableOpacity
+                    style={styles.logInMenuButton}
+                    onPress={() => {
+                    this.props.navigation.navigate('LogIn');
+                     }
+                    } >
+                    <Text style={styles.buttonText}> Login </Text>
+                  </TouchableOpacity>
+                </View> 
+               <View style={styles.item}>
+                <TouchableOpacity
+                  style={styles.logInMenuButton}
+                  onPress={() => {
+                  this.props.navigation.navigate('SignUp');
+                   }
+                  } >
+                  <Text style={styles.buttonText}> Sign Up </Text>
+               </TouchableOpacity>
+              </View>
+              <View style={styles.item}>
+               <TouchableOpacity
+                  style={styles.logInMenuButton}
+                  onPress={() => {
+                    Alert.alert('We have not yet implemented the Table interface!');
+                  }
+                  } >
+                  <Text style={styles.buttonText}> Continue As Guest </Text>
+                </TouchableOpacity>
+                </View>
+                </View>
           </ImageBackground>
         </View>
       </View>
@@ -963,7 +981,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     width: 260,
     alignItems: 'center',
-    backgroundColor: 'yellow',
+    backgroundColor: '#fff44f',
   },
   empMenuButton: {
     marginTop: 230,
