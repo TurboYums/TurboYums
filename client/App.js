@@ -6,7 +6,7 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://192.168.1.14:5000/';
+const API_URL = 'http://172.31.147.98:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
