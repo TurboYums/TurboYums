@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, FlatList, View, Text, ScrollView } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
-import MenuItem from './components/MenuItem'
+import { Button, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
+import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
+import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar} from 'react-native';
+import { Header} from 'react-native-elements';
+import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
@@ -13,31 +14,54 @@ let token = '';
 let items = '';
 let currentItem = '';
 
-class WelcomeScreen extends React.Component {
-
+class LogoTitle extends React.Component {
   render() {
-    const shadowStyle={
-      shadowOpacity:.25
-    }
     return (
-      <View style={styles.container}>
+      <Image
+      style={{alignSelf: 'center', height: 30, width: 30, borderRadius: 0}}
+        source={require('./assets/Logomono.png')}
+       // width={Dimensions.get('window').width}
+       resizeMode="stretch"
+      />
+    );
+  }
+}
+
+class WelcomeScreen extends React.Component {
+ 
+  static navigationOptions = {
+    // GOTTA CHANGE BAR STYLE TO LIGHT COLOR THIS JUST REMOVES THE HEADER
+    header: null,
+    };
+  render() {
+  const shadowStyle={
+      shadowOpacity:.25    
+    }
+    return (     
+           <View style={styles.container}>
         <View>
+      
+        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%'}}>
-            <View style={[styles.viewStyle,shadowStyle]}>
-            <View style={styles.item}>
+          
+            <View style={[shadowStyle]}>
+              <View style={styles.item}>
+             
              
                   <TouchableOpacity
-                    style={styles.logInMenuButton}
+                   style={styles.logInMenuButton}
                     onPress={() => {
                     this.props.navigation.navigate('LogIn');
                      }
                     } >
-                    <Text style={styles.buttonText}> Login </Text>
-                  </TouchableOpacity>
+                  <Text style={styles.buttonText}> Login </Text>
+                   
+                   </TouchableOpacity>
                 </View> 
+              
                <View style={styles.item}>
                 <TouchableOpacity
-                  style={styles.logInMenuButton}
+                  style={styles.signUpButton}
                   onPress={() => {
                   this.props.navigation.navigate('SignUp');
                    }
@@ -47,7 +71,7 @@ class WelcomeScreen extends React.Component {
               </View>
               <View style={styles.item}>
                <TouchableOpacity
-                  style={styles.logInMenuButton}
+                  style={styles.guestbutton}
                   onPress={() => {
                     Alert.alert('We have not yet implemented the Table interface!');
                   }
@@ -56,6 +80,7 @@ class WelcomeScreen extends React.Component {
                 </TouchableOpacity>
                 </View>
                 </View>
+               
           </ImageBackground>
         </View>
       </View>
@@ -72,6 +97,14 @@ class SignUpScreen extends React.Component {
     accountType: '',
     email: ''
   }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   handleusername = (text) => {
     this.setState({ username: text })
   }
@@ -92,11 +125,18 @@ class SignUpScreen extends React.Component {
   }
 
   render() {
+    const shadowStyle={
+      shadowOpacity:.2
+    }
     return (
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.SignUpText}>
-            Enter your details:
+             
+        <View style={styles.container}>
+      <ScrollView style={{flex: 1}}>
+      <Text style={styles.SignUpText}>
+            Create
+          </Text>
+          <Text style={styles.text}>
+          your TurboYums account
           </Text>
           <TextInput style={styles.input}
             underlineColorAndroid="transparent"
@@ -129,7 +169,7 @@ class SignUpScreen extends React.Component {
             placeholder="   Email"
             autoCapitalize="none"
             onChangeText={this.handleemail} />
-
+          </ScrollView>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
@@ -161,15 +201,24 @@ class SignUpScreen extends React.Component {
                 });
               }
             }}>
-            <Text style={styles.submitButtonText}> SUBMIT </Text>
+            <Text style={styles.submitButtonText}> Next </Text>
           </TouchableOpacity>
+          
         </View>
-      </View>
+     
     );
   }
 }
 
 class LogInScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   state = {
     username: '',
     password: ''
@@ -185,11 +234,20 @@ class LogInScreen extends React.Component {
   }
   render() {
     return (
+      <View style={{flex: 1}}>
+      <View style={styles.headerStyle}>
+      <Image source={require('./assets/headerBackground.png')} style={{ width: '100%', height: '100%'}}></Image>
+      </View> 
+      
       <View style={styles.container}>
+      
         <View>
-
+       
+          <Text style={styles.SignUpText}>
+            Sign in
+          </Text>
           <Text style={styles.text}>
-            Login with your Username and Password:
+          with your TurboYums account
           </Text>
           <TextInput style={styles.input}
             underlineColorAndroid="transparent"
@@ -243,12 +301,21 @@ class LogInScreen extends React.Component {
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     );
   }
 }
 
 
 class ClockInOutScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   state = {
     compHours: ''
   }
@@ -332,7 +399,14 @@ class ClockInOutScreen extends React.Component {
 }
 
 class EmployeePortalScreen extends React.Component {
-
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -382,6 +456,14 @@ class EmployeePortalScreen extends React.Component {
 }
 
 class PaymentScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   state = {
     cardNumber: '',
     exp_month: '',
@@ -496,6 +578,14 @@ class PaymentScreen extends React.Component {
 }
 
 class ReceiptScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
     <ListItem
@@ -584,7 +674,14 @@ class ReceiptScreen extends React.Component {
 
 
 class DineInOutScreen extends React.Component {
-
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   _onPressButton(navigate) {
     fetch(API_URL + 'api/order/create', {
       method: 'POST',
@@ -652,6 +749,14 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   static navigationOptions = {
     title: 'Menu',
     headerStyle: {
@@ -729,16 +834,14 @@ class MenuScreen extends React.Component {
 
 class ViewItemScreen extends React.Component {
   static navigationOptions = {
-    title: 'ViewItem',
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
     headerStyle: {
-      backgroundColor: '#f4511e',
+      backgroundColor: '#fff44f',
     },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    // headerRight: <Button>'Cart'</Button>
+    headerTintColor: '#000000',
   };
+ 
   _onPressAddOrder = () => {
     fetch(API_URL + 'api/order/add', {//fetch start
       method: 'POST',
@@ -786,6 +889,14 @@ class ViewItemScreen extends React.Component {
 }
 
 class SummaryScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
     <ListItem
@@ -891,7 +1002,7 @@ const AppContainer = createAppContainer(RootStack);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22
+    //paddingTop: 20
   },
   sectionHeader: {
     paddingTop: 10,
@@ -940,23 +1051,28 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   text: {
-    marginTop: 10,
-    color: '#101010',
-    margin: 10,
-    fontSize: 20,
+    marginLeft: 30,
+    color: '#5b5b5b',
+    //marginTop: 2,
+    fontSize: 18,
   },
   SignUpText: {
     marginTop: 10,
-    color: 'red',
+    fontSize: 30,
+    marginLeft: 30,
+    // fontStyle: 'bold',
+    color: 'black',
     margin: 10,
-    fontSize: 20,
   },
   input: {
     margin: 15,
+    marginLeft: 30,
+    marginRight: 30,
     backgroundColor: 'white',
     height: 40,
-    borderColor: '#f7df1e',
-    borderWidth: 1
+    borderColor: '#dadce0',
+    borderWidth: 1,
+    borderRadius: 5
   },
   hourViewer: {
     margin: 15,
@@ -966,19 +1082,31 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   submitButton: {
-    backgroundColor: '#f7df1e',
+    backgroundColor: '#fff44f',
     padding: 10,
-    margin: 15,
+    margin: 30,
     height: 40,
-  },
+    borderRadius: 100,
+    alignItems: 'center',
+    //position: 'absolute',
+    //bottom: 0,
+    //flex: 1,
+    //justifyContent: 'flex-end',
+    //marginBottom: 0
+    },
   submitButtonText: {
     color: 'black'
   },
 
   logInMenuButton: {
-    marginTop: 271,
+    borderRadius:100,
+    marginBottom: 20,
+    //paddingTop:10,
+    paddingBottom:10,
+    marginTop: 250,
     marginLeft: 50,
-    marginBottom: 30,
+    //marginBottom: 10,
+   height: 50,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
@@ -986,26 +1114,49 @@ const styles = StyleSheet.create({
   empMenuButton: {
     marginTop: 230,
     marginLeft: 50,
-    marginBottom: 30,
+    marginBottom: 50,
     width: 260,
     alignItems: 'center',
     backgroundColor: 'yellow',
     justifyContent: 'center',
   },
-
-  button: {
-    marginTop: 50,
+  signUpButton: {
+    borderRadius:100,
+    marginBottom: 20,
+    //paddingTop:10,
+    paddingBottom:10,
+    marginTop: 280,
     marginLeft: 50,
-    marginBottom: 30,
+    //marginBottom: 10,
+   height: 50,
     width: 260,
     alignItems: 'center',
-    backgroundColor: '#f7df1e',
-    justifyContent: 'center'
+    backgroundColor: '#fff44f',
+  },
+  guestbutton: {
+    borderRadius:100,
+    marginBottom: 20,
+    //paddingTop:10,
+    paddingBottom:10,
+    marginTop: 310,
+    marginLeft: 50,
+    //marginBottom: 10,
+   // height: 30,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#fff44f'
   },
   buttonText: {
     padding: 20,
     color: 'black'
-  }
+  },
+  headerStyle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff44f'
+   }
 })
 
 
