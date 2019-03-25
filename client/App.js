@@ -960,7 +960,7 @@ const styles = StyleSheet.create({
   },
 
   logInMenuButton: {
-    marginTop: 270,
+    marginTop: 271,
     marginLeft: 50,
     marginBottom: 30,
     width: 260,
