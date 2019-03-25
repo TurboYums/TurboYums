@@ -1,76 +1,77 @@
 import React from 'react';
 import { Button, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar} from 'react-native';
-import { Header} from 'react-native-elements';
+import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+import { Header } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://192.168.1.14:5000/';
+const API_URL = 'http://172.31.130.43:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
 let items = '';
+let employees = '';
 let currentItem = '';
 
 class LogoTitle extends React.Component {
   render() {
     return (
       <Image
-      style={{alignSelf: 'center', height: 30, width: 30, borderRadius: 0}}
+        style={{ alignSelf: 'center', height: 30, width: 30, borderRadius: 0 }}
         source={require('./assets/Logomono.png')}
-       // width={Dimensions.get('window').width}
-       resizeMode="stretch"
+        // width={Dimensions.get('window').width}
+        resizeMode="stretch"
       />
     );
   }
 }
 
 class WelcomeScreen extends React.Component {
- 
+
   static navigationOptions = {
     // GOTTA CHANGE BAR STYLE TO LIGHT COLOR THIS JUST REMOVES THE HEADER
     header: null,
-    };
+  };
   render() {
-  const shadowStyle={
-      shadowOpacity:.25    
+    const shadowStyle = {
+      shadowOpacity: .25
     }
-    return (     
-           <View style={styles.container}>
+    return (
+      <View style={styles.container}>
         <View>
-      
-        <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f'/>
-          <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%'}}>
-          
+
+          <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
+          <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
+
             <View style={[shadowStyle]}>
               <View style={styles.item}>
-             
-             
-                  <TouchableOpacity
-                   style={styles.logInMenuButton}
-                    onPress={() => {
+
+
+                <TouchableOpacity
+                  style={styles.logInMenuButton}
+                  onPress={() => {
                     this.props.navigation.navigate('LogIn');
-                     }
-                    } >
+                  }
+                  } >
                   <Text style={styles.buttonText}> Login </Text>
-                   
-                   </TouchableOpacity>
-                </View> 
-              
-               <View style={styles.item}>
+
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.item}>
                 <TouchableOpacity
                   style={styles.signUpButton}
                   onPress={() => {
-                  this.props.navigation.navigate('SignUp');
-                   }
+                    this.props.navigation.navigate('SignUp');
+                  }
                   } >
                   <Text style={styles.buttonText}> Sign Up </Text>
-               </TouchableOpacity>
+                </TouchableOpacity>
               </View>
               <View style={styles.item}>
-               <TouchableOpacity
+                <TouchableOpacity
                   style={styles.guestbutton}
                   onPress={() => {
                     Alert.alert('We have not yet implemented the Table interface!');
@@ -78,9 +79,9 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Continue As Guest </Text>
                 </TouchableOpacity>
-                </View>
-                </View>
-               
+              </View>
+            </View>
+
           </ImageBackground>
         </View>
       </View>
@@ -125,20 +126,20 @@ class SignUpScreen extends React.Component {
   }
 
   render() {
-    const shadowStyle={
-      shadowOpacity:.2
+    const shadowStyle = {
+      shadowOpacity: .2
     }
     return (
-             
-        <View style={styles.container}>
-        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
 
-      <ScrollView style={{flex: 1}}>
-      <Text style={styles.SignUpText}>
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+
+        <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
             Create
           </Text>
           <Text style={styles.text}>
-          your TurboYums account
+            your TurboYums account
           </Text>
           <TextInput style={styles.input}
             underlineColorAndroid="transparent"
@@ -171,43 +172,43 @@ class SignUpScreen extends React.Component {
             placeholder="   Email"
             autoCapitalize="none"
             onChangeText={this.handleemail} />
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={() => {
-              if (!this.state.username || !this.state.firstname || !this.state.lastname || !this.state.password || !this.state.accountType || !this.state.email) {
-                Alert.alert('Please fill in all fields');
-              } else {
-                fetch(API_URL + 'api/users/create', {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    username: this.state.username,
-                    firstname: this.state.firstname,
-                    lastname: this.state.lastname,
-                    password: this.state.password,
-                    accountType: this.state.accountType,
-                    email: this.state.email,
-                  }),
-                }).then((res) => res.json()).then(resJson => {
-                  if (resJson.creationSuccess) {
-                    Alert.alert('Succesfully Created Account! Please Log In');
-                    this.props.navigation.navigate('LogIn');
-                  } else {
-                    Alert.alert('Error Creating Account!');
-                    this.props.navigation.navigate('Welcome');
-                  }
-                });
-              }
-            }}>
-            <Text style={styles.submitButtonText}> Next </Text>
-          </TouchableOpacity>
-          
-        </View>
-     
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => {
+            if (!this.state.username || !this.state.firstname || !this.state.lastname || !this.state.password || !this.state.accountType || !this.state.email) {
+              Alert.alert('Please fill in all fields');
+            } else {
+              fetch(API_URL + 'api/users/create', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  username: this.state.username,
+                  firstname: this.state.firstname,
+                  lastname: this.state.lastname,
+                  password: this.state.password,
+                  accountType: this.state.accountType,
+                  email: this.state.email,
+                }),
+              }).then((res) => res.json()).then(resJson => {
+                if (resJson.creationSuccess) {
+                  Alert.alert('Succesfully Created Account! Please Log In');
+                  this.props.navigation.navigate('LogIn');
+                } else {
+                  Alert.alert('Error Creating Account!');
+                  this.props.navigation.navigate('Welcome');
+                }
+              });
+            }
+          }}>
+          <Text style={styles.submitButtonText}> Next </Text>
+        </TouchableOpacity>
+
+      </View>
+
     );
   }
 }
@@ -236,75 +237,75 @@ class LogInScreen extends React.Component {
   }
   render() {
     return (
-      <View style={{flex: 1}}>
-       <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
+      <View style={{ flex: 1 }}>
+        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
 
-      <View style={styles.headerStyle}>
-      <Image source={require('./assets/headerBackground.png')} style={{ width: '100%', height: '100%'}}></Image>
-      </View> 
-      
-      <View style={styles.container}>
-      
-        <View>
-       
-          <Text style={styles.SignUpText}>
-            Sign in
-          </Text>
-          <Text style={styles.text}>
-          with your TurboYums account
-          </Text>
-          <TextInput style={styles.input}
-            underlineColorAndroid="transparent"
-            placeholder="   Username"
-            autoCapitalize="none"
-            onChangeText={this.handleusername} />
-
-          <TextInput style={styles.input}
-            underlineColorAndroid="transparent"
-            secureTextEntry={true}
-            placeholder="   Password"
-            autoCapitalize="none"
-            onChangeText={this.handlePassword} />
-
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={() => {
-              if (!this.state.username || !this.state.password) {
-                Alert.alert('Please enter a username and password.');
-              } else {
-                fetch(API_URL + 'api/users/login', {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    username: this.state.username,
-                    password: this.state.password,
-                  }),
-                }).then((res) => res.json()).then(resJson => {
-                  if (resJson.loginValid) {
-                    currentUser = resJson.user;
-                    switch (resJson.user.accountType) {
-                      //employee is 0 
-                      case 0:
-                        this.props.navigation.navigate('ClockInOut');
-                        break;
-                      //customer is 1
-                      case 1:
-                        this.props.navigation.navigate('DineInOut');
-                        break;
-                    }
-                  } else {
-                    Alert.alert('Incorrect Username or Password.');
-                  }
-                });
-              }
-            }}>
-            <Text style={styles.submitButtonText}> SUBMIT </Text>
-          </TouchableOpacity>
+        <View style={styles.headerStyle}>
+          <Image source={require('./assets/headerBackground.png')} style={{ width: '100%', height: '100%' }}></Image>
         </View>
-      </View>
+
+        <View style={styles.container}>
+
+          <View>
+
+            <Text style={styles.SignUpText}>
+              Sign in
+          </Text>
+            <Text style={styles.text}>
+              with your TurboYums account
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Username"
+              autoCapitalize="none"
+              onChangeText={this.handleusername} />
+
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              secureTextEntry={true}
+              placeholder="   Password"
+              autoCapitalize="none"
+              onChangeText={this.handlePassword} />
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => {
+                if (!this.state.username || !this.state.password) {
+                  Alert.alert('Please enter a username and password.');
+                } else {
+                  fetch(API_URL + 'api/users/login', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      username: this.state.username,
+                      password: this.state.password,
+                    }),
+                  }).then((res) => res.json()).then(resJson => {
+                    if (resJson.loginValid) {
+                      currentUser = resJson.user;
+                      switch (resJson.user.accountType) {
+                        //employee is 0 
+                        case 0:
+                          this.props.navigation.navigate('ClockInOut');
+                          break;
+                        //customer is 1
+                        case 1:
+                          this.props.navigation.navigate('DineInOut');
+                          break;
+                      }
+                    } else {
+                      Alert.alert('Incorrect Username or Password.');
+                    }
+                  });
+                }
+              }}>
+              <Text style={styles.submitButtonText}> SUBMIT </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
@@ -438,7 +439,7 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Staff interface!');
+                this.props.navigation.navigate('Staff');
               }
               } >
               <Text style={styles.buttonText}> View Staff </Text>
@@ -622,7 +623,7 @@ class ReceiptScreen extends React.Component {
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
-      this.setState({order: resJson.order})
+      this.setState({ order: resJson.order })
       let tempItems = resJson.items;
       items = []
 
@@ -634,11 +635,11 @@ class ReceiptScreen extends React.Component {
         else {
           items.push({ category: item.category, data: [item] });
         }
-        this.setState({items: items});;
+        this.setState({ items: items });;
       }
-  
+
     })
-    
+
   }
 
   render() {
@@ -845,7 +846,7 @@ class ViewItemScreen extends React.Component {
     },
     headerTintColor: '#000000',
   };
- 
+
   _onPressAddOrder = () => {
     fetch(API_URL + 'api/order/add', {//fetch start
       method: 'POST',
@@ -892,8 +893,62 @@ class ViewItemScreen extends React.Component {
   }
 }
 
+class StaffScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      employees: null
+    };
+  }
+
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    //this.props.navigation.navigate('ViewEmployee', { order: order, takeOut: '1' })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/users/getEmployees', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      this.setState({ employees: resJson.employees });;
+    })
+  }
+
+  render() {
+    return (
+      <View>
+        <Text>Employees: </Text>
+        <View>
+          <FlatList
+            data={this.state.employees}
+            renderItem={({ item }) => <Text>{item.firstname + " " + item.lastname}</Text>}
+          />
+        </View>
+      </View>
+
+    );
+
+  }
+}
+
 class SummaryScreen extends React.Component {
-   static navigationOptions = {
+  static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -933,7 +988,7 @@ class SummaryScreen extends React.Component {
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
-      this.setState({order: resJson.order})
+      this.setState({ order: resJson.order })
       let tempItems = resJson.items;
       items = []
 
@@ -945,11 +1000,11 @@ class SummaryScreen extends React.Component {
         else {
           items.push({ category: item.category, data: [item] });
         }
-        this.setState({items: items});;
+        this.setState({ items: items });;
       }
-  
+
     })
-    
+
   }
 
   render() {
@@ -995,6 +1050,7 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
+    Staff: StaffScreen
   },
   {
     initialRouteName: 'Welcome',
@@ -1097,20 +1153,20 @@ const styles = StyleSheet.create({
     //flex: 1,
     //justifyContent: 'flex-end',
     //marginBottom: 0
-    },
+  },
   submitButtonText: {
     color: 'black'
   },
 
   logInMenuButton: {
-    borderRadius:100,
+    borderRadius: 100,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
+    paddingBottom: 10,
     marginTop: 250,
     marginLeft: 50,
     //marginBottom: 10,
-   height: 50,
+    height: 50,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
@@ -1125,27 +1181,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signUpButton: {
-    borderRadius:100,
+    borderRadius: 100,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
+    paddingBottom: 10,
     marginTop: 280,
     marginLeft: 50,
     //marginBottom: 10,
-   height: 50,
+    height: 50,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
   guestbutton: {
-    borderRadius:100,
+    borderRadius: 100,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
+    paddingBottom: 10,
     marginTop: 310,
     marginLeft: 50,
     //marginBottom: 10,
-   // height: 30,
+    // height: 30,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f'
@@ -1160,7 +1216,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#fff44f'
-   }
+  }
 })
 
 

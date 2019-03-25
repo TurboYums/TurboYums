@@ -83,6 +83,11 @@ api.post('/api/users/addhours', (req, res) => {
   })
 })
 
+api.post('/api/users/getEmployees', (req, res) => {
+  User.findAll({ where: { accountType: 0 } }).then(users => {
+   res.send({employees: users});
+  })
+})
 
 today = new Date();
 var minutesIn;
