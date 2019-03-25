@@ -41,7 +41,7 @@ class WelcomeScreen extends React.Component {
            <View style={styles.container}>
         <View>
       
-        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
+        <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f'/>
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%'}}>
           
             <View style={[shadowStyle]}>
@@ -889,7 +889,7 @@ class ViewItemScreen extends React.Component {
 }
 
 class SummaryScreen extends React.Component {
-  static navigationOptions = {
+   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
