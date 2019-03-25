@@ -17,12 +17,10 @@ class WelcomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View /*style={styles.container}*/ style={{ backgroundColor: '#FFF44F'}}>
         <View>
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-
-
-            <TouchableOpacity
+                        <TouchableOpacity
               style={styles.logInMenuButton}
               onPress={() => {
                 this.props.navigation.navigate('LogIn');
