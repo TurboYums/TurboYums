@@ -131,6 +131,8 @@ class SignUpScreen extends React.Component {
     return (
              
         <View style={styles.container}>
+        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
+
       <ScrollView style={{flex: 1}}>
       <Text style={styles.SignUpText}>
             Create
@@ -235,6 +237,8 @@ class LogInScreen extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
+       <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f'/>
+
       <View style={styles.headerStyle}>
       <Image source={require('./assets/headerBackground.png')} style={{ width: '100%', height: '100%'}}></Image>
       </View> 
