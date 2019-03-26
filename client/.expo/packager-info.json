@@ -1,8 +1,8 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://dt-kvt.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.dt-kvt.anonymous.client.exp.direct",
-  "ngrokPid": 34394,
+  "expoServerPort": null,
+  "expoServerNgrokUrl": "https://ef-mvp.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.ef-mvp.anonymous.client.exp.direct",
+  "ngrokPid": 89732,
   "devToolsPort": 19002,
   "packagerPort": 19001,
   "packagerPid": 34366
