@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button,ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
+import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.31.130.43:5000/';
+const API_URL = 'http://192.168.1.14:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -329,7 +329,7 @@ class ClockInOutScreen extends React.Component {
   }
 
   _clockIn = () => {
-    this.setState({animating: true });
+    this.setState({ animating: true });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         fetch(API_URL + 'api/users/clockIn', {
@@ -349,21 +349,21 @@ class ClockInOutScreen extends React.Component {
           var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
           if (resJson.clockInSuccess) {
-            Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
+            Alert.alert("Successfully Clocked In: " + currentUser.firstname + " " + currentUser.lastname, ' Date: ' + currDate + '\nTime: ' + currTime);
 
           } else {
-            Alert.alert(currentUser + " is already Clocked In!");
+            Alert.alert(currentUser.firstname + " " + currentUser.lastname + " is already Clocked In!");
           }
         });
       },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
     );
-    this.setState({animating: false });
+    this.setState({ animating: false });
   }
 
   _clockOut = () => {
-    this.setState({animating: true });
+    this.setState({ animating: true });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         fetch(API_URL + 'api/users/clockOut', {
@@ -395,7 +395,7 @@ class ClockInOutScreen extends React.Component {
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
     );
 
-    this.setState({animating: false });
+    this.setState({ animating: false });
   }
   render() {
     return (
@@ -405,16 +405,16 @@ class ClockInOutScreen extends React.Component {
             <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: " editable={false} ref={component => this._MyComponent = component} />
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {this._clockIn()}} >
+              onPress={() => { this._clockIn() }} >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {this._clockOut()}} >
+              onPress={() => { this._clockOut() }} >
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
-        
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -440,7 +440,7 @@ class EmployeePortalScreen extends React.Component {
     },
     headerTintColor: '#000000',
   };
-  
+
   render() {
     return (
       <View style={styles.container}>
@@ -481,7 +481,7 @@ class EmployeePortalScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-            
+
           </ImageBackground>
         </View>
       </View>
@@ -489,7 +489,104 @@ class EmployeePortalScreen extends React.Component {
   }
 }
 
-class PaymentScreen extends React.Component {
+class PaymentChoicesScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  state = {
+    cardNumber: '',
+    exp_month: '',
+    exp_year: '',
+    cvc: '',
+    postalCode: '',
+    sources: ''
+  }
+  handlecardNumber = (text) => {
+    this.setState({ cardNumber: text })
+    if (this.state.cardNumber.length < 16) {
+    }
+  }
+  handleexp_month = (text) => {
+    this.setState({ exp_month: text })
+  }
+  handleexp_year = (text) => {
+    this.setState({ exp_year: text })
+  }
+  handlecvc = (text) => {
+    this.setState({ cvc: text })
+  }
+  handlepostalCode = (text) => {
+    this.setState({ postalCode: text })
+  }
+  login = (username, word) => {
+    alert('username: ' + username + ' password: ' + password)
+  }
+
+  submitPayment = (item) => {
+    fetch(API_URL + "api/charges/create", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: order.totalPrice,
+        currency: 'usd',
+        source: item.stripe_id,
+        description: 'Charge for order #' + order.id,
+        customer: currentUser.stripe_id
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      this.props.navigation.navigate('Receipt');
+    })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/sources/get', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        user: currentUser,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      this.setState({ sources: resJson.sources })
+    })
+
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.text}>
+            Choose Method of Payment:
+          </Text>
+          <FlatList
+            data={this.state.sources}
+            renderItem={({ item }) => <Text style={styles.menuItem} onPress={this.submitPayment(item)}>{item.firstname + " " + item.lastname + " - " +  item.last4}</Text>}
+          />
+
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {this.props.navigation.navigate('NewPayment');}}>
+            <Text style={styles.submitButtonText}> New Card </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+}
+
+
+class NewPaymentScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -1055,7 +1152,7 @@ class SummaryScreen extends React.Component {
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => {
-            this.props.navigation.navigate('Payment', { order: [] });
+            this.props.navigation.navigate('PaymentChoices', { order: [] });
           }}>
           <Text style={styles.submitButtonText}> Pay </Text>
         </TouchableOpacity>
@@ -1071,7 +1168,8 @@ const RootStack = createStackNavigator(
     Welcome: WelcomeScreen,
     LogIn: LogInScreen,
     ClockInOut: ClockInOutScreen,
-    Payment: PaymentScreen,
+    NewPayment: NewPaymentScreen,
+    PaymentChoices: PaymentChoicesScreen,
     Receipt: ReceiptScreen,
     SignUp: SignUpScreen,
     EmployeePortal: EmployeePortalScreen,
