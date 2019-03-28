@@ -37,6 +37,7 @@ describe('Users', () => {
 
     });
 
+
     describe('/POST Login User', () => {
         it('it should succesfully login a user', (done) => {
             let user = {
@@ -53,5 +54,39 @@ describe('Users', () => {
                 });
         });
 
+    });
+
+    describe('/POST Clock In Employee', () => {
+        it('it should successfully clock in an employee', (done) => {
+            let user = {
+                status: 1,
+            }
+            chai.request(server)
+                .post('/api/users/clockIn')
+                .send(user)
+                .end((err, res) => {
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('user');
+                    res.body.should.have.property('clockInSuccess');
+                    done();
+                });
+        });
+    });
+
+    describe('/POST Clock Out Employee', () => {
+        it('it should successfully clock in an employee', (done) => {
+            let user = {
+                status: 0,
+            }
+            chai.request(server)
+                .post('/api/users/clockIn')
+                .send(user)
+                .end((err, res) => {
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('user');
+                    res.body.should.have.property('clockOutSuccess');
+                    done();
+                });
+        });
     });
 });
