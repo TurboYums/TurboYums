@@ -31,7 +31,8 @@ api.post('/api/users/create', (req, res) => {
         
         res.send({ 
           creationSuccess: true,
-          text: `Created User:  ${newUser.username}` 
+          text: `Created User:  ${newUser.username}`,
+          user: newUser
         });
       })
     })

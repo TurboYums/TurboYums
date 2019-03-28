@@ -7,5 +7,6 @@ module.exports = new Sequelize({
     username: config.mysql.username || 'root',
     password: config.mysql.password || 'password',
     dialect: config.mysql.dialect || 'mysql',
-    port: config.mysql.port || '3306'
+    port: config.mysql.port || '3306',
+    logging: false
   });
