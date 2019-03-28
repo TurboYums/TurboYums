@@ -1,7 +1,7 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const User = sequelize.import('../models/user.js');
-const ClockLog = sequelize.import('../models/ClockLog.js');
+const ClockLog = sequelize.import('../models/clockLog.js');
 const config = require('../config.json');
 const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 const bcrypt = require('bcrypt');
@@ -83,6 +83,11 @@ api.post('/api/users/addhours', (req, res) => {
   })
 })
 
+api.post('/api/users/getEmployees', (req, res) => {
+  User.findAll({ where: { accountType: 0 } }).then(users => {
+   res.send({employees: users});
+  })
+})
 
 today = new Date();
 var minutesIn;
@@ -108,6 +113,9 @@ api.post('/api/users/clockIn', (req, res) => {
         timeClockedIn: fullTime,
         timeClockedOut: "0",
         hoursWorked: 0,
+        latitudeClockedIn: req.body.latitude,
+        longitudeClockedIn: req.body.longitude,
+        ipClockedIn: req.ip.replace('::ffff:', '')
       })
       
       user.save().then(() => {
@@ -158,6 +166,9 @@ api.post('/api/users/clockOut', (req, res) => {
       ClockLog.findOne({ where: { username: employee, timeClockedOut: 0} }).then(clockLog => {
         clockLog.hoursWorked = hoursWorked;
         clockLog.timeClockedOut = fullTime2;
+        clockLog.ipClockedOut = req.ip.replace('::ffff:', '')
+        clockLog.latitudeClockedOut = req.body.latitude,
+        clockLog.longitudeClockedOut = req.body.longitude,
         clockLog.save().then(() =>{clockLog.reload()});
       })
       user.hoursWorked = hoursWorked;

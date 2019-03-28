@@ -26,13 +26,13 @@ api.post('/api/sources/create', (req, res) => {
         Source.create({
           stripe_id: card.id,
           user_stripe_id: req.body.user.stripe_id,
-
           type: req.body.type,
           firstname: req.body.user.firstname,
           lastname: req.body.user.lastname,
           billingAddress: req.body.billingAddress,
           cvv: req.body.cvc,
           expDate: req.body.expDate,
+          last4: req.body.number.substr(req.body.number.length - 4)
         }).then(newSource => {
           res.send({source: newSource});
         })
