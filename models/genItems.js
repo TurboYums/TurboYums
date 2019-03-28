@@ -3,6 +3,7 @@
 const sequelize = require('./sequelize.js');
 const Item = sequelize.import('./item.js');
 
+
 Item.create({
   itemName: 'Plain',
   category: 'Pizza',
@@ -10,6 +11,7 @@ Item.create({
   ingredient: 'Crust, Sauce, Cheese',
   description: 'Famous Plain Pizza',
 })
+
 Item.create({
   itemName: 'Margherita',
   category: 'Pizza',
@@ -17,6 +19,7 @@ Item.create({
   ingredient: 'Crust, Sauce, Cheese, Basil, Tomato Slices',
   description: 'A delicious classic margherita pizza',
 })
+
 Item.create({
   itemName: 'Pepperoni',
   category: 'Pizza',
@@ -32,6 +35,7 @@ Item.create({
   ingredient: 'Crust, Sauce, Cheese',
   description: 'Famous Plain Pasta',
 })
+
 Item.create({
   itemName: 'Meatballs and Spaghetti',
   category: 'Pasta',

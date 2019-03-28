@@ -8,7 +8,6 @@ const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 const Source = sequelize.import('../models/source.js');
 
 api.post('/api/sources/create', (req, res) => {
-  console.log('here 11')
   stripe.tokens.create({
     card: {
       number: req.body.number || '4242424242424242',
@@ -17,12 +16,10 @@ api.post('/api/sources/create', (req, res) => {
       cvc: req.body.cvc || '123'
     }
   }, function (err, token) {
-    console.log(req.body.user)
     stripe.customers.createSource(
       req.body.user.stripe_id,
       { source: token.id },
       function (err, card) {
-        console.log('here 24')
         Source.create({
           stripe_id: card.id,
           user_stripe_id: req.body.user.stripe_id,
@@ -35,9 +32,12 @@ api.post('/api/sources/create', (req, res) => {
           last4: req.body.number.substr(req.body.number.length - 4)
         }).then(newSource => {
           res.send({source: newSource});
+        }).catch( function(err) {
+          res.send({error: err});
         })
       }
     )
+    res.send({source: token, error: err});
   })
 })
 
