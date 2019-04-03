@@ -6,7 +6,8 @@ const OrderItem = sequelize.import('../models/orderitem.js');
 
 Order = sequelize.define('order', {
   totalPrice: Sequelize.DOUBLE,
-  specialReuest: Sequelize.STRING
+  specialRequest: Sequelize.STRING,
+  status: Sequelize.STRING
 })
 
 Order.belongsTo(User);
