@@ -453,6 +453,15 @@ class EmployeePortalScreen extends React.Component {
               <Text style={styles.buttonText}> View Tables </Text>
             </TouchableOpacity>
 
+          <TouchableOpacity
+            style = {styles.KitchenButton}
+            onPress = {() => {
+              Alert.alert('Will take you to the kitchen interface');
+            }
+            } >
+              <Text style = {styles.buttonText}> Kitchen Interface </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -1098,6 +1107,7 @@ class StaffScreen extends React.Component {
   }
 }
 
+
 class SummaryScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1190,6 +1200,10 @@ class SummaryScreen extends React.Component {
     );
 
   }
+}
+
+class ManagerScreen extends React.Component {
+
 }
 
 const RootStack = createStackNavigator(
@@ -1435,6 +1449,9 @@ const styles = StyleSheet.create({
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
+  },
+  KitchenButton: {
+    
   }
 })
 
