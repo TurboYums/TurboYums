@@ -5,6 +5,8 @@ Ensure you have all proper packages installed
 ``` 
     npm install -g yarn
     yarn install
+    cd client
+    yarn install
 ```
 
 Docker should also be installed and running

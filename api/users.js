@@ -28,13 +28,17 @@ api.post('/api/users/create', (req, res) => {
         minutesOut: 0,
         hoursOut: 0
       }).then(newUser => {
-        
         res.send({ 
           creationSuccess: true,
           text: `Created User:  ${newUser.username}`,
           user: newUser
         });
-      })
+      }).catch( function (err) {
+        res.send({ 
+          creationSuccess: false,
+          error: err,
+        });
+      });
     })
   })
 })

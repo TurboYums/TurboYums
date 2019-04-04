@@ -31,10 +31,13 @@ api.post('/api/sources/create', (req, res) => {
           expDate: req.body.expDate,
           last4: req.body.number.substr(req.body.number.length - 4)
         }).then(newSource => {
-          res.send({source: newSource, error: err});
+          res.send({source: newSource});
+        }).catch( function(err) {
+          res.send({error: err});
         })
       }
     )
+    res.send({source: token, error: err});
   })
 })
 

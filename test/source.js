@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 
 describe('Source', () => {
     describe('/POST Create Source', () => {
-        it('it should fail to create a source', (done) => {
+        it('it create a token without a user but fail to create a source', (done) => {
             let user = {
                 username: 'testUser',
                 firstname: 'Joe',
@@ -32,13 +32,14 @@ describe('Source', () => {
                 cvc: '123',
                 user: user,
             }
-            
+
             chai.request(server)
                 .post('/api/sources/create')
                 .send(source)
                 .end((err, res) => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
+                    res.body.should.have.property('source');
                     done();
                 });
         });
@@ -57,7 +58,7 @@ describe('Source', () => {
                 cvc: '123',
                 user: user,
             }
-            
+
             chai.request(server)
                 .post('/api/sources/get')
                 .send(source)
@@ -70,4 +71,44 @@ describe('Source', () => {
 
     });
 
+    describe('/POST Charge Card', () => {
+        it('it should attempt to issue a charge and fail because it can\'t associate', (done) => {
+            let user = {
+                stripe_id: 'cus_EmLn89tIw40A5O'
+            }
+            let request = {
+                number: '4242424242424242',
+                exp_month: 12,
+                exp_year: 2020,
+                cvc: '123',
+                user: user,
+                customer: 'cus_EmLn89tIw40A5O',
+                amount: '500', // Unit: cents
+                currency: 'usd',
+                source: req.body.token,
+                description: req.body.description,
+                customer: req.body.customer
+            }
+
+            chai.request(server)
+                .post('/api/sources/create')
+                .send(request)
+                .end((err, res) => {
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    res.body.should.have.property('source');
+
+                    chai.request(server)
+                        .post('/api/charges/create')
+                        .send(request)
+                        .end((err, res) => {
+                            res.body.should.be.a('object');
+                            done();
+                        });
+                });
+
+
+        });
+
+    });
 });
