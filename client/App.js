@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
-const API_URL = 'http://192.168.1.193:5000/';
+const API_URL = 'http://172.31.236.119:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -65,7 +65,7 @@ class WelcomeScreen extends React.Component {
                 <TouchableOpacity
                   style={styles.signUpButton}
                   onPress={() => {
-                    this.props.navigation.navigate('SignUp');git p
+                    this.props.navigation.navigate('SignUp');
                   }
                   } >
                   <Text style={styles.buttonText}> Sign Up </Text>
@@ -75,7 +75,7 @@ class WelcomeScreen extends React.Component {
                 <TouchableOpacity
                   style={styles.guestbutton}
                   onPress={() => {
-                    Alert.alert('We have not yet implemented the Table interface!');
+                    this.props.navigation.navigate('Menu');
                   }
                   } >
                   <Text style={styles.buttonText}> Continue As Guest </Text>
@@ -326,7 +326,7 @@ class ClockInOutScreen extends React.Component {
     compHours: '',
     latitude: null,
     longitude: null,
-    animating: true
+    animating: false
   }
 
   _clockIn = () => {
@@ -385,10 +385,10 @@ class ClockInOutScreen extends React.Component {
           if (resJson.clockOutSuccess) {
             this.state.compHours = resJson.totalHours;
             this._MyComponent.setNativeProps({ text: 'Total Hours Worked This Pay Period: ' + this.state.compHours });
-            Alert.alert("Successfully Clocked Out: " + currentUser.username, 'Date: ' + currDate + '\nTime: ' + currTime + '\nShift Length: ' + resJson.sessionHours);
+            Alert.alert("Successfully Clocked Out: " + currentUser.firstname, 'Date: ' + currDate + '\nTime: ' + currTime + '\nShift Length: ' + resJson.sessionHours);
 
           } else {
-            Alert.alert(currentUser + " is already Clocked Out!");
+            Alert.alert(currentUser.firstname + " is already Clocked Out!");
           }
         });
       },
@@ -481,7 +481,109 @@ class EmployeePortalScreen extends React.Component {
   }
 }
 
-class PaymentScreen extends React.Component {
+class PaymentChoicesScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  state = {
+    cardNumber: '',
+    exp_month: '',
+    exp_year: '',
+    cvc: '',
+    postalCode: '',
+    sources: ''
+  }
+  handlecardNumber = (text) => {
+    this.setState({ cardNumber: text })
+    if (this.state.cardNumber.length < 16) {
+    }
+  }
+  handleexp_month = (text) => {
+    this.setState({ exp_month: text })
+  }
+  handleexp_year = (text) => {
+    this.setState({ exp_year: text })
+  }
+  handlecvc = (text) => {
+    this.setState({ cvc: text })
+  }
+  handlepostalCode = (text) => {
+    this.setState({ postalCode: text })
+  }
+  login = (username, word) => {
+    alert('username: ' + username + ' password: ' + password)
+  }
+
+  submitPayment = (item) => {
+    fetch(API_URL + "api/charges/create", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: order.totalPrice,
+        currency: 'usd',
+        source: item.stripe_id,
+        description: 'Charge for order #' + order.id,
+        customer: currentUser.stripe_id
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      this.props.navigation.navigate('Receipt');
+    })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/sources/get', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        user: currentUser,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      this.setState({ sources: resJson.sources })
+    })
+
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.text}>
+            Choose Method of Payment:
+          </Text>
+          <FlatList
+            data={this.state.sources}
+            renderItem={({ item }) => <Text style={styles.menuItem} onPress={() => this.submitPayment(item)}>{item.firstname + " " + item.lastname + " - " + item.last4}</Text>}
+          />
+
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => { this.props.navigation.navigate('NewPayment'); }}>
+            <Text style={styles.submitButtonText}> New Card </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => { this.props.navigation.navigate('NewPayment'); }}>
+            <Text style={styles.submitButtonText}> Cash </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+}
+
+
+class NewPaymentScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -611,6 +713,7 @@ class ReceiptScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerLeft: null
   };
   keyExtractor = (item, index) => index.toString()
   renderItem = ({ item }) => (
@@ -667,7 +770,7 @@ class ReceiptScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-          <Text style={styles.text}>
+          <Text style={styles.SignUpText}>
             Receipt:
           </Text>
         </View>
@@ -688,9 +791,9 @@ class ReceiptScreen extends React.Component {
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
-
+              this.props.navigation.navigate('Menu');
             }}>
-            <Text style={styles.submitButtonText}> Submit </Text>
+            <Text style={styles.submitButtonText}> Menu </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1089,7 +1192,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(247,247,247,1.0)',
   },
   menuItem: {
-    paddingTop: 10,
+    paddingTop: 30,
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 2,
@@ -1163,7 +1266,7 @@ const styles = StyleSheet.create({
   },
   hourViewer: {
     margin: 15,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff44f',
     height: 40,
     borderColor: 'transparent',
     borderWidth: 1
@@ -1180,6 +1283,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     //justifyContent: 'flex-end',
     //marginBottom: 0
+    
   },
   submitButtonText: {
     padding: 2,
@@ -1191,8 +1295,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 250,
-    marginLeft: 50,
+    marginTop: 310,
+    marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,
@@ -1202,7 +1306,7 @@ const styles = StyleSheet.create({
   empMenuButton: {
     marginTop: 230,
     marginLeft: 50,
-    marginBottom: 50,
+    marginBottom: 68,
     width: 260,
     alignItems: 'center',
     backgroundColor: 'yellow',
@@ -1213,8 +1317,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 280,
-    marginLeft: 50,
+    marginTop: 340,
+    marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,
@@ -1226,8 +1330,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 310,
-    marginLeft: 50,
+    marginTop: 370,
+    marginLeft: 68,
     //marginBottom: 10,
     // height: 30,
     width: 260,
@@ -1249,9 +1353,9 @@ const styles = StyleSheet.create({
     borderRadius:100,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
-   // marginTop: 250,
-    marginLeft: 50,
+    paddingBottom: 10,
+    // marginTop: 250,
+    marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,
@@ -1270,9 +1374,9 @@ const styles = StyleSheet.create({
     marginTop:150,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
-   // marginTop: 250,
-    marginLeft: 50,
+    paddingBottom: 10,
+    // marginTop: 250,
+    marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,
@@ -1284,9 +1388,9 @@ const styles = StyleSheet.create({
     marginTop:120,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom:10,
-   // marginTop: 250,
-    marginLeft: 50,
+    paddingBottom: 10,
+    // marginTop: 250,
+    marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,

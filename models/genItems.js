@@ -13,16 +13,31 @@ Item.create({
 Item.create({
   itemName: 'Margherita',
   category: 'Pizza',
-  itemPrice: 200,
-  ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  itemPrice: 350,
+  ingredient: 'Crust, Sauce, Cheese, Basil, Tomato Slices',
+  description: 'A delicious classic margherita pizza',
 })
 Item.create({
   itemName: 'Pepperoni',
   category: 'Pizza',
-  itemPrice: 200,
+  itemPrice: 400,
+  ingredient: 'Crust, Sauce, Cheese, Pepperoni',
+  description: 'Everyone\'s favorite peperoni',
+})
+
+Item.create({
+  itemName: 'Fettucini Alfredo',
+  category: 'Pasta',
+  itemPrice: 750,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Famous Plain Pasta',
+})
+Item.create({
+  itemName: 'Meatballs and Spaghetti',
+  category: 'Pasta',
+  itemPrice: 800,
+  ingredient: 'Crust, Sauce, Cheese, Basil, Tomato Slices',
+  description: 'A delicious classic margherita Pasta',
 })
 
 Item.create({
