@@ -7,7 +7,11 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
+<<<<<<< HEAD
 const API_URL = 'http://192.168.56.1:5000/';
+=======
+const API_URL = 'http://172.31.149.49:5000/';
+>>>>>>> master
 let currentUser = '';
 let order = '';
 let token = '';
@@ -35,9 +39,9 @@ class WelcomeScreen extends React.Component {
     header: null,
   };
   render() {
-    const shadowStyle = {
+    /*const shadowStyle = {
       shadowOpacity: .25
-    }
+    }*/
     return (
       <View style={styles.container}>
         <View>
@@ -45,10 +49,8 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-            <View style={[shadowStyle]}>
-              <View style={styles.item}>
-
-
+           
+              
                 <TouchableOpacity
                   style={styles.logInMenuButton}
                   onPress={() => {
@@ -56,11 +58,9 @@ class WelcomeScreen extends React.Component {
                   }
                   } >
                   <Text style={styles.buttonText}> Login </Text>
+                 </TouchableOpacity>
+              
 
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.item}>
                 <TouchableOpacity
                   style={styles.signUpButton}
                   onPress={() => {
@@ -69,8 +69,7 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableOpacity>
-              </View>
-              <View style={styles.item}>
+
                 <TouchableOpacity
                   style={styles.guestbutton}
                   onPress={() => {
@@ -79,8 +78,7 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Continue As Guest </Text>
                 </TouchableOpacity>
-              </View>
-            </View>
+            
 
           </ImageBackground>
         </View>
@@ -164,7 +162,7 @@ class SignUpScreen extends React.Component {
               onChangeText={this.handlePassword} />
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="   Account Type (0 is Employee, 1 is Customer)"
+              placeholder="   Account Type (0 is Manager, 1 is Employee, 2 is Customer)"
               autoCapitalize="none"
               onChangeText={this.handleaccounttype} />
             <TextInput style={styles.input}
@@ -287,14 +285,21 @@ class LogInScreen extends React.Component {
                     if (resJson.loginValid) {
                       currentUser = resJson.user;
                       switch (resJson.user.accountType) {
-                        //employee is 0 
+                        //manager is 0 
                         case 0:
-                          this.props.navigation.navigate('ClockInOut');
+                          this.props.navigation.navigate('ManagerPortal');
                           break;
-                        //customer is 1
+
+                        //employee is 1
                         case 1:
-                          this.props.navigation.navigate('DineInOut');
+                          this.props.navigation.navigate('EmployeePortal');
                           break;
+
+                        //customer is 2
+                        case 2:
+                        this.props.navigation.navigate('DineInOut');
+                        break;  
+
                       }
                     } else {
                       Alert.alert('Incorrect Username or Password.');
@@ -415,11 +420,6 @@ class ClockInOutScreen extends React.Component {
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.tButton}
-              onPress={() => { this.props.navigation.navigate('EmployeePortal'); }} >
-              <Text style={styles.buttonText}> Employee Portal </Text>
-            </TouchableOpacity>
             <ActivityIndicator animating={this.state.animating} size="large" color="#fff44f" />
           </ImageBackground>
         </View>
@@ -431,7 +431,71 @@ class ClockInOutScreen extends React.Component {
 class EmployeePortalScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: <LogoTitle />,
+    headerTitle: 'Welcome, Employee!',
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View>
+          <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
+
+            <TouchableOpacity
+              style={styles.TablesButton}
+              onPress={() => {
+                Alert.alert('We have not yet implemented the Table interface!')
+              }
+              } >
+              <Text style={styles.buttonText}> View Tables </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                Alert.alert('We have not yet implemented the Schedule interface!');
+              }} >
+              <Text style={styles.buttonText}> View Schedule </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('Staff');
+              }} >
+              <Text style={styles.buttonText}> View Staff </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('Menu');
+              }} >
+              <Text style={styles.buttonText}> View Menu </Text>
+            </TouchableOpacity>
+              
+              
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('ClockInOut');
+              }} >
+              <Text style={styles.buttonText}> Clock In/Out </Text>
+            </TouchableOpacity>
+
+          </ImageBackground>
+        </View>
+      </View>
+    );
+  }
+}
+
+class ManagerPortalScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: 'Welcome, Manager!',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -476,12 +540,21 @@ class EmployeePortalScreen extends React.Component {
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('ClockInOut');
+              }} >
+              <Text style={styles.buttonText}> Clock In/Out </Text>
+            </TouchableOpacity>
+
           </ImageBackground>
         </View>
       </View>
     );
   }
 }
+
 
 class PaymentChoicesScreen extends React.Component {
   static navigationOptions = {
@@ -807,7 +880,7 @@ class ReceiptScreen extends React.Component {
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: <LogoTitle />,
+    headerTitle: 'Welcome to our Fine Dining!',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -863,7 +936,7 @@ class DineInOutScreen extends React.Component {
         <View>
           <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
             <TouchableOpacity
-              style={styles.signUpButton}
+              style={styles.topButton}
               onPress={() => { this._onPressButton() }}>
               <Text style={styles.buttonText}> Dine In </Text>
             </TouchableOpacity>
@@ -1203,6 +1276,7 @@ const RootStack = createStackNavigator(
     Receipt: ReceiptScreen,
     SignUp: SignUpScreen,
     EmployeePortal: EmployeePortalScreen,
+    ManagerPortal: ManagerPortalScreen,
     DineInOut: DineInOutScreen,
     Menu: MenuScreen,
     Summary: SummaryScreen,
@@ -1357,7 +1431,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 340,
+    marginTop: 10,
     marginLeft: 68,
     //marginBottom: 10,
     height: 50,
@@ -1370,10 +1444,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 370,
+    marginTop: 10,
     marginLeft: 68,
     //marginBottom: 10,
-    // height: 30,
+    height: 60,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f'
@@ -1437,6 +1511,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
+<<<<<<< HEAD
   reset: {
     position: 'absolute',
     bottom: 625,
@@ -1507,6 +1582,22 @@ table6: {
     aspectRatio: 2,
     flexDirection: 'row'
 },
+=======
+  topButton: {
+    borderRadius: 100,
+    marginTop: 120,
+    marginBottom: 20,
+    //paddingTop:10,
+    paddingBottom: 10,
+    // marginTop: 250,
+    marginLeft: 68,
+    //marginBottom: 10,
+    height: 50,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#fff44f',
+  },
+>>>>>>> master
 })
 
 
