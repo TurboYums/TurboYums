@@ -7,11 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-<<<<<<< HEAD
-const API_URL = 'http://172.31.132.189:5000/';
-=======
-const API_URL = 'http://172.31.149.49:5000/';
->>>>>>> c172126f061fdfc4cf097283c4ea67f953ad4af9
+const API_URL = 'http://172.31.103.111:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -28,6 +24,18 @@ class LogoTitle extends React.Component {
         source={require('./assets/Logomono.png')}
         // width={Dimensions.get('window').width}
         resizeMode="stretch"
+      />
+    );
+  }
+}
+
+class EditButton extends React.Component{
+  render(){
+    return(
+      <EditButton
+        onPress={() => alert('This is a button!')}
+          title="Edit"
+        color="#000000"
       />
     );
   }
@@ -536,7 +544,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                this.props.navigation.navigate('Menu');
+                this.props.navigation.navigate('EditMenu'); //will change this to Menu when I have the edit button showing only for manager working
               }} >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
@@ -961,6 +969,129 @@ class MenuScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    //headerRight: <EditButton/>,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      items: []
+    };
+  }
+
+  _onConfirm(navigate, state) {
+    navigate('Summary')
+  }
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  _onPressOrder = (item) => {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+
+      this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
+    });
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+
+        this.setState({ items: items });;
+      }
+    });
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    if(currentUser.accountType==0){
+      button = <EditButton />;
+    }
+    else{
+      button=null;
+    }
+    console.log("ARRIVED")
+    console.log(this.props.navigation.state)
+    const { order_count } = 0
+    const { order_message } = "Order Count is:" + order_count
+    return (
+      <View>
+        <ScrollView>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
+            renderSectionHeader={({ section: { category } }) => (
+              <Text style={styles.sectionHeader}>{category}</Text>
+            )}
+            sections={this.state.items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressOrder() }}>
+          <Text style={styles.submitButtonText}> View Order </Text>
+        </TouchableOpacity>
+      </View>
+
+    );
+  }
+}
+
+class ManagerMenu extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    headerRight: (
+      <Button
+        onPress={() => alert('This is a button!')}
+        title="Edit"
+        color="#000000"
+      />
+    ),
   };
 
   constructor(props) {
@@ -1281,7 +1412,8 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
-    Staff: StaffScreen
+    Staff: StaffScreen,
+    EditMenu: ManagerMenu
   },
   {
     initialRouteName: 'Welcome',

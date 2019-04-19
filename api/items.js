@@ -15,11 +15,22 @@ api.post('/api/items/create', (req, res) => {
   })
 })
 
+api.post('/api/items/remove', (req, res) => {
+  Item.destroy({
+    where: {
+      id: req.body.id
+    }
+  }),then (deletedItem => {
+    res.send({item: deletedItem});
+  })
+})
+
 api.get('/api/items/getAll', (req, res) => {
   Item.findAll({group: ['category', 'id']}).then(items => {
     res.send({items: items})
   })
 })
+
 
 //filter
 /*api.post('/api/items/filter', (req, res) => {
