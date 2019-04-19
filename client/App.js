@@ -96,14 +96,11 @@ class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
             <View style={[shadowStyle]}>
               <View style={styles.item}>
-
-
                 <TouchableOpacity
                   style={styles.logInMenuButton}
                   onPress={() => {
