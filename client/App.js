@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.31.236.119:5000/';
+const API_URL = 'http://192.168.56.1:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -1098,6 +1098,7 @@ class StaffScreen extends React.Component {
   }
 }
 
+
 class SummaryScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1435,7 +1436,77 @@ const styles = StyleSheet.create({
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
-  }
+  },
+  reset: {
+    position: 'absolute',
+    bottom: 625,
+    left: 120,
+    height: 45,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table1: {
+    position: 'absolute',
+    bottom: 100,
+    left: 55,
+    height: 90,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table2: {
+    position: 'absolute',
+    bottom: 300,
+    left: 55,
+    height: 90,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table3: {
+    position: 'absolute',
+    bottom: 500,
+    left: 55,
+    height: 90,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table4: {
+    position: 'absolute',
+    bottom: 500,
+    left: 200,
+    height: 90,
+    backgroundColor: 'black',
+    width: 90,
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table5: {
+    position: 'absolute',
+    bottom: 300,
+    left: 200,
+    height: 90,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
+table6: {
+    position: 'absolute',
+    bottom: 100,
+    left: 200,
+    height: 90,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+},
 })
 
 
