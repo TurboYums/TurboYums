@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.31.149.49:5000/';
+const API_URL = 'http://192.168.1.193:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -67,7 +67,7 @@ class WelcomeScreen extends React.Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={styles.guestbutton}
+                  style={styles.signUpButton}
                   onPress={() => {
                     this.props.navigation.navigate('Menu');
                   }
