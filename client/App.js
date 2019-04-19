@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.31.236.119:5000/';
+const API_URL = 'http://192.168.1.253:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -41,10 +41,8 @@ class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-
             <View style={[shadowStyle]}>
               <View style={styles.item}>
 
@@ -289,7 +287,7 @@ class LogInScreen extends React.Component {
                       switch (resJson.user.accountType) {
                         //employee is 0 
                         case 0:
-                          this.props.navigation.navigate('ClockInOut');
+                          this.props.navigation.navigate('EmployeePortal');
                           break;
                         //customer is 1
                         case 1:
@@ -450,7 +448,7 @@ class EmployeePortalScreen extends React.Component {
                 Alert.alert('We have not yet implemented the Table interface!')
               }
               } >
-              <Text style={styles.buttonText}> View Tables </Text>
+              <Text style={styles.buttonText}>Tables</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -458,7 +456,15 @@ class EmployeePortalScreen extends React.Component {
               onPress={() => {
                 Alert.alert('We have not yet implemented the Schedule interface!');
               }} >
-              <Text style={styles.buttonText}> View Schedule </Text>
+              <Text style={styles.buttonText}>Schedule</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('ClockInOut');
+              }} >
+              <Text style={styles.buttonText}>Timesheets</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -466,14 +472,23 @@ class EmployeePortalScreen extends React.Component {
               onPress={() => {
                 this.props.navigation.navigate('Staff');
               }} >
-              <Text style={styles.buttonText}> View Staff </Text>
+              <Text style={styles.buttonText}>Staff</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
                 this.props.navigation.navigate('Menu');
               }} >
-              <Text style={styles.buttonText}> View Menu </Text>
+              <Text style={styles.buttonText}>Menu</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('OrderQueue');
+              }} >
+              <Text style={styles.buttonText}>Order Queue</Text>
             </TouchableOpacity>
 
           </ImageBackground>
@@ -529,6 +544,7 @@ class PaymentChoicesScreen extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        order: order,
         amount: order.totalPrice,
         currency: 'usd',
         source: item.stripe_id,
@@ -1098,6 +1114,97 @@ class StaffScreen extends React.Component {
   }
 }
 
+class OrderQueueScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  keyExtractor = (order, index) => index.toString()
+  renderItem = ({ order }) => (
+    <ListItem
+      title={order.id}
+      subtitle={order.userStripeId}
+    />
+  )
+  constructor(props) {
+    super(props);
+    this.state = {
+      orders: null
+    };
+  }
+
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewOrder', { order: order, takeOut: '1' })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/getOrders', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      let tempOrders = resJson.orders;
+      orders = []
+
+      for (let order of tempOrders) {
+        console.log(order);
+        if (orders[orders.length - 1] && order.category == orders[orders.length - 1].category) {
+          orders[orders.length - 1].data.push(order);
+        }
+        else {
+          orders.push({ category: order.category, data: [order] });
+        }
+        this.setState({ orders: orders });;
+      }
+
+    })
+
+  }
+
+  render() {
+
+    return (
+      <View>
+        <Text style={styles.SignUpText}>Order Summary:</Text>
+        <View>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+              {item.itemName + "       $" + item.itemPrice / 100}
+            </Text>
+              //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
+            }
+            sections={items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </View>
+        <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
+        <Text style={styles.receiptFooter}>Tax: ${(order.totalPrice * .06625 / 100).toFixed(2)}</Text>
+        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
+
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => {
+            this.props.navigation.navigate('PaymentChoices', { order: [] });
+          }}>
+          <Text style={styles.submitButtonText}> Pay </Text>
+        </TouchableOpacity>
+      </View>
+
+    );
+
+  }
+}
+
 class SummaryScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1206,7 +1313,8 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
-    Staff: StaffScreen
+    Staff: StaffScreen,
+    OrderQueue: OrderQueueScreen
   },
   {
     initialRouteName: 'Welcome',

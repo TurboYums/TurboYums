@@ -9,7 +9,9 @@ api.post('/api/order/create', (req, res) => {
   Order.create({
     totalPrice: req.body.totalPrice,
     specialRequest: req.body.specialRequest,
-    userId: req.body.userId
+    userId: req.body.userId,
+    status: 'ordering',
+    active: 0
   }).then(newOrder => {
     res.send({ order: newOrder });
   })
@@ -29,6 +31,12 @@ api.post('/api/order/add', (req, res) => {
         })
       })
     })
+  })
+})
+
+api.post('/api/order/getOrders', (req, res) => {
+  Order.findAll({ where: { active: 1 } }).then(orders => {
+      res.send({ orders: orders})
   })
 })
 

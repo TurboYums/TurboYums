@@ -42,19 +42,23 @@ api.post('/api/charges/create', (req, res) => {
       source_stripe_id: req.body.source_stripe_id,
       customer: req.body.customer
     }).then(newChargeModel => {
-      console.log("seraching for " + req.body.customer);
+      console.log("searching for " + req.body.customer);
       User.findOne({ where: { stripe_id: req.body.customer } }).then(user => {
         console.log("adding points to " + user.stripe_id);
-        earnedRewards = config.rewards.rewardEarnedPerTransaction + Math.floor(config.rewards.rewardEarnedPerDollarSpent * newChargeModel.amount * 100);  
-        user.increment('rewardpoints', { by: earnedRewards});
+        earnedRewards = config.rewards.rewardEarnedPerTransaction + Math.floor(config.rewards.rewardEarnedPerDollarSpent * newChargeModel.amount * 100);
+        user.increment('rewardpoints', { by: earnedRewards });
         user.reload().then(() => {
-          if(user.rewardpoints >= config.requiredCountForReward){
-            user.increment('rewardBalance', {by: config.rewards.rewardValue});
+          if (user.rewardpoints >= config.requiredCountForReward) {
+            user.increment('rewardBalance', { by: config.rewards.rewardValue });
             user.rewardpoints = 0;
             user.save().then(() => {
-              res.send({ user: user, charge: newChargeModel });});
+              order.status = "payed";
+              order.active = 1;
+              order.save.then(() => {
+                res.send({ user: user, charge: newChargeModel });
+              });
+            });
           }
-          res.send({ user: user, charge: newChargeModel });
         })
       })
     })
