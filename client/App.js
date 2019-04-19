@@ -1,13 +1,14 @@
 import React from 'react';
-import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { Button,ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
-const API_URL = 'http://192.168.1.14:5000/';
+const API_URL = 'http://192.168.1.193:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -131,84 +132,84 @@ class SignUpScreen extends React.Component {
     }
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <View style={styles.container}>
-
-          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
-          <ScrollView style={{ flex: 1 }}>
-            <Text style={styles.SignUpText}>
-              Create
+      <View style={styles.container}>
+      
+        <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+        <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
+            Create
           </Text>
-            <Text style={styles.text}>
-              your TurboYums account
+          <Text style={styles.text}>
+            your TurboYums account
           </Text>
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              placeholder="   Username"
-              autoCapitalize="none"
-              onChangeText={this.handleusername} />
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              placeholder="   First Name"
-              autoCapitalize="words"
-              onChangeText={this.handlefirstname} />
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              placeholder="   Last Name"
-              autoCapitalize="words"
-              onChangeText={this.handlelastname} />
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              secureTextEntry={true}
-              placeholder="   Password"
-              autoCapitalize="none"
-              onChangeText={this.handlePassword} />
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              placeholder="   Account Type (0 is Employee, 1 is Customer)"
-              autoCapitalize="none"
-              onChangeText={this.handleaccounttype} />
-            <TextInput style={styles.input}
-              underlineColorAndroid="transparent"
-              placeholder="   Email"
-              autoCapitalize="none"
-              onChangeText={this.handleemail} />
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={() => {
-              if (!this.state.username || !this.state.firstname || !this.state.lastname || !this.state.password || !this.state.accountType || !this.state.email) {
-                Alert.alert('Please fill in all fields');
-              } else {
-                fetch(API_URL + 'api/users/create', {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    username: this.state.username,
-                    firstname: this.state.firstname,
-                    lastname: this.state.lastname,
-                    password: this.state.password,
-                    accountType: this.state.accountType,
-                    email: this.state.email,
-                  }),
-                }).then((res) => res.json()).then(resJson => {
-                  if (resJson.creationSuccess) {
-                    Alert.alert('Succesfully Created Account! Please Log In');
-                    this.props.navigation.navigate('LogIn');
-                  } else {
-                    Alert.alert('Error Creating Account!');
-                    this.props.navigation.navigate('Welcome');
-                  }
-                });
-              }
-            }}>
-            <Text style={styles.submitButtonText}> Next </Text>
-          </TouchableOpacity>
-
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="   Username"
+            autoCapitalize="none"
+            onChangeText={this.handleusername} />
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="   First Name"
+            autoCapitalize="words"
+            onChangeText={this.handlefirstname} />
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="   Last Name"
+            autoCapitalize="words"
+            onChangeText={this.handlelastname} />
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            secureTextEntry={true}
+            placeholder="   Password"
+            autoCapitalize="none"
+            onChangeText={this.handlePassword} />
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="   Account Type (0 is Employee, 1 is Customer)"
+            autoCapitalize="none"
+            onChangeText={this.handleaccounttype} />
+          <TextInput style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="   Email"
+            autoCapitalize="none"
+            onChangeText={this.handleemail} />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => {
+            if (!this.state.username || !this.state.firstname || !this.state.lastname || !this.state.password || !this.state.accountType || !this.state.email) {
+              Alert.alert('Please fill in all fields');
+            } else {
+              fetch(API_URL + 'api/users/create', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  username: this.state.username,
+                  firstname: this.state.firstname,
+                  lastname: this.state.lastname,
+                  password: this.state.password,
+                  accountType: this.state.accountType,
+                  email: this.state.email,
+                }),
+              }).then((res) => res.json()).then(resJson => {
+                if (resJson.creationSuccess) {
+                  Alert.alert('Succesfully Created Account! Please Log In');
+                  this.props.navigation.navigate('LogIn');
+                } else {
+                  Alert.alert('Error Creating Account!');
+                  this.props.navigation.navigate('Welcome');
+                }
+              });
+            }
+          }}>
+          <Text style={styles.submitButtonText}> Next </Text>
+        </TouchableOpacity>
+        
         </View>
-      </KeyboardAvoidingView>
+       </KeyboardAvoidingView>
     );
   }
 }
@@ -329,7 +330,7 @@ class ClockInOutScreen extends React.Component {
   }
 
   _clockIn = () => {
-    this.setState({ animating: true });
+    this.setState({animating: true });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         fetch(API_URL + 'api/users/clockIn', {
@@ -349,21 +350,21 @@ class ClockInOutScreen extends React.Component {
           var currTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
           if (resJson.clockInSuccess) {
-            Alert.alert("Successfully Clocked In: " + currentUser.firstname + " " + currentUser.lastname, ' Date: ' + currDate + '\nTime: ' + currTime);
+            Alert.alert("Successfully Clocked In: " + currentUser, 'Date: ' + currDate + '\nTime: ' + currTime);
 
           } else {
-            Alert.alert(currentUser.firstname + " " + currentUser.lastname + " is already Clocked In!");
+            Alert.alert(currentUser + " is already Clocked In!");
           }
         });
       },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
     );
-    this.setState({ animating: false });
+    this.setState({animating: false });
   }
 
   _clockOut = () => {
-    this.setState({ animating: true });
+    this.setState({animating: true });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         fetch(API_URL + 'api/users/clockOut', {
@@ -395,7 +396,7 @@ class ClockInOutScreen extends React.Component {
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 },
     );
 
-    this.setState({ animating: false });
+    this.setState({animating: false });
   }
   render() {
     return (
@@ -405,19 +406,19 @@ class ClockInOutScreen extends React.Component {
             <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: " editable={false} ref={component => this._MyComponent = component} />
             <TouchableOpacity
               style={styles.ClockInButton}
-              onPress={() => { this._clockIn() }} >
+              onPress={() => {this._clockIn()}} >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
-
+            
             <TouchableOpacity
               style={styles.tButton}
-              onPress={() => { this._clockOut() }} >
+              onPress={() => {this._clockOut()}} >
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
-
+        
             <TouchableOpacity
               style={styles.tButton}
-              onPress={() => { this.props.navigation.navigate('EmployeePortal'); }} >
+              onPress={() => {this.props.navigation.navigate('EmployeePortal');}} >
               <Text style={styles.buttonText}> Employee Portal </Text>
             </TouchableOpacity>
             <ActivityIndicator animating={this.state.animating} size="large" color="#fff44f" />
@@ -437,7 +438,7 @@ class EmployeePortalScreen extends React.Component {
     },
     headerTintColor: '#000000',
   };
-
+  
   render() {
     return (
       <View style={styles.container}>
@@ -456,26 +457,23 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!');
-              }} >
+                Alert.alert('We have not yet implemented the Schedule interface!');}} >
               <Text style={styles.buttonText}> View Schedule </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                this.props.navigation.navigate('Staff');
-              }} >
+                this.props.navigation.navigate('Staff');}} >
               <Text style={styles.buttonText}> View Staff </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                this.props.navigation.navigate('Menu');
-              }} >
+                this.props.navigation.navigate('Menu');}} >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-
+            
           </ImageBackground>
         </View>
       </View>
@@ -483,104 +481,7 @@ class EmployeePortalScreen extends React.Component {
   }
 }
 
-class PaymentChoicesScreen extends React.Component {
-  static navigationOptions = {
-    // headerTitle instead of title
-    headerTitle: <LogoTitle />,
-    headerStyle: {
-      backgroundColor: '#fff44f',
-    },
-    headerTintColor: '#000000',
-  };
-  state = {
-    cardNumber: '',
-    exp_month: '',
-    exp_year: '',
-    cvc: '',
-    postalCode: '',
-    sources: ''
-  }
-  handlecardNumber = (text) => {
-    this.setState({ cardNumber: text })
-    if (this.state.cardNumber.length < 16) {
-    }
-  }
-  handleexp_month = (text) => {
-    this.setState({ exp_month: text })
-  }
-  handleexp_year = (text) => {
-    this.setState({ exp_year: text })
-  }
-  handlecvc = (text) => {
-    this.setState({ cvc: text })
-  }
-  handlepostalCode = (text) => {
-    this.setState({ postalCode: text })
-  }
-  login = (username, word) => {
-    alert('username: ' + username + ' password: ' + password)
-  }
-
-  submitPayment = (item) => {
-    fetch(API_URL + "api/charges/create", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        amount: order.totalPrice,
-        currency: 'usd',
-        source: item.stripe_id,
-        description: 'Charge for order #' + order.id,
-        customer: currentUser.stripe_id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      this.props.navigation.navigate('Receipt');
-    })
-  }
-
-  componentWillMount() {
-    fetch(API_URL + 'api/sources/get', {//fetch start
-      method: 'POST',
-      headers: {//header start
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-        user: currentUser,
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      this.setState({ sources: resJson.sources })
-    })
-
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.text}>
-            Choose Method of Payment:
-          </Text>
-          <FlatList
-            data={this.state.sources}
-            renderItem={({ item }) => <Text style={styles.menuItem} onPress={this.submitPayment(item)}>{item.firstname + " " + item.lastname + " - " + item.last4}</Text>}
-          />
-
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={() => { this.props.navigation.navigate('NewPayment'); }}>
-            <Text style={styles.submitButtonText}> New Card </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-}
-
-
-class NewPaymentScreen extends React.Component {
+class PaymentScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -882,15 +783,6 @@ class MenuScreen extends React.Component {
     },
     headerTintColor: '#000000',
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      order: order,
-      items: []
-    };
-  }
-
   _onConfirm(navigate, state) {
     navigate('Summary')
   }
@@ -923,36 +815,9 @@ class MenuScreen extends React.Component {
           items.push({ category: item.category, data: [item] });
         }
       }
-
       this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
     });
   }
-
-  componentWillMount() {
-    fetch(API_URL + 'api/items/getAll', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((res) => res.json()).then(resJson => {
-      let tempItems = resJson.items;
-      items = []
-
-      for (let item of tempItems) {
-        console.log(item);
-        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
-          items[items.length - 1].data.push(item);
-        }
-        else {
-          items.push({ category: item.category, data: [item] });
-        }
-
-        this.setState({ items: items });;
-      }
-    });
-  }
-
   render() {
     const { navigate } = this.props.navigation;
     console.log("ARRIVED")
@@ -962,14 +827,14 @@ class MenuScreen extends React.Component {
     return (
       <View>
         <ScrollView>
-          <SectionList
-            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
-            renderSectionHeader={({ section: { category } }) => (
-              <Text style={styles.sectionHeader}>{category}</Text>
-            )}
-            sections={this.state.items}
-            keyExtractor={(item, index) => item + index}
-          />
+        <SectionList
+          renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$"+ item.itemPrice / 100} </Text>}
+          renderSectionHeader={({ section: { category } }) => (
+            <Text style={styles.sectionHeader}>{category}</Text>
+          )}
+          sections={items}
+          keyExtractor={(item, index) => item + index}
+        />
         </ScrollView>
         <TouchableOpacity
           style={styles.submitButton}
@@ -977,7 +842,7 @@ class MenuScreen extends React.Component {
           <Text style={styles.submitButtonText}> View Order </Text>
         </TouchableOpacity>
       </View>
-
+      
     );
   }
 }
@@ -1078,7 +943,7 @@ class StaffScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>Employees: </Text>
+        <Text style={SignUpText}>Employees:</Text>
         <View>
           <FlatList
             data={this.state.employees}
@@ -1160,10 +1025,10 @@ class SummaryScreen extends React.Component {
         <View>
           <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-              {item.itemName + "       $" + item.itemPrice / 100}
-            </Text>
-              //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
-            }
+                                                     {item.itemName + "       $" + item.itemPrice / 100}
+                                                    </Text>
+                                                    //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
+                                                  }
             sections={items}
             keyExtractor={(item, index) => item + index}
           />
@@ -1175,7 +1040,7 @@ class SummaryScreen extends React.Component {
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => {
-            this.props.navigation.navigate('PaymentChoices', { order: [] });
+            this.props.navigation.navigate('Payment', { order: [] });
           }}>
           <Text style={styles.submitButtonText}> Pay </Text>
         </TouchableOpacity>
@@ -1191,8 +1056,7 @@ const RootStack = createStackNavigator(
     Welcome: WelcomeScreen,
     LogIn: LogInScreen,
     ClockInOut: ClockInOutScreen,
-    NewPayment: NewPaymentScreen,
-    PaymentChoices: PaymentChoicesScreen,
+    Payment: PaymentScreen,
     Receipt: ReceiptScreen,
     SignUp: SignUpScreen,
     EmployeePortal: EmployeePortalScreen,
@@ -1230,7 +1094,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 2,
     fontSize: 18,
-
+ 
     textAlign: 'left',
   },
   viewItem: {
@@ -1382,11 +1246,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff44f'
   },
   tButton: {
-    borderRadius: 100,
+    borderRadius:100,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom: 10,
-    // marginTop: 250,
+    paddingBottom:10,
+   // marginTop: 250,
     marginLeft: 50,
     //marginBottom: 10,
     height: 50,
@@ -1396,18 +1260,18 @@ const styles = StyleSheet.create({
   },
   submitButton2: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
+    bottom:0,
+    left:0,
     backgroundColor: '#fff44f',
     borderRadius: 100
   },
-  ClockInButton: {
-    borderRadius: 100,
-    marginTop: 150,
+  ClockInButton:{
+    borderRadius:100,
+    marginTop:150,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom: 10,
-    // marginTop: 250,
+    paddingBottom:10,
+   // marginTop: 250,
     marginLeft: 50,
     //marginBottom: 10,
     height: 50,
@@ -1415,13 +1279,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
-  TablesButton: {
-    borderRadius: 100,
-    marginTop: 120,
+  TablesButton:{
+    borderRadius:100,
+    marginTop:120,
     marginBottom: 20,
     //paddingTop:10,
-    paddingBottom: 10,
-    // marginTop: 250,
+    paddingBottom:10,
+   // marginTop: 250,
     marginLeft: 50,
     //marginBottom: 10,
     height: 50,

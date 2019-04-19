@@ -1,9 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://c3-wgg.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.c3-wgg.anonymous.client.exp.direct",
+  "ngrokPid": 1304,
   "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null
+  "packagerPort": 19001,
+  "packagerPid": 14760
 }
