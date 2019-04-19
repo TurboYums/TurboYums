@@ -7,7 +7,11 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
+<<<<<<< HEAD
 const API_URL = 'http://172.31.132.189:5000/';
+=======
+const API_URL = 'http://172.31.149.49:5000/';
+>>>>>>> c172126f061fdfc4cf097283c4ea67f953ad4af9
 let currentUser = '';
 let order = '';
 let token = '';
@@ -159,7 +163,7 @@ class SignUpScreen extends React.Component {
               onChangeText={this.handlePassword} />
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="   Account Type (0 is Employee, 1 is Customer, 2 is Manager)"
+              placeholder="   Account Type (0 is Manager, 1 is Employee, 2 is Customer)"
               autoCapitalize="none"
               onChangeText={this.handleaccounttype} />
             <TextInput style={styles.input}
@@ -282,18 +286,21 @@ class LogInScreen extends React.Component {
                     if (resJson.loginValid) {
                       currentUser = resJson.user;
                       switch (resJson.user.accountType) {
-                        //employee is 0 
+                        //manager is 0 
                         case 0:
+                          this.props.navigation.navigate('ManagerPortal');
+                          break;
+
+                        //employee is 1
+                        case 1:
                           this.props.navigation.navigate('EmployeePortal');
                           break;
-                        //customer is 1
-                        case 1:
-                          this.props.navigation.navigate('DineInOut');
-                          break;
-                        //manager is 2
+
+                        //customer is 2
                         case 2:
-                        this.props.navigation.navigate('ManagerPortal');
+                        this.props.navigation.navigate('DineInOut');
                         break;  
+
                       }
                     } else {
                       Alert.alert('Incorrect Username or Password.');
