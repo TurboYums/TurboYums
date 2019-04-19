@@ -7,13 +7,14 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.30.20.207:5000/';
+const API_URL = 'http://172.31.132.189:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
 let items = '';
 let employees = '';
 let currentItem = '';
+
 
 class LogoTitle extends React.Component {
   render() {
