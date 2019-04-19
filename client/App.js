@@ -1154,8 +1154,7 @@ class SummaryScreen extends React.Component {
   }
 }
 
-const RootStack = createStackNavigator(
-  {
+const RootStack = createStackNavigator({
     Welcome: WelcomeScreen,
     LogIn: LogInScreen,
     ClockInOut: ClockInOutScreen,
