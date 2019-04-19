@@ -65,7 +65,7 @@ class WelcomeScreen extends React.Component {
                 <TouchableOpacity
                   style={styles.signUpButton}
                   onPress={() => {
-                    this.props.navigation.navigate('SignUp');
+                    this.props.navigation.navigate('SignUp');git p
                   }
                   } >
                   <Text style={styles.buttonText}> Sign Up </Text>
