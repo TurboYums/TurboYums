@@ -35,9 +35,9 @@ class WelcomeScreen extends React.Component {
     header: null,
   };
   render() {
-    const shadowStyle = {
+    /*const shadowStyle = {
       shadowOpacity: .25
-    }
+    }*/
     return (
       <View style={styles.container}>
         <View>
@@ -45,10 +45,8 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-            <View style={[shadowStyle]}>
-              <View style={styles.item}>
-
-
+           
+              
                 <TouchableOpacity
                   style={styles.logInMenuButton}
                   onPress={() => {
@@ -56,11 +54,9 @@ class WelcomeScreen extends React.Component {
                   }
                   } >
                   <Text style={styles.buttonText}> Login </Text>
+                 </TouchableOpacity>
+              
 
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.item}>
                 <TouchableOpacity
                   style={styles.signUpButton}
                   onPress={() => {
@@ -69,8 +65,7 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableOpacity>
-              </View>
-              <View style={styles.item}>
+
                 <TouchableOpacity
                   style={styles.guestbutton}
                   onPress={() => {
@@ -79,8 +74,7 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Continue As Guest </Text>
                 </TouchableOpacity>
-              </View>
-            </View>
+            
 
           </ImageBackground>
         </View>
@@ -420,6 +414,7 @@ class ClockInOutScreen extends React.Component {
               onPress={() => { this.props.navigation.navigate('EmployeePortal'); }} >
               <Text style={styles.buttonText}> Employee Portal </Text>
             </TouchableOpacity>
+
             <ActivityIndicator animating={this.state.animating} size="large" color="#fff44f" />
           </ImageBackground>
         </View>
@@ -1356,7 +1351,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 340,
+    marginTop: 10,
     marginLeft: 68,
     //marginBottom: 10,
     height: 50,
@@ -1369,10 +1364,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
-    marginTop: 370,
+    marginTop: 10,
     marginLeft: 68,
     //marginBottom: 10,
-    // height: 30,
+    height: 60,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f'
