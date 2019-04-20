@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
 
-const API_URL = 'http://172.30.20.207:5000/';
+const API_URL = 'http://192.168.1.5:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -1232,7 +1232,13 @@ class WhichEditScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> Edit Existing Items </Text>
             </TouchableOpacity>
-              
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('RemoveItem');
+              }} >
+              <Text style={styles.buttonText}> Remove Item </Text>
+            </TouchableOpacity>
 
           </ImageBackground>
         </View>
@@ -1357,6 +1363,79 @@ class AddItemScreen extends React.Component {
               }
             }}>
             <Text style={styles.submitButtonText}> Create </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+}
+
+class RemoveItemScreen extends React.Component {
+  state = {
+    itemName: '',
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  handleitemName = (text) => {
+    this.setState({ itemName: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
+              Item Deletion
+          </Text>
+          <Text style={styles.text}>
+            Enter details below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Item Name:"
+              autoCapitalize="words"
+              onChangeText={this.handleitemName} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.itemName) {
+                Alert.alert('Please fill in the field.');
+              } else {
+                fetch(API_URL + 'api/items/remove', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: this.state.itemName,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Succesfully Deleted Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  } else {
+                    Alert.alert('Error Deleting Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  }
+                });
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Delete </Text>
           </TouchableOpacity>
 
         </View>
@@ -1645,6 +1724,7 @@ const RootStack = createStackNavigator(
     WhichEdit: WhichEditScreen,
     EditItem: EditItemScreen,
     AddItem: AddItemScreen,
+    RemoveItem: RemoveItemScreen,
   },
   {
     initialRouteName: 'Welcome',

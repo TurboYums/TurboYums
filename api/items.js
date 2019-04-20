@@ -22,10 +22,14 @@ api.post('/api/items/create', (req, res) => {
 api.post('/api/items/remove', (req, res) => {
   Item.destroy({
     where: {
-      id: req.body.id
+      itemName: req.body.itemName
     }
   }),then (deletedItem => {
-    res.send({item: deletedItem});
+    res.send({
+      creationSuccess: true,
+      text: `Deleted Item: ${deletedItem}`,
+      item: deletedItem
+    });
   })
 })
 
