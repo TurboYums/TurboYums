@@ -1604,7 +1604,7 @@ class TableLayout extends React.Component {
                         </Text>
         </View>
         <View style={styles.legReady}>
-          <Text style={{ color: 'white'}}>       Ready</Text>
+          <Text style={{ color: 'white' }}>       Ready</Text>
         </View>
         <View style={styles.legDirty}>
           <Text style={{ color: 'white' }}>         Dirty</Text>
