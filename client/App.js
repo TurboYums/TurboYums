@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+import { Alert, AppRegistry, Image, StyleSheet, Animated, PanResponder, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://192.168.56.1:5000/';
+const API_URL = 'http://172.31.59.123:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -15,6 +15,8 @@ let items = '';
 let employees = '';
 let currentItem = '';
 let currentTable = '';
+
+
 
 class LogoTitle extends React.Component {
   render() {
@@ -1189,6 +1191,23 @@ class TableLayout extends React.Component {
       legDirty: 'coral',
       legReady: 'green'
     };
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/tables/getTabless', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        tableIS: tableID,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      table = resJson.table
+      this.setState({ table: resJson.table })
+    })
+
   }
 
   table1Select = () => {
