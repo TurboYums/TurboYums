@@ -1,1 +1,14 @@
+<<<<<<< HEAD
 {}
+=======
+{
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://47-zut.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.47-zut.anonymous.client.exp.direct",
+  "ngrokPid": 64714,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 64700,
+  "webpackServerPort": null
+}
+>>>>>>> a674c5b... delete working

@@ -1,14 +1,13 @@
-import React from 'react'
-import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native'
-import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation' // Version can be specified in package.json
-import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native'
-import { Header, CheckBox } from 'react-native-elements'
-import MenuItem from './components/MenuItem'
+import React from 'react';
+import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
+import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+import { Header,ListItem} from 'react-native-elements';
+import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
-
 import { ListItem, Badge} from 'react-native-elements';
 
 
@@ -2182,7 +2181,88 @@ class OrderQueueScreen extends React.Component {
   }
 }
 
-class OrderSummaryStaffScreen extends React.Component {
+class DeleteItemScreen extends React.Component {
+  static navigationOptions = {
+    
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  _onPressAddOrder = () => {
+    fetch(API_URL + 'api/order/add', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.state.params.refresh();
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+
+  }
+  _onPressDeleteOrder = () => {
+    fetch(API_URL + 'api/order/remove', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+  }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentItem.itemName}</Text>
+        <Text style={styles.itemPrice}>{'Price: $' + currentItem.itemPrice / 100}</Text>
+        <Text style={styles.itemPrice}>{'Description: ' + currentItem.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressAddOrder() }}>
+          <Text style={styles.submitButtonText}> Add To Order </Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDeleteOrder() }}>
+          <Text style={styles.submitButtonText}> Delete Item </Text>
+          
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+
+class StaffScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -2347,6 +2427,35 @@ class SummaryScreen extends React.Component {
     })
   }
   componentWillMount() {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({ order: resJson.order })
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({ items: items });;
+      }
+
+    })
+  }
+  componentWillMount() {
     fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
       headers: {
@@ -2389,7 +2498,7 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item }) => this.renderItem({item})
+            renderItem={({ item, index, section }) => this.renderItem({item})
             
             // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
             //   {item.itemName + "       $" + item.itemPrice / 100}
@@ -2451,7 +2560,9 @@ const RootStack = createStackNavigator(
     AddPingCusty: AddPingScreenCust,
     AddPingEmp: AddPingScreenEmp,
     ViewPings: ViewPingScreen,
-    DelPing: DelPingScreen
+    DelPing: DelPingScreen,
+    DeleteItem: DeleteItemScreen,
+    Staff: StaffScreen
   },
   {
     initialRouteName: 'Welcome',
