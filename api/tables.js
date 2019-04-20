@@ -4,7 +4,7 @@ const sequelize = require('../models/sequelize.js');
 const Table = sequelize.import('../models/table.js');
 
 api.post('/api/tables/create', (req, res) => {
-    Tabke.create({
+    Table.create({
         tableID: req.body.tableID,
         status: 0
     }).then(newTable => {

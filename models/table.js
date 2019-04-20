@@ -3,7 +3,7 @@ const sequelize = require('./sequelize.js');
 
 Table = sequelize.define('table', {
   tableID: Sequelize.DOUBLE,
-  status: Sequelize.INT
+  status: Sequelize.INTEGER
 })
 
 Table.belongsTo(Order);
