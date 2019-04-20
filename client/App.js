@@ -2,28 +2,13 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-<<<<<<< HEAD
+
 import { Header, ListItem, Avatar, Badge, Icon, withBadge} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
-//AppRegistry.registerComponent('RNNavigators', () => Drawer );
-//=======
-//const API_URL = 'http://10.0.1.85:5000/';
-// const API_URL = 'http://127.0.0.1:5000/';
-//>>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
-const API_URL = 'http://192.168.1.193:5000/';
-//const API_URL = 'http://10.0.1.85:5000/';
-=======
-import { Header, ListItem} from 'react-native-elements';
-import MenuItem from './components/MenuItem';
-import { unregisterTaskAsync } from 'expo-background-fetch';
-import { Font } from 'expo';
-
-import { CheckBox } from 'react-native-elements'
 
 
 const API_URL = 'http://10.0.1.85:5000/';
->>>>>>> c52733dc8b7333d5412e173a631f20cc00a9d7d6
 // const API_URL = 'http://127.0.0.1:5000/';
 let currentUser = '';
 let order = '';
@@ -1543,9 +1528,9 @@ class ViewItemScreen extends React.Component {
   }
 }
 
-class EditItemScreen extends React.Component { //This is where we gotta make changes to edit items @Holly :)
+class DeleteItemScreen extends React.Component {
   static navigationOptions = {
-    // headerTitle instead of title
+    
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
@@ -1578,9 +1563,26 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
           items.push({ category: item.category, data: [item] });
         }
       }
+      this.props.navigation.state.params.refresh();
       this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
     });
 
+  }
+  _onPressDeleteOrder = () => {
+    fetch(API_URL + 'api/order/remove', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
   }
   render() {
     const { navigate } = this.props.navigation;
@@ -1593,6 +1595,13 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
           style={styles.submitButton}
           onPress={() => { this._onPressAddOrder() }}>
           <Text style={styles.submitButtonText}> Add To Order </Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDeleteOrder() }}>
+          <Text style={styles.submitButtonText}> Delete Item </Text>
+          
         </TouchableOpacity>
       </View>
     );
@@ -1663,18 +1672,18 @@ class SummaryScreen extends React.Component {
     headerTintColor: '#000000',
   };
   keyExtractor = (item, index) => index.toString()
-  deleteItem = (item) => console.log('Deleted ' + item.itemName)
+  deleteItem = (item) => console.log('Deleted '+ item.itemName)
   renderItem = ({ item }) => (
     <ListItem
-      title={item.itemName + "        $" + item.itemPrice / 100}
+      title={item.itemName+ "        $"+ item.itemPrice/100 }
       rightIcon={
-        <Image
+          <Image
           source={require('./assets/delete.png')}
           style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
         />
       }
-      onPressRightIcon={() => console.log('Pressed !')}
-      onPress={this.GetSectionListItem.bind(this, item)}
+      onPressRightIcon = {() => console.log('Pressed !')}
+      onPress = {this.GetSectionListItem.bind(this, item)}
     />
   )
   constructor(props) {
@@ -1689,7 +1698,7 @@ class SummaryScreen extends React.Component {
     currentItem = item;
     this.props.navigation.navigate('DeleteItem', { order: order, takeOut: '1' })
   }
-  componentDidMount() {
+  componentDidMount(){
     fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
       headers: {//header start
@@ -1756,11 +1765,11 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item, index, section }) => this.renderItem({ item })
-
-              // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-              //   {item.itemName + "       $" + item.itemPrice / 100}
-              // </Text>
+            renderItem={({ item, index, section }) => this.renderItem({item})
+            
+            // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+            //   {item.itemName + "       $" + item.itemPrice / 100}
+            // </Text>
               //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
             }
             sections={items}
@@ -1802,11 +1811,8 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
-    Staff: StaffScreen,
-    EditMenu: ManagerMenu,
-    WhichEdit: WhichEditScreen,
-    EditItem: EditItemScreen,
-    AddItem: AddItemScreen,
+    DeleteItem: DeleteItemScreen,
+    Staff: StaffScreen
   },
   {
     initialRouteName: 'Welcome',
