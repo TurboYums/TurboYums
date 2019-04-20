@@ -1,13 +1,9 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://qy-wxj.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.qy-wxj.anonymous.client.exp.direct",
-  "ngrokPid": 16912,
   "expoServerNgrokUrl": "https://dt-kvt.anonymous.client.exp.direct",
   "packagerNgrokUrl": "https://packager.dt-kvt.anonymous.client.exp.direct",
   "ngrokPid": 20700,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 15364
   "packagerPid": 11968
 }
