@@ -11,7 +11,11 @@ api.post('/api/items/create', (req, res) => {
     description: req.body.description,
     rating: req.body.rating,
   }).then(newItem => {
-    res.send({ item: newItem });
+    res.send({ 
+      creationSuccess: true,
+      text: `Created Item: ${newItem.username}`,
+      item: newItem 
+    });
   })
 })
 
@@ -20,6 +24,13 @@ api.post('/api/items/remove', (req, res) => {
     where: {
       id: req.body.id
     }
+  }),then (deletedItem => {
+    res.send({item: deletedItem});
+  })
+})
+
+api.post('/api/items/edit', (req, res) => {
+  Item.findOne({where: {id: req.body.id}
   }),then (deletedItem => {
     res.send({item: deletedItem});
   })
