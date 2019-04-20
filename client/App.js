@@ -1194,14 +1194,14 @@ class TableLayout extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getTabless', {//fetch start
+    fetch(API_URL + 'api/tables/getTables', {//fetch start
       method: 'POST',
       headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-        tableIS: tableID,
+        tables: tables,
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       table = resJson.table
@@ -1351,21 +1351,18 @@ class TableLayout extends React.Component {
       }),
     }).then((res) => res.json()).then(resJson => {
       currentTable = resJson.table;
-      if (resJson.table.status == 0) {
-        if (this.state.table5 == 'coral') {
-          this.setState({ table5: 'green' })
-          Alert.alert("Table is now clean.");
-        }
-      } else if (resJson.table.status == 1) {
-        if (this.state.table5 == 'green') {
-          this.setState({ table5: 'red' })
-          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
-        }
-      } else if (resJson.table.status == 2) {
-        if (this.state.table5 == 'red') {
-          this.setState({ table5: 'coral' })
-          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
-        }
+      if (resJson.table.status == 0 && resJson.statusChange == true) {
+        this.setState({ table5: 'green' })
+        Alert.alert("Table is now clean.");
+
+      } else if (resJson.table.status == 1 && resJson.statusChange == true) {
+        this.setState({ table5: 'red' })
+        Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+
+      } else if (resJson.table.status == 2 && resJson.statusChange == true) {
+        this.setState({ table5: 'coral' })
+        Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
+
       }
     });
   }
@@ -1575,21 +1572,17 @@ class TableLayout extends React.Component {
       }),
     }).then((res) => res.json()).then(resJson => {
       currentTable = resJson.table;
-      if (resJson.table.status == 0) {
-        if (this.state.table12 == 'coral') {
-          this.setState({ table12: 'green' })
-          Alert.alert("Table is now clean.");
-        }
-      } else if (resJson.table.status == 1) {
-        if (this.state.table12 == 'green') {
-          this.setState({ table12: 'red' })
-          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
-        }
-      } else if (resJson.table.status == 2) {
-        if (this.state.table12 == 'red') {
-          this.setState({ table12: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
-        }
+      if (resJson.table.status == 0 && resJson.statusChange == true) {
+        this.setState({ table12: 'green' })
+        Alert.alert("Table is now clean.");
+      } else if (resJson.table.status == 1 && resJson.statusChange == true) {
+        this.setState({ table12: 'red' })
+        Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+      } else if (resJson.table.status == 2 && resJson.statusChange == true) {
+        this.setState({ table12: 'coral' })
+        Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+      } else {
+        Alert.alert("Invalid table selection.")
       }
     });
   }
