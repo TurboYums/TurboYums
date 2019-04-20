@@ -1307,7 +1307,88 @@ class ViewPingScreen extends React.Component {
   }
 }
 
-class ManagerMenu extends React.Component {
+class DeleteItemScreen extends React.Component {
+  static navigationOptions = {
+    
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  _onPressAddOrder = () => {
+    fetch(API_URL + 'api/order/add', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.state.params.refresh();
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+
+  }
+  _onPressDeleteOrder = () => {
+    fetch(API_URL + 'api/order/remove', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+  }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentItem.itemName}</Text>
+        <Text style={styles.itemPrice}>{'Price: $' + currentItem.itemPrice / 100}</Text>
+        <Text style={styles.itemPrice}>{'Description: ' + currentItem.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressAddOrder() }}>
+          <Text style={styles.submitButtonText}> Add To Order </Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDeleteOrder() }}>
+          <Text style={styles.submitButtonText}> Delete Item </Text>
+          
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+
+class StaffScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -2292,10 +2373,18 @@ class SummaryScreen extends React.Component {
     headerTintColor: '#000000',
   }
   keyExtractor = (item, index) => index.toString()
+  deleteItem = (item) => console.log('Deleted '+ item.itemName)
   renderItem = ({ item }) => (
     <ListItem
-      title={item.title}
-      subtitle={item.price}
+      title={item.itemName+ "        $"+ item.itemPrice/100 }
+      rightIcon={
+          <Image
+          source={require('./assets/delete.png')}
+          style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
+        />
+      }
+      onPressRightIcon = {() => console.log('Pressed !')}
+      onPress = {this.GetSectionListItem.bind(this, item)}
     />
   )
   constructor(props) {
@@ -2320,10 +2409,38 @@ class SummaryScreen extends React.Component {
   }
 
   GetSectionListItem = (item) => {
-    currentItem = item
-    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+    currentItem = item;
+    this.props.navigation.navigate('DeleteItem', { order: order, takeOut: '1' })
   }
+  componentDidMount(){
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({ order: resJson.order })
+      let tempItems = resJson.items;
+      items = []
 
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({ items: items });;
+      }
+
+    })
+  }
   componentWillMount() {
     fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
@@ -2367,9 +2484,11 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-              {item.itemName + "       $" + item.itemPrice / 100}
-            </Text>
+            renderItem={({ item, index, section }) => this.renderItem({item})
+            
+            // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+            //   {item.itemName + "       $" + item.itemPrice / 100}
+            // </Text>
               //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
             }
             sections={items}
@@ -2426,6 +2545,7 @@ const RootStack = createStackNavigator(
     AddPingEmp: AddPingScreenEmp,
     ViewPings: ViewPingScreen,
     DelPing: DelPingScreen
+    DeleteItem: DeleteItemScreen,
   },
   {
     initialRouteName: 'Welcome',
