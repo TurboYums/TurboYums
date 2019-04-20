@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerPort": 19005,
+  "expoServerNgrokUrl": "https://p7-ajh.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.p7-ajh.anonymous.client.exp.direct",
+  "ngrokPid": 9408,
+  "devToolsPort": 19004,
+  "packagerPort": 19006,
+  "packagerPid": 8264,
   "webpackServerPort": null
 }

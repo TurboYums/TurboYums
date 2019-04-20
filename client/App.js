@@ -1192,16 +1192,16 @@ class TableLayout extends React.Component {
       legReady: 'green'
     };
   }
-
+/*
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getTabless', {//fetch start
+    fetch(API_URL + 'api/tables/getTables', {//fetch start
       method: 'POST',
       headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-        tableIS: tableID,
+        tableID: tableID,
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       table = resJson.table
@@ -1209,6 +1209,7 @@ class TableLayout extends React.Component {
     })
 
   }
+  */
 
   table1Select = () => {
     fetch(API_URL + 'api/tables/changeStatus', {
