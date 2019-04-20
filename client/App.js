@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://172.31.59.123:5000/';
+const API_URL = 'http://192.168.1.218:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -1194,14 +1194,14 @@ class TableLayout extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getTables', {//fetch start
+    fetch(API_URL + 'api/order/getTables', {//fetch start
       method: 'POST',
       headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-        tables: tables,
+        orderId: order.id,
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       table = resJson.table
@@ -1237,7 +1237,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table1 == 'red') {
           this.setState({ table1: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1269,7 +1269,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table2 == 'red') {
           this.setState({ table2: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1301,7 +1301,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table3 == 'red') {
           this.setState({ table3: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1333,7 +1333,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table4 == 'red') {
           this.setState({ table4: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1394,7 +1394,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table6 == 'red') {
           this.setState({ table6: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1426,7 +1426,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table7 == 'red') {
           this.setState({ table7: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1458,7 +1458,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table8 == 'red') {
           this.setState({ table8: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1490,7 +1490,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table9 == 'red') {
           this.setState({ table9: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1522,7 +1522,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table10 == 'red') {
           this.setState({ table10: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1554,7 +1554,7 @@ class TableLayout extends React.Component {
       } else if (resJson.table.status == 2) {
         if (this.state.table11 == 'red') {
           this.setState({ table11: 'coral' })
-          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
         }
       }
     });
@@ -1581,7 +1581,7 @@ class TableLayout extends React.Component {
         Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
       } else if (resJson.table.status == 2 && resJson.statusChange == true) {
         this.setState({ table12: 'coral' })
-        Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
       } else {
         Alert.alert("Invalid table selection.")
       }

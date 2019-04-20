@@ -40,6 +40,14 @@ api.post('/api/order/getItems', (req, res) => {
   })
 })
 
+api.post('/api/order/getTables', (req, res) => {
+  Order.findOne({ where: { id: req.body.orderId } }).then(order => {
+    order.getTables().then(tables => {
+      res.send({ order: order, tables: tables })
+    })
+  })
+})
+
 api.post('/api/order/remove', (req, res) => {
   OrderItem.removeAttribute(req.body.OrderItemId).then( ()=> {
     res.send({sucess: true})
