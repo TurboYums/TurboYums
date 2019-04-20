@@ -14,6 +14,7 @@ let token = '';
 let items = '';
 let employees = '';
 let currentItem = '';
+let currentTable = '';
 
 class LogoTitle extends React.Component {
   render() {
@@ -45,36 +46,36 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-           
-              
-                <TouchableOpacity
-                  style={styles.logInMenuButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('LogIn');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Login </Text>
-                 </TouchableOpacity>
-              
 
-                <TouchableOpacity
-                  style={styles.signUpButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('SignUp');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.guestbutton}
-                  onPress={() => {
-                    this.props.navigation.navigate('Menu');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Continue As Guest </Text>
-                </TouchableOpacity>
-            
+            <TouchableOpacity
+              style={styles.logInMenuButton}
+              onPress={() => {
+                this.props.navigation.navigate('TableLayout');
+              }
+              } >
+              <Text style={styles.buttonText}> Login </Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              style={styles.signUpButton}
+              onPress={() => {
+                this.props.navigation.navigate('SignUp');
+              }
+              } >
+              <Text style={styles.buttonText}> Sign Up </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.guestbutton}
+              onPress={() => {
+                this.props.navigation.navigate('Menu');
+              }
+              } >
+              <Text style={styles.buttonText}> Continue As Guest </Text>
+            </TouchableOpacity>
+
 
           </ImageBackground>
         </View>
@@ -293,8 +294,8 @@ class LogInScreen extends React.Component {
 
                         //customer is 2
                         case 2:
-                        this.props.navigation.navigate('DineInOut');
-                        break;  
+                          this.props.navigation.navigate('DineInOut');
+                          break;
 
                       }
                     } else {
@@ -443,7 +444,7 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.TablesButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Table interface!')
+                this.props.navigation.navigate('TableLayout');
               }
               } >
               <Text style={styles.buttonText}> View Tables </Text>
@@ -471,8 +472,8 @@ class EmployeePortalScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-              
-              
+
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -1167,6 +1168,536 @@ class StaffScreen extends React.Component {
   }
 }
 
+class TableLayout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      table1: 'green',
+      table2: 'green',
+      table3: 'green',
+      table4: 'green',
+      table5: 'green',
+      table6: 'green',
+      table7: 'green',
+      table8: 'green',
+      table9: 'green',
+      table10: 'green',
+      table11: 'green',
+      table12: 'green',
+      reset: 'black',
+      legOcc: 'red',
+      legDirty: 'coral',
+      legReady: 'green'
+    };
+  }
+
+  table1Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table1 == 'coral') {
+          this.setState({ table1: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table1 == 'green') {
+          this.setState({ table1: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table1 == 'red') {
+          this.setState({ table1: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table2Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table2 == 'coral') {
+          this.setState({ table2: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table2 == 'green') {
+          this.setState({ table2: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table2 == 'red') {
+          this.setState({ table2: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table3Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table3 == 'coral') {
+          this.setState({ table3: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table3 == 'green') {
+          this.setState({ table3: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table3 == 'red') {
+          this.setState({ table3: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table4Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table4 == 'coral') {
+          this.setState({ table4: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table4 == 'green') {
+          this.setState({ table4: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table4 == 'red') {
+          this.setState({ table4: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table5Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table5 == 'coral') {
+          this.setState({ table5: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table5 == 'green') {
+          this.setState({ table5: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table5 == 'red') {
+          this.setState({ table5: 'coral' })
+          Alert.alert("Table with table ID, " + currentTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table6Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table6 == 'coral') {
+          this.setState({ table6: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table6 == 'green') {
+          this.setState({ table6: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table6 == 'red') {
+          this.setState({ table6: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table7Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table7 == 'coral') {
+          this.setState({ table7: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table7 == 'green') {
+          this.setState({ table7: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table7 == 'red') {
+          this.setState({ table7: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table8Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table8 == 'coral') {
+          this.setState({ table8: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table8 == 'green') {
+          this.setState({ table8: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table8 == 'red') {
+          this.setState({ table8: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table9Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table9 == 'coral') {
+          this.setState({ table9: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table9 == 'green') {
+          this.setState({ table9: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table9 == 'red') {
+          this.setState({ table9: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table10Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table10 == 'coral') {
+          this.setState({ table10: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table10 == 'green') {
+          this.setState({ table10: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table10 == 'red') {
+          this.setState({ table10: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table11Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table11 == 'coral') {
+          this.setState({ table11: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table11 == 'green') {
+          this.setState({ table11: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table11 == 'red') {
+          this.setState({ table11: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  table12Select = () => {
+    fetch(API_URL + 'api/tables/changeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableID: currentTable.tableID,
+        status: currentTable.status
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      currentTable = resJson.table;
+      if (resJson.table.status == 0) {
+        if (this.state.table12 == 'coral') {
+          this.setState({ table12: 'green' })
+          Alert.alert("Table is now clean.");
+        }
+      } else if (resJson.table.status == 1) {
+        if (this.state.table12 == 'green') {
+          this.setState({ table12: 'red' })
+          Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
+        }
+      } else if (resJson.table.status == 2) {
+        if (this.state.table12 == 'red') {
+          this.setState({ table12: 'coral' })
+          Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
+        }
+      }
+    });
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.TabTitleCont}>
+          <Text style={styles.TabTitle}>
+            Table Layout
+
+                        </Text>
+        </View>
+        <View style={styles.legReady}>
+          <Text style={{ color: 'white'}}>       Ready</Text>
+        </View>
+        <View style={styles.legDirty}>
+          <Text style={{ color: 'white' }}>         Dirty</Text>
+        </View>
+        <View style={styles.legOcc}>
+          <Text style={{ color: 'white' }}>    Occupied</Text>
+        </View>
+
+        <View style={styles.table1}>
+          <Button
+            title="  #1  "
+            color={this.state.table1}
+            onPress={this.table1Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table2}>
+          <Button
+            title="  #2  "
+            color={this.state.table2}
+            onPress={this.table2Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table3}>
+          <Button
+            title="  #3  "
+            color={this.state.table3}
+            onPress={this.table3Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table4}>
+          <Button
+            title="  #4  "
+            color={this.state.table4}
+            onPress={this.table4Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table5}>
+          <Button
+            title="  #5  "
+            color={this.state.table5}
+            onPress={this.table5Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table6}>
+          <Button
+            title="  #6  "
+            color={this.state.table6}
+            onPress={this.table6Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table7}>
+          <Button
+            title="         #7         "
+            color={this.state.table7}
+            onPress={this.table7Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table8}>
+          <Button
+            title="         #8         "
+            color={this.state.table8}
+            onPress={this.table8Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table9}>
+          <Button
+            title="         #9         "
+            color={this.state.table9}
+            onPress={this.table9Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table10}>
+          <Button
+            title="        #10        "
+            color={this.state.table10}
+            onPress={this.table10Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table11}>
+          <Button
+            title="        #11        "
+            color={this.state.table11}
+            onPress={this.table11Select.bind(this)
+            }
+          />
+        </View>
+        <View style={styles.table12}>
+          <Button
+            title="        #12        "
+            color={this.state.table12}
+            onPress={this.table12Select.bind(this)
+            }
+          />
+        </View>
+      </View>
+
+    );
+  }
+}
+
+
+
 
 class SummaryScreen extends React.Component {
   static navigationOptions = {
@@ -1277,7 +1808,8 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
-    Staff: StaffScreen
+    Staff: StaffScreen,
+    TableLayout: TableLayout
   },
   {
     initialRouteName: 'Welcome',
@@ -1393,7 +1925,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     //justifyContent: 'flex-end',
     //marginBottom: 0
-    
+
   },
   submitButtonText: {
     padding: 2,
@@ -1521,6 +2053,181 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
+  container100: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  TabTitleCont: {
+    position: 'absolute',
+    bottom: 575,
+    left: 140,
+    fontSize: 15
+  },
+  legOcc: {
+    position: 'absolute',
+    bottom: 515,
+    left: 140,
+    height: 45,
+    width: 90,
+    backgroundColor: 'red',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  legDirty: {
+    position: 'absolute',
+    bottom: 515,
+    left: 255,
+    height: 45,
+    width: 90,
+    backgroundColor: 'coral',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  legReady: {
+    position: 'absolute',
+    bottom: 515,
+    left: 25,
+    height: 45,
+    width: 90,
+    backgroundColor: 'green',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  reset: {
+    position: 'absolute',
+    bottom: 480,
+    left: 140,
+    height: 45,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table1: {
+    position: 'absolute',
+    bottom: 50,
+    left: 5,
+    height: 75,
+    width: 30,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table2: {
+    position: 'absolute',
+    bottom: 200,
+    left: 5,
+    height: 75,
+    width: 30,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table3: {
+    position: 'absolute',
+    bottom: 350,
+    left: 5,
+    height: 75,
+    width: 30,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table4: {
+    position: 'absolute',
+    bottom: 350,
+    left: 325,
+    height: 75,
+    backgroundColor: 'black',
+    width: 30,
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table5: {
+    position: 'absolute',
+    bottom: 200,
+    left: 325,
+    height: 75,
+    width: 30,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table6: {
+    position: 'absolute',
+    bottom: 50,
+    left: 325,
+    height: 75,
+    width: 30,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table7: {
+
+    position: 'absolute',
+    bottom: 60,
+    left: 80,
+    height: 50,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table8: {
+    position: 'absolute',
+    bottom: 210,
+    left: 80,
+    height: 50,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table9: {
+
+    position: 'absolute',
+    bottom: 355,
+    left: 80,
+    height: 80,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row',
+
+  },
+  table10: {
+    position: 'absolute',
+    bottom: 60,
+    left: 200,
+    height: 50,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table11: {
+    position: 'absolute',
+    bottom: 210,
+    left: 200,
+    height: 50,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  table12: {
+    position: 'absolute',
+    bottom: 355,
+    left: 200,
+    height: 80,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  }
 })
 
 

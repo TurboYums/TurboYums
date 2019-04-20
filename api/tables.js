@@ -55,34 +55,3 @@ api.post('/api/tables/changeStatus'), (req, res) => {
     })
 }
 
-//to put in App.js, onButtonPress function
-table1Select = () => {
-    fetch(API_URL + 'api/users/changeStatus', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            tableID: currentTable.tableID,
-            status: currentTable.status
-        }),
-    }).then((res) => res.json()).then(resJson => {
-        if (resJson.table.status == 0) {
-            if (this.state.table1 == 'coral') {
-                this.setState({ table1: 'green' })
-                Alert.alert("Table is now clean.");
-            }
-        } else if (resJson.table.status == 1) {
-            if (this.state.table1 == 'green') {
-                this.setState({ table1: 'red' })
-                Alert.alert("Selected valid table with table ID, " + currentTable.tableID + ".");
-            }
-        } else if (resJson.table.status == 2) {
-            if (this.state.table1 == 'red') {
-                this.setState({ table1: 'coral' })
-                Alert.alert("Table with table ID, " + currenTable.tableID + ", is dirty.");
-            }
-        }
-    });
-}
