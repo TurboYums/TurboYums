@@ -6,6 +6,7 @@ import { Header } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+import { Dropdown } from 'react-native-material-dropdown';
 
 const API_URL = 'http://192.168.1.253:5000/';
 let currentUser = '';
@@ -44,36 +45,36 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-           
-              
-                <TouchableOpacity
-                  style={styles.logInMenuButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('LogIn');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Login </Text>
-                 </TouchableOpacity>
-              
 
-                <TouchableOpacity
-                  style={styles.signUpButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('SignUp');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.signUpButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('Menu');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Continue As Guest </Text>
-                </TouchableOpacity>
-            
+            <TouchableOpacity
+              style={styles.logInMenuButton}
+              onPress={() => {
+                this.props.navigation.navigate('LogIn');
+              }
+              } >
+              <Text style={styles.buttonText}> Login </Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              style={styles.signUpButton}
+              onPress={() => {
+                this.props.navigation.navigate('SignUp');
+              }
+              } >
+              <Text style={styles.buttonText}> Sign Up </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.signUpButton}
+              onPress={() => {
+                this.props.navigation.navigate('Menu');
+              }
+              } >
+              <Text style={styles.buttonText}> Continue As Guest </Text>
+            </TouchableOpacity>
+
 
           </ImageBackground>
         </View>
@@ -292,8 +293,8 @@ class LogInScreen extends React.Component {
 
                         //customer is 2
                         case 2:
-                        this.props.navigation.navigate('DineInOut');
-                        break;  
+                          this.props.navigation.navigate('DineInOut');
+                          break;
 
                       }
                     } else {
@@ -470,8 +471,8 @@ class EmployeePortalScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-              
-              
+
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -1203,13 +1204,14 @@ class OrderQueueScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: null
+      order: order,
+      orders: []
     };
   }
 
-  GetSectionListItem = (item) => {
-    currentItem = item;
-    this.props.navigation.navigate('ViewOrder', { order: order, takeOut: '1' })
+  GetSectionListOrder = (order) => {
+    currentOrder = order;
+    this.props.navigation.navigate('OrderSummaryStaff', { order: order, takeOut: '1' })
   }
 
   componentWillMount() {
@@ -1220,7 +1222,7 @@ class OrderQueueScreen extends React.Component {
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-        
+
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       let tempOrders = resJson.orders;
@@ -1248,6 +1250,97 @@ class OrderQueueScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
+            renderItem={({ order, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, order)}>
+              {order.userStripeId}
+            </Text>
+              //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
+            }
+            sections={this.state.orders}
+            keyExtractor={(order, index) => order + index}
+          />
+        </View>
+      </View>
+
+    );
+
+  }
+}
+
+class OrderSummaryStaff extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  keyExtractor = (item, index) => index.toString()
+  renderItem = ({ item }) => (
+    <ListItem
+      title={item.title}
+      subtitle={item.price}
+    />
+  )
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      items: null
+    };
+  }
+
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({ order: resJson.order })
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({ items: items });;
+      }
+
+    })
+
+  }
+
+  render() {
+    let data = [{
+      value: 'Received',
+    }, {
+      value: 'In Progress',
+    }, {
+      value: 'Ready',
+    }, {
+      value: 'Served',
+    }];
+    return (
+      <View>
+        <Text style={styles.SignUpText}>Order Summary:</Text>
+        <View>
+          <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
               {item.itemName + "       $" + item.itemPrice / 100}
             </Text>
@@ -1257,17 +1350,10 @@ class OrderQueueScreen extends React.Component {
             keyExtractor={(item, index) => item + index}
           />
         </View>
-        <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
-        <Text style={styles.receiptFooter}>Tax: ${(order.totalPrice * .06625 / 100).toFixed(2)}</Text>
-        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
-
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => {
-            this.props.navigation.navigate('PaymentChoices', { order: [] });
-          }}>
-          <Text style={styles.submitButtonText}> Pay </Text>
-        </TouchableOpacity>
+        <Dropdown
+          label='Order Status'
+          data={data}
+        />
       </View>
 
     );
@@ -1501,7 +1587,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     //justifyContent: 'flex-end',
     //marginBottom: 0
-    
+
   },
   submitButtonText: {
     padding: 2,

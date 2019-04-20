@@ -52,7 +52,7 @@ Item.create({
   description: 'Famous Plain Pizza',
 })
 Item.create({
-  itemName: 'Muchroom and Swiss Burger',
+  itemName: 'Mushroom and Swiss Burger',
   category: 'Burger',
   itemPrice: 300,
   ingredient: 'Crust, Sauce, Cheese',
