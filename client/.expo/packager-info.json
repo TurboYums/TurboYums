@@ -3,7 +3,7 @@
   "packagerNgrokUrl": "https://packager.p7-ajh.anonymous.client.exp.direct",
   "ngrokPid": 768,
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 16156
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null
 }
