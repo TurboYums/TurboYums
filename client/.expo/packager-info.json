@@ -1,20 +1,9 @@
 {
-<<<<<<< HEAD
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://dt-kvt.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.dt-kvt.anonymous.client.exp.direct",
-  "ngrokPid": 20700,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 11968
-=======
   "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "devToolsPort": 19002,
   "packagerPort": null,
   "packagerPid": null,
-  "webpackServerPort": null
->>>>>>> 7e14ed6c6b30cf7e3a4e4b1d3f0c3c61743525dd
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
