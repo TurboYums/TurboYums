@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
-const API_URL = 'http://10.0.1.85:5000/';
+const API_URL = 'http://192.168.1.193:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -31,7 +31,6 @@ class LogoTitle extends React.Component {
 class WelcomeScreen extends React.Component {
 
   static navigationOptions = {
-    // GOTTA CHANGE BAR STYLE TO LIGHT COLOR THIS JUST REMOVES THE HEADER
     header: null,
   };
   render() {
@@ -41,12 +40,8 @@ class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-
-          <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-
-           
-              
                 <TouchableOpacity
                   style={styles.logInMenuButton}
                   onPress={() => {
@@ -55,7 +50,6 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Login </Text>
                  </TouchableOpacity>
-              
 
                 <TouchableOpacity
                   style={styles.signUpButton}
@@ -217,8 +211,8 @@ class LogInScreen extends React.Component {
     headerTintColor: '#000000',
   };
   state = {
-    username: '',
-    password: ''
+    username: '  ',
+    password: '  '
   }
   handleusername = (text) => {
     this.setState({ username: text })
