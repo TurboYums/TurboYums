@@ -1095,13 +1095,13 @@ class ManagerMenu extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    headerRight: (
+    /*headerRight: (
       <Button
         onPress={() => alert('This is a button!')}
         title="Edit"
         color="#000000"
       />
-    ),
+    ),*/
   };
 
   constructor(props) {
@@ -1232,7 +1232,13 @@ class WhichEditScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> Edit Existing Items </Text>
             </TouchableOpacity>
-              
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('RemoveItem');
+              }} >
+              <Text style={styles.buttonText}> Remove Item </Text>
+            </TouchableOpacity>
 
           </ImageBackground>
         </View>
@@ -1365,6 +1371,79 @@ class AddItemScreen extends React.Component {
   }
 }
 
+class RemoveItemScreen extends React.Component {
+  state = {
+    itemName: '',
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  handleitemName = (text) => {
+    this.setState({ itemName: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
+              Item Deletion
+          </Text>
+          <Text style={styles.text}>
+            Enter details below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Item Name:"
+              autoCapitalize="words"
+              onChangeText={this.handleitemName} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.itemName) {
+                Alert.alert('Please fill in the field.');
+              } else {
+                fetch(API_URL + 'api/items/remove', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: this.state.itemName,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Succesfully Deleted Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  } else {
+                    Alert.alert('Error Deleting Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  }
+                });
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Delete </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+}
+
 class ViewItemScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1431,48 +1510,151 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
     headerTintColor: '#000000',
   };
 
-  _onPressAddOrder = () => {
-    fetch(API_URL + 'api/order/add', {//fetch start
-      method: 'POST',
-      headers: {//header start
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-        orderId: order.id,
-        itemId: currentItem.id
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      order = resJson.order
-      let tempItems = resJson.items;
-      items = []
 
-      for (let item of tempItems) {
-        console.log(item);
-        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
-          items[items.length - 1].data.push(item);
-        }
-        else {
-          items.push({ category: item.category, data: [item] });
-        }
-      }
-      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
-    });
-
+  state = {
+    itemName: currentItem.itemName,
+    itemPrice: "" + currentItem.itemPrice,
+    description: currentItem.description,
   }
+  handleitemName = (text) => {
+    this.setState({ itemName: text })
+  }
+  handleitemPrice = (text) => {
+    this.setState({ itemPrice: text })
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+
   render() {
     const { navigate } = this.props.navigation;
-    return (
-      <View>
-        <Text style={styles.SignUpText}>{currentItem.itemName}</Text>
-        <Text style={styles.itemPrice}>{'Price: $' + currentItem.itemPrice / 100}</Text>
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (    
+
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+        <View>
+        <Text style={styles.SignUpText}>{currentItem.itemName + ' - $' + currentItem.itemPrice / 100}</Text>
         <Text style={styles.itemPrice}>{'Description: ' + currentItem.description}</Text>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => { this._onPressAddOrder() }}>
-          <Text style={styles.submitButtonText}> Add To Order </Text>
-        </TouchableOpacity>
-      </View>
+
+        </View>
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
+              Edit Item:
+          </Text>
+          <Text style={styles.text}>
+            Enter Updated Info Below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              value = {this.state.itemName}
+              autoCapitalize="words"
+              onChangeText={this.handleitemName} />
+
+            <TouchableOpacity
+            style={styles.submitButtonEditMenu}
+            onPress={() => {
+              if (!this.state.itemName) {
+                Alert.alert('Please fill in the updated name field!');
+              } else {
+                fetch(API_URL + 'api/items/editName', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: currentItem.itemName,
+                    updatedName: this.state.itemName,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.nameChange) {
+                    currentItem = resJson.item;
+                    Alert.alert('Succesfully Updated Name!');
+                  } else {
+                    Alert.alert('Error Updating Name!');
+                  }
+                });
+              }
+            }}>
+          <Text style={styles.submitButtonText}> Update Name </Text>
+          </TouchableOpacity>
+
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              value = {this.state.itemPrice}
+              autoCapitalize="words"
+              onChangeText={this.handleitemPrice} />
+
+            <TouchableOpacity
+            style={styles.submitButtonEditMenu}
+            onPress={() => {
+              if (!this.state.itemPrice) {
+                Alert.alert('Please fill in the updated price field!');
+              } else {
+                fetch(API_URL + 'api/items/editPrice', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: currentItem.itemName,
+                    updatedPrice: this.state.itemPrice,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.priceChange) {
+                    Alert.alert('Succesfully Updated Price!');
+                  } else {
+                    Alert.alert('Error Updating Price!');
+                  }
+                });
+              }
+            }}>
+          <Text style={styles.submitButtonText}> Update Price </Text>
+          </TouchableOpacity>
+           
+
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              value = {this.state.description}
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+
+            <TouchableOpacity
+            style={styles.submitButtonEditMenu}
+            onPress={() => {
+              if (!this.state.description) {
+                Alert.alert('Please fill in the updated description field!');
+              } else {
+                fetch(API_URL + 'api/items/editDescription', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: currentItem.itemName,
+                    updatedDesc: this.state.description,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.descChange) {
+                    Alert.alert('Succesfully Updated Description!');
+                  } else {
+                    Alert.alert('Error Updating Description!');
+                  }
+                });
+              }
+            }}>
+          <Text style={styles.submitButtonText}> Update Descripton </Text>
+          </TouchableOpacity>
+          </ScrollView>
+
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -1645,6 +1827,7 @@ const RootStack = createStackNavigator(
     WhichEdit: WhichEditScreen,
     EditItem: EditItemScreen,
     AddItem: AddItemScreen,
+    RemoveItem: RemoveItemScreen,
   },
   {
     initialRouteName: 'Welcome',
@@ -1749,6 +1932,20 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   submitButton: {
+    backgroundColor: '#fff44f',
+    padding: 10,
+    margin: 30,
+    height: 40,
+    borderRadius: 100,
+    alignItems: 'center',
+    //position: 'absolute',
+    //bottom: 0,
+    //flex: 1,
+    //justifyContent: 'flex-end',
+    //marginBottom: 0
+    
+  },
+  submitButtonEditMenu: {
     backgroundColor: '#fff44f',
     padding: 10,
     margin: 30,
