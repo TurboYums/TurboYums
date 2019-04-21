@@ -20,7 +20,9 @@ api.post('/api/tables/create', (req, res) => {
 api.get('/api/tables/getAll', (req, res) => {
     Table.findAll().then(tables => {
         res.send({ tables: tables })
-    })
+    }).catch(error => {
+        console.log(error);
+      })
 })
 
 
