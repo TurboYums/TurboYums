@@ -7,7 +7,7 @@ Table = sequelize.define('table', {
   status: Sequelize.INTEGER
 })
 
-//Table.belongsTo(Order);
+Table.belongsTo(Order);
 module.exports = (sequelize, DataTypes) => {
   return Table;
 }
