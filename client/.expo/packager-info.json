@@ -1,19 +1,9 @@
 {
-<<<<<<< HEAD
-  "packagerPort": 19001,
-  "packagerPid": 23396,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "devToolsPort": 19002,
-  "expoServerPort": 19000
-=======
-  "expoServerNgrokUrl": "https://p7-ajh.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.p7-ajh.anonymous.client.exp.direct",
-  "ngrokPid": 16192,
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 26520
->>>>>>> 589bf5b5de59e7eb5b38dd7595c7bb35e3d0aee6
+  "packagerPid": 23048,
+  "expoServerNgrokUrl": "https://k4-8bi.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.k4-8bi.anonymous.client.exp.direct",
+  "ngrokPid": 22260
 }
