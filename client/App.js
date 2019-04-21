@@ -2,9 +2,10 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-import { Header,CheckBox, ListItem} from 'react-native-elements';
+import { Header, ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+
 
 const API_URL = 'http://10.0.1.85:5000/';
 // const API_URL = 'http://127.0.0.1:5000/';
@@ -954,6 +955,11 @@ class FilterSelectionScreen extends React.Component{
 //   alert("value changed")
 // }
 
+handlePressCheckedBox = (checked) => {
+  this.setState({
+    isChecked: checked,
+  });
+}
   render(){
     const { navigate } = this.props.navigation;
     console.log(this.props.navigation.state)
@@ -962,7 +968,12 @@ class FilterSelectionScreen extends React.Component{
       <View>
 
         <Text style={{fontSize: 35}}>Allergies/Restrictions</Text>
-     
+       
+
+        <Button
+        title="Menu"
+        />
+
         
       </View>
     );
