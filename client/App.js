@@ -1202,7 +1202,7 @@ class TableLayout extends React.Component {
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-        tables: tables,
+        //tables: tables,
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       //table = resJson.table
