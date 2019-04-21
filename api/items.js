@@ -1,7 +1,12 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
-const googleTranslate = require('google-translate')(api.google_translate_api_key);
+const { Translate } = require('@google-cloud/translate');
+const projectId = 'YOUR_PROJECT_ID';
+const translate = new Translate({
+  projectId: projectId,
+});
+
 
 api.post('/api/items/create', (req, res) => {
   Item.create({
@@ -12,10 +17,10 @@ api.post('/api/items/create', (req, res) => {
     description: req.body.description,
     rating: req.body.rating,
   }).then(newItem => {
-    res.send({ 
+    res.send({
       creationSuccess: true,
       text: `Created Item: ${newItem.username}`,
-      item: newItem 
+      item: newItem
     });
   })
 })
@@ -25,7 +30,7 @@ api.post('/api/items/remove', (req, res) => {
     where: {
       itemName: req.body.itemName
     }
-  }).then (deletedItem => {
+  }).then(deletedItem => {
     res.send({
       creationSuccess: true,
       text: `Deleted Item: ${deletedItem}`,
@@ -35,8 +40,9 @@ api.post('/api/items/remove', (req, res) => {
 })
 
 api.post('/api/items/editName', (req, res) => {
-  Item.findOne({where: {itemName: req.body.itemName}
-  }).then (item => {
+  Item.findOne({
+    where: { itemName: req.body.itemName }
+  }).then(item => {
     item.update({
       itemName: req.body.updatedName
     })
@@ -49,8 +55,9 @@ api.post('/api/items/editName', (req, res) => {
 })
 
 api.post('/api/items/editPrice', (req, res) => {
-  Item.findOne({where: {itemName: req.body.itemName}
-  }).then (item => {
+  Item.findOne({
+    where: { itemName: req.body.itemName }
+  }).then(item => {
     item.update({
       itemPrice: req.body.updatedPrice
     })
@@ -63,8 +70,9 @@ api.post('/api/items/editPrice', (req, res) => {
 })
 
 api.post('/api/items/editDescription', (req, res) => {
-  Item.findOne({where: {itemName: req.body.itemName}
-  }).then (item => {
+  Item.findOne({
+    where: { itemName: req.body.itemName }
+  }).then(item => {
     item.update({
       description: req.body.updatedDesc
     })
@@ -77,14 +85,22 @@ api.post('/api/items/editDescription', (req, res) => {
 })
 
 api.post('/api/items/getAll', (req, res) => {
-  Item.findAll({group: ['category', 'id']}).then(items => {
-    if(req.body.translate == true){
-      googleTranslate.translate(JSON.stringify(items), req.body.translate_target, function(err, translation) {
-        res.send(err);
-        //res.send(translation.translatedText);
-      });
+  Item.findAll({ group: ['category', 'id'] }).then(items => {
+    if (req.body.translate == true) {
+      translate
+        .translate(JSON.stringify(items), req.body.target)
+        .then(results => {
+          const translation = results[0];
+          console.log(translation);
+          console.log(`Translation: ${JSON.parse(translation)}`);
+          res.send({ items: translation.replace("\\", "") })
+        })
+        .catch(err => {
+          console.error('ERROR:', err);
+        });
+    } else {
+      res.send({ items: items });
     }
-    //res.send({items: items})
   })
 })
 
