@@ -8,12 +8,8 @@ import { unregisterTaskAsync } from 'expo-background-fetch';
 // import {CheckBox} from 'react-native-check-box'
 
 
-<<<<<<< HEAD
-const API_URL = 'http://192.168.1.193:5000/';
-=======
 const API_URL = 'http://10.0.1.85:5000/';
 // const API_URL = 'http://127.0.0.1:5000/';
->>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
 let currentUser = '';
 let order = '';
 let token = '';
