@@ -5,7 +5,9 @@ import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeed
 import { Header, ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
-// import {CheckBox} from 'react-native-check-box'
+import { Font } from 'expo';
+
+import { CheckBox } from 'react-native-elements'
 
 
 const API_URL = 'http://10.0.1.85:5000/';
@@ -944,46 +946,29 @@ class DineInOutScreen extends React.Component {
   }
 }
 class FilterSelectionScreen extends React.Component{
+  async componentWillMount() {
+    await Font.loadAsync({
+      'Font Awesome': require('./assets/fonts/fontawesome.ttf')
+    });
+  }
 
-
-// checkBoxTest(){
-//   alert("value changed")
-// }
-
-// handlePressCheckedBox = (checked) => {
-//   this.setState({
-//     isChecked: checked,
-//   });
-// }
   render(){
     const { navigate } = this.props.navigation;
     console.log(this.props.navigation.state)
     
     return (
       <View>
+          <Text style={{ fontFamily: 'Font Awesome', fontSize: 20 }}>&#xf164;</Text>
+          <CheckBox
+            title='Click Here'
+            //  checked={this.state.checked}
+          />
 
-        <Text style={{fontSize: 35}}>Allergies/Restrictions</Text>
-{/* 
-              <CheckBox
-          style={{flex: 1, padding: 10}}
-          onClick={()=>{
-            this.setState({
-                isChecked:!this.state.isChecked
-            })
-          }}
-          isChecked={this.state.isChecked}
-          leftText={"CheckBox"}
-      /> */}
-
-        <Button 
-        onPress={()=>{
-            this.props.navigation.navigate('Menu')
-        }}
-        title="Menu"
-
-        />
-
-        
+          <CheckBox
+            center
+            title='Click Here'
+            // checked={this.state.checked}
+          />
       </View>
     );
   }
