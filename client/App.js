@@ -1512,9 +1512,9 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 
 
   state = {
-    itemName: '',
-    itemPrice: '',
-    description: '',
+    itemName: currentItem.itemName,
+    itemPrice: "" + currentItem.itemPrice,
+    description: currentItem.description,
   }
   handleitemName = (text) => {
     this.setState({ itemName: text })
@@ -1550,7 +1550,7 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="   Updated Item Name:"
+              value = {this.state.itemName}
               autoCapitalize="words"
               onChangeText={this.handleitemName} />
 
@@ -1585,7 +1585,7 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="   Updated Item Price (in cents):"
+              value = {this.state.itemPrice}
               autoCapitalize="words"
               onChangeText={this.handleitemPrice} />
 
@@ -1620,7 +1620,7 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
-              placeholder="   Updated Description:"
+              value = {this.state.description}
               autoCapitalize="words"
               onChangeText={this.handledescription} />
 
