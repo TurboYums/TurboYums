@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-import { Header,ListItem} from 'react-native-elements';
+import { Header,CheckBox, ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 
@@ -918,7 +918,7 @@ class DineInOutScreen extends React.Component {
           items.push({ category: item.category, data: [item] });
         }
       }
-      this.props.navigation.navigate('Menu');
+      this.props.navigation.navigate('FilterSelection');
     });
   }
 
@@ -947,6 +947,28 @@ class DineInOutScreen extends React.Component {
     );
   }
 }
+class FilterSelectionScreen extends React.Component{
+
+
+// checkBoxTest(){
+//   alert("value changed")
+// }
+
+  render(){
+    const { navigate } = this.props.navigation;
+    console.log(this.props.navigation.state)
+    
+    return (
+      <View>
+
+        <Text style={{fontSize: 35}}>Allergies/Restrictions</Text>
+     
+        
+      </View>
+    );
+  }
+}
+
 
 class MenuScreen extends React.Component {
   static navigationOptions = {
@@ -1392,6 +1414,7 @@ const RootStack = createStackNavigator(
     EmployeePortal: EmployeePortalScreen,
     ManagerPortal: ManagerPortalScreen,
     DineInOut: DineInOutScreen,
+    FilterSelection: FilterSelectionScreen, 
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
