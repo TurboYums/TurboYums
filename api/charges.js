@@ -7,9 +7,14 @@ const stripe = require('stripe')(config.stripe.STRIPE_SECRET_KEY);
 
 const Charge = sequelize.import('../models/charge.js');
 const User = sequelize.import('../models/user.js');
+const Order = sequelize.import('../models/order.js');
 
 api.post('/api/charges/create', (req, res) => {
-
+  Order.findOne({ where: { id: req.body.order_id } }).then(order => {
+  if(order && order.status != "ordering"){
+    res.send({err: "Order has already been paid for."})
+    return;
+  }
   const charge = stripe.charges.create({
     amount: req.body.amount, // Unit: cents
     currency: req.body.currency,
@@ -29,7 +34,7 @@ api.post('/api/charges/create', (req, res) => {
       failure_code: req.body.failure_code,
       failure_message: req.body.failure_message,
       livemode: req.body.livemode,
-      order: req.body.order,
+      order: req.body.order_id,
       outcome: req.body.outcome,
       paid: req.body.paid,
       receipt_email: req.body.receipt_email,
@@ -48,19 +53,27 @@ api.post('/api/charges/create', (req, res) => {
         earnedRewards = config.rewards.rewardEarnedPerTransaction + Math.floor(config.rewards.rewardEarnedPerDollarSpent * newChargeModel.amount * 100);
         user.increment('rewardpoints', { by: earnedRewards });
         user.reload().then(() => {
-          if (user.rewardpoints >= config.requiredCountForReward) {
-            user.increment('rewardBalance', { by: config.rewards.rewardValue });
-            user.rewardpoints = 0;
-            user.save().then(() => {
-              order.status = "payed";
+            if (user.rewardpoints >= config.requiredCountForReward) {
+              user.increment('rewardBalance', { by: config.rewards.rewardValue });
+              user.rewardpoints = 0;
+              user.save().then(() => {
+                order.status = "Paid";
+                order.active = 1;
+                order.save().then(() => {
+                  res.send({ user: user, charge: newChargeModel });
+                });
+              });
+            } else {
+              order.status = "Paid";
               order.active = 1;
-              order.save.then(() => {
+              order.save().then(() => {
                 res.send({ user: user, charge: newChargeModel });
               });
-            });
-          }
+            }
+          })
         })
       })
     })
-  })
+  }
+  )
 });

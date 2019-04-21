@@ -16,33 +16,40 @@ api.post('/api/sources/create', (req, res) => {
       cvc: req.body.cvc || '123'
     }
   }, function (err, token) {
-    stripe.customers.createSource(
-      req.body.user.stripe_id,
-      { source: token.id },
-      function (err, card) {
-        Source.create({
-          stripe_id: card.id,
-          user_stripe_id: req.body.user.stripe_id,
-          type: req.body.type,
-          firstname: req.body.user.firstname,
-          lastname: req.body.user.lastname,
-          billingAddress: req.body.billingAddress,
-          cvv: req.body.cvc,
-          expDate: req.body.expDate,
-          last4: req.body.number.substr(req.body.number.length - 4)
-        }).then(newSource => {
-          res.send({source: newSource});
-        }).catch( function(err) {
-          res.send({error: err});
-        })
-      }
-    )
-    res.send({source: token, error: err});
+    if (err) {
+      console.log(err);
+    }
+    else {
+      stripe.customers.createSource(
+        req.body.user.stripe_id,
+        { source: token.id },
+        function (err, card) {
+          if (err) console.log(err);
+          Source.create({
+            stripe_id: card.id,
+            user_stripe_id: req.body.user.stripe_id,
+            type: req.body.type,
+            firstname: req.body.user.firstname,
+            lastname: req.body.user.lastname,
+            billingAddress: req.body.billingAddress,
+            cvv: req.body.cvc,
+            expDate: req.body.expDate,
+            last4: req.body.number.substr(req.body.number.length - 4)
+          }).then(newSource => {
+            res.send({ source: newSource });
+          }).catch(function (err) {
+            res.send({ error: err });
+          })
+        }
+      )
+      res.send({ source: token, error: err });
+    }
+    
   })
 })
 
 api.post('/api/sources/get', (req, res) => {
   Source.findAll({ where: { user_stripe_id: req.body.user.stripe_id } }).then(sources => {
-    res.send({sources: sources});;
+    res.send({ sources: sources });;
   })
 })

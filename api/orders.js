@@ -9,7 +9,7 @@ api.post('/api/order/create', (req, res) => {
   Order.create({
     totalPrice: req.body.totalPrice,
     specialRequest: req.body.specialRequest,
-    userId: req.body.userId,
+    userStripeId: req.body.userId,
     status: 'ordering',
     active: 0
   }).then(newOrder => {
@@ -31,6 +31,20 @@ api.post('/api/order/add', (req, res) => {
         })
       })
     })
+  })
+})
+
+api.post('/api/order/setStatus', (req, res) => {
+  Order.findOne({ where: { id: req.body.orderId } }).then(order => {
+    order.status = req.body.status;
+
+    order.active = ( order.status == "Served") ? 0 : order.active;
+    
+    order.save().then(() => {
+      order.reload().then(() => {
+        res.send({ order: order });
+      })
+    });
   })
 })
 
