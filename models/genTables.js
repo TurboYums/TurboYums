@@ -1,3 +1,4 @@
+/*
 const sequelize = require('./sequelize.js');
 const Item = sequelize.import('./table.js');
 
@@ -75,3 +76,4 @@ Table.create({
     // print the error details
     console.log(err);
 });
+*/

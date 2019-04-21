@@ -1,8 +1,6 @@
 //Generate Pizzas
-
 const sequelize = require('./sequelize.js');
 const Item = sequelize.import('./item.js');
-
 
 Item.create({
   itemName: 'Plain',

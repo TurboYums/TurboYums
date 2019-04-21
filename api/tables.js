@@ -20,13 +20,21 @@ api.post('/api/tables/create', (req, res) => {
 api.get('/api/tables/getAll', (req, res) => {
     Table.findAll().then(tables => {
         res.send({ tables: tables })
+    }).then(function(user) {
+        // you can now access the newly created task via the variable task
+        console.log('success');
     })
+    .catch(function(err) {
+        // print the error details
+        console.log(err);
+    });
 })
 
 
-/*
+
 api.post('/api/tables/changeStatus'), (req, res) => {
     Table.findOne({ where: { tableID: req.body.tableID } }).then(table => {
+        console.log("dfsfdf");
         if (table.status == 0 || table.status == 1 || table.status == 2) {
             if (table.status == 0) {
                 table.status = 1;
@@ -60,5 +68,3 @@ api.post('/api/tables/changeStatus'), (req, res) => {
         }
     })
 }
-
-*/

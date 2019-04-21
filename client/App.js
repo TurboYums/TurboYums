@@ -53,7 +53,7 @@ class WelcomeScreen extends React.Component {
             <TouchableOpacity
               style={styles.logInMenuButton}
               onPress={() => {
-                this.props.navigation.navigate('TableLayout');
+                this.props.navigation.navigate('LogIn');
               }
               } >
               <Text style={styles.buttonText}> Login </Text>
@@ -1213,6 +1213,7 @@ class TableLayout extends React.Component {
   
 
   table1Select = () => {
+    //console.log(currentTable);
     fetch(API_URL + 'api/tables/changeStatus', {
       method: 'POST',
       headers: {
@@ -1220,11 +1221,13 @@ class TableLayout extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        
         tableID: currentTable.tableID,
         status: currentTable.status
       }),
     }).then((res) => res.json()).then(resJson => {
       currentTable = resJson.table;
+     // console.log(currentTable +"hiii");
       if (resJson.table.status == 0) {
         if (this.state.table1 == 'coral') {
           this.setState({ table1: 'green' })
