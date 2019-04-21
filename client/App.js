@@ -1202,11 +1202,7 @@ class TableLayout extends React.Component {
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-<<<<<<< HEAD
         tables: tables,
-=======
-       // orderId: order.id,
->>>>>>> 589bf5b5de59e7eb5b38dd7595c7bb35e3d0aee6
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       //table = resJson.table
