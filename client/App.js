@@ -8,8 +8,12 @@ import { unregisterTaskAsync } from 'expo-background-fetch';
 // import {CheckBox} from 'react-native-check-box'
 
 
+<<<<<<< HEAD
+const API_URL = 'http://192.168.1.193:5000/';
+=======
 const API_URL = 'http://10.0.1.85:5000/';
 // const API_URL = 'http://127.0.0.1:5000/';
+>>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
 let currentUser = '';
 let order = '';
 let token = '';
@@ -33,7 +37,6 @@ class LogoTitle extends React.Component {
 class WelcomeScreen extends React.Component {
 
   static navigationOptions = {
-    // GOTTA CHANGE BAR STYLE TO LIGHT COLOR THIS JUST REMOVES THE HEADER
     header: null,
   };
   render() {
@@ -43,12 +46,8 @@ class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-
-          <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-
-           
-              
                 <TouchableOpacity
                   style={styles.logInMenuButton}
                   onPress={() => {
@@ -57,7 +56,6 @@ class WelcomeScreen extends React.Component {
                   } >
                   <Text style={styles.buttonText}> Login </Text>
                  </TouchableOpacity>
-              
 
                 <TouchableOpacity
                   style={styles.signUpButton}
@@ -219,8 +217,8 @@ class LogInScreen extends React.Component {
     headerTintColor: '#000000',
   };
   state = {
-    username: '',
-    password: ''
+    username: '  ',
+    password: '  '
   }
   handleusername = (text) => {
     this.setState({ username: text })
@@ -874,11 +872,11 @@ class ReceiptScreen extends React.Component {
   }
 }
 
-
+//ADD NAV BAR
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Welcome to our Fine Dining!',
+    //headerTitle: 'Welcome to our Fine Dining!',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
