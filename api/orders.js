@@ -41,7 +41,16 @@ api.post('/api/order/getItems', (req, res) => {
 })
 
 api.post('/api/order/remove', (req, res) => {
-  OrderItem.removeAttribute(req.body.OrderItemId).then( ()=> {
-    res.send({sucess: true})
+  OrderItem.destroy({where:{ orderId: req.body.orderId, itemId: req.body.itemId }}).then( ()=> {
+    Order.findOne({ where: { id: req.body.orderId } }).then(order => {
+      Item.findOne({ where: { id: req.body.itemId } }).then(item => {
+        order.decrement('totalPrice', { by: item.itemPrice }).then(decorder => {
+          decorder.getItems().then(items => {
+            res.send({ order: decorder, items: items })
+          })
+        })
+    })
+
   })
+})
 })
