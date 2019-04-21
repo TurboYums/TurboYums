@@ -223,10 +223,22 @@ class LogInScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => alert('This is a button!')}
+        style={{paddingRight: 15}}
+      >
+       <Image
+        style={{ height: 30, width: 30,}}
+        source={require('./assets/menu.png')}
+        resizeMode="contain"
+      />
+      </TouchableOpacity>
+      ),
   };
   state = {
-    username: '  ',
-    password: '  '
+    username: '',
+    password: ''
   }
   handleusername = (text) => {
     this.setState({ username: text })
