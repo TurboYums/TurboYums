@@ -5,6 +5,7 @@ import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeed
 import { Header, ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+// import {CheckBox} from 'react-native-check-box'
 
 
 const API_URL = 'http://10.0.1.85:5000/';
@@ -955,11 +956,11 @@ class FilterSelectionScreen extends React.Component{
 //   alert("value changed")
 // }
 
-handlePressCheckedBox = (checked) => {
-  this.setState({
-    isChecked: checked,
-  });
-}
+// handlePressCheckedBox = (checked) => {
+//   this.setState({
+//     isChecked: checked,
+//   });
+// }
   render(){
     const { navigate } = this.props.navigation;
     console.log(this.props.navigation.state)
@@ -968,10 +969,24 @@ handlePressCheckedBox = (checked) => {
       <View>
 
         <Text style={{fontSize: 35}}>Allergies/Restrictions</Text>
-       
+{/* 
+              <CheckBox
+          style={{flex: 1, padding: 10}}
+          onClick={()=>{
+            this.setState({
+                isChecked:!this.state.isChecked
+            })
+          }}
+          isChecked={this.state.isChecked}
+          leftText={"CheckBox"}
+      /> */}
 
-        <Button
+        <Button 
+        onPress={()=>{
+            this.props.navigation.navigate('Menu')
+        }}
         title="Menu"
+
         />
 
         
