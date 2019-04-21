@@ -1,6 +1,7 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
 const Item = sequelize.import('../models/item.js');
+const googleTranslate = require('google-translate')(api.google_translate_api_key);
 
 api.post('/api/items/create', (req, res) => {
   Item.create({
@@ -36,9 +37,15 @@ api.post('/api/items/edit', (req, res) => {
   })
 })
 
-api.get('/api/items/getAll', (req, res) => {
+api.post('/api/items/getAll', (req, res) => {
   Item.findAll({group: ['category', 'id']}).then(items => {
-    res.send({items: items})
+    if(req.body.translate == true){
+      googleTranslate.translate(JSON.stringify(items), req.body.translate_target, function(err, translation) {
+        res.send(err);
+        //res.send(translation.translatedText);
+      });
+    }
+    //res.send({items: items})
   })
 })
 

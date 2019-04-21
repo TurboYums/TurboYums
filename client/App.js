@@ -8,12 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 import { Dropdown } from 'react-native-material-dropdown';
 
-<<<<<<< HEAD
 const API_URL = 'http://192.168.1.253:5000/';
-=======
-
-const API_URL = 'http://172.30.20.207:5000/';
->>>>>>> master
 let currentUser = '';
 let order = '';
 let token = '';
@@ -1838,14 +1833,11 @@ const RootStack = createStackNavigator(
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
     Staff: StaffScreen,
-<<<<<<< HEAD
-    OrderQueue: OrderQueueScreen
-=======
+    OrderQueue: OrderQueueScreen,
     EditMenu: ManagerMenu,
     WhichEdit: WhichEditScreen,
     EditItem: EditItemScreen,
     AddItem: AddItemScreen,
->>>>>>> master
   },
   {
     initialRouteName: 'Welcome',
