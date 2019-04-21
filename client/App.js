@@ -866,11 +866,11 @@ class ReceiptScreen extends React.Component {
   }
 }
 
-
+//ADD NAV BAR
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Welcome to our Fine Dining!',
+    //headerTitle: 'Welcome to our Fine Dining!',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
