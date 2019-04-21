@@ -49,21 +49,21 @@ Item.create({
   category: 'Burger',
    itemPrice: 300,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'World Class Cheese Burger',
 })
 Item.create({
   itemName: 'Mushroom and Swiss Burger',
   category: 'Burger',
   itemPrice: 300,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Best Mushroom Burger on the East Coast',
 })
 Item.create({
   itemName: 'Blue Cheese Burger',
   category: 'Burger',
   itemPrice: 300,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Delicious Burger topped with Blue Cheese',
 })
 
 
@@ -72,19 +72,19 @@ Item.create({
   category: 'Drink',
   itemPrice: 150,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Fizzy Sugar Water',
 })
 Item.create({
   itemName: 'Ice Tea',
   category: 'Drink',
   itemPrice: 150,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Sweet Iced Tea',
 })
 Item.create({
   itemName: 'Lemonade',
   category: 'Drink',
   itemPrice: 150,
   ingredient: 'Crust, Sauce, Cheese',
-  description: 'Famous Plain Pizza',
+  description: 'Hand Squeezed Lemonade',
 })
