@@ -23,17 +23,56 @@ api.post('/api/items/create', (req, res) => {
 api.post('/api/items/remove', (req, res) => {
   Item.destroy({
     where: {
-      id: req.body.id
+      itemName: req.body.itemName
     }
-  }),then (deletedItem => {
-    res.send({item: deletedItem});
+  }).then (deletedItem => {
+    res.send({
+      creationSuccess: true,
+      text: `Deleted Item: ${deletedItem}`,
+      item: deletedItem
+    });
   })
 })
 
-api.post('/api/items/edit', (req, res) => {
-  Item.findOne({where: {id: req.body.id}
-  }),then (deletedItem => {
-    res.send({item: deletedItem});
+api.post('/api/items/editName', (req, res) => {
+  Item.findOne({where: {itemName: req.body.itemName}
+  }).then (item => {
+    item.update({
+      itemName: req.body.updatedName
+    })
+    res.send({
+      item: item,
+      nameChange: true
+    });
+
+  })
+})
+
+api.post('/api/items/editPrice', (req, res) => {
+  Item.findOne({where: {itemName: req.body.itemName}
+  }).then (item => {
+    item.update({
+      itemPrice: req.body.updatedPrice
+    })
+    res.send({
+      item: item,
+      priceChange: true
+    });
+
+  })
+})
+
+api.post('/api/items/editDescription', (req, res) => {
+  Item.findOne({where: {itemName: req.body.itemName}
+  }).then (item => {
+    item.update({
+      description: req.body.updatedDesc
+    })
+    res.send({
+      item: item,
+      descChange: true
+    });
+
   })
 })
 
