@@ -14,7 +14,7 @@ api.post('/api/tables/create', (req, res) => {
 
 
 api.get('/api/tables/getAll', (req, res) => {
-    Table.findAll({ group: ['tableID', 'status'] }).then(tables => {
+    Table.findAll().then(tables => {
         res.send({ tables: tables })
     })
 })
