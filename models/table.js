@@ -3,8 +3,8 @@ const sequelize = require('./sequelize.js');
 
 Table = sequelize.define('table', {
   //tableID: Sequelize.DOUBLE,
-  tableID: { type: Sequelize.DOUBLE, unique: true },
-  status: Sequelize.INTEGER
+  //tableID: { type: Sequelize.DOUBLE, unique: true },
+  status: Sequelize.STRING
 })
 
 Table.belongsTo(Order);

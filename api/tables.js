@@ -4,8 +4,7 @@ const Table = sequelize.import('../models/table.js');
 
 api.post('/api/tables/create', (req, res) => {
     Table.create({
-        tableID: req.body.tableID,
-        status: 0
+        status: 'green'
     }).then(newTable => {
         res.send({ table: newTable });
     }).catch(function(err) {
@@ -13,8 +12,6 @@ api.post('/api/tables/create', (req, res) => {
         console.log(err);
     });
 })
-
-
 
 
 api.get('/api/tables/getAll', (req, res) => {
@@ -32,22 +29,25 @@ api.get('/api/tables/getAll', (req, res) => {
 
 
 
-api.post('/api/tables/changeStatus'), (req, res) => {
-    Table.findOne({ where: { tableID: req.body.tableID } }).then(table => {
-        console.log("dfsfdf");
-        if (table.status == 0 || table.status == 1 || table.status == 2) {
-            if (table.status == 0) {
-                table.status = 1;
+api.post('/api/tables/changeStatus', (req, res) => {
+    //console.log(req.body.table_id);
+   // console.log("hello michelle");
+    Table.findOne({ where: { id: req.body.table_id } }).then(table => {
+        //console.log(table.id);
+        if (table.status == "green" || table.status == "red" || table.status == "coral") {
+            if (table.status == 'green') {
+                table.status = 'red';
+                table.orderId=req.body.orderId;
             }
-            else if (table.status == 1) {
-                table.status = 2;
+            else if (table.status == 'red') {
+                table.status = 'coral';
             }
-            else if (table.status == 2) {
-                table.status = 0;
+            else if (table.status == 'coral') {
+                table.status = 'green';
             }
 
-            user.save().then(() => {
-                user.reload().then(() => {
+            table.save().then(() => {
+                table.reload().then(() => {
                     res.send({
                         table: table,
                         statusChange: true
@@ -56,8 +56,8 @@ api.post('/api/tables/changeStatus'), (req, res) => {
             });
         }
         else {
-            user.save().then(() => {
-                user.reload().then(() => {
+            table.save().then(() => {
+                table.reload().then(() => {
                     res.send({
                         table: table,
                         statusChange: false
@@ -67,4 +67,4 @@ api.post('/api/tables/changeStatus'), (req, res) => {
 
         }
     })
-}
+})
