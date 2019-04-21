@@ -5,6 +5,7 @@ const Order = sequelize.import('../models/order.js');
 const Item = sequelize.import('../models/item.js');
 const OrderItem = sequelize.import('../models/orderitem.js');
 
+
 api.post('/api/order/create', (req, res) => {
   Order.create({
     totalPrice: req.body.totalPrice,
@@ -59,6 +60,35 @@ api.post('/api/order/getItems', (req, res) => {
     order.getItems().then(items => {
       res.send({ order: order, items: items })
     })
+  })
+})
+
+api.post('/api/order/email', (req, res) => {
+  var mailOptions = {
+    from: 'TurboYums',
+    to: req.body.email,
+    subject: 'Receipt',
+    text: 'Receipt for Order #' + req.body.orderId + "\n"
+  }
+  mailOptions.text += "----------------------\n"
+
+  Order.findOne({ where: { id: req.body.orderId } }).then(order => {
+
+    order.getItems().then(items => {
+      for(let item of items){
+        mailOptions.text += item.itemName + "   $" + item.itemPrice/100 + "\n"
+      }
+      mailOptions.text += "----------------------\n"
+      mailOptions.text += "Total :     $" + order.totalPrice/100
+      api.transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error)
+        } else {
+          console.log('Email sent: ' + info.response)
+        }
+      }); 
+    })
+   
   })
 })
 

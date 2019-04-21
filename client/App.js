@@ -844,6 +844,22 @@ class ReceiptScreen extends React.Component {
     this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
   }
 
+  emailReceipt = () => {
+    fetch(API_URL + 'api/order/email', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: order.id,
+        email: currentUser.email
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      Alert.alert("Emailed!");
+    })
+  }
+
   componentWillMount() {
     fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
@@ -893,11 +909,16 @@ class ReceiptScreen extends React.Component {
         <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
         <Text style={styles.receiptFooter}>Tax: ${order.totalPrice * .07 / 100}</Text>
         <Text style={styles.receiptFooter}>Tip: ${this.state.tip}</Text>
-        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
+        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100 + parseFloat(this.state.tip)}</Text>
         <View>
           <Text style={styles.text}>
             You have: {currentUser.rewardpoints}
           </Text>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => this.emailReceipt()}>
+            <Text style={styles.submitButtonText}> Email </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
@@ -915,7 +936,7 @@ class ReceiptScreen extends React.Component {
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Welcome to our Fine Dining!',
+    headerTitle: '',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
