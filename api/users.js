@@ -17,6 +17,7 @@ api.post('/api/users/create', (req, res) => {
         lastname: req.body.lastname,
         password: hash,
         accountType: req.body.accountType,
+        hourlyRate: req.body.hourlyRate,
         rewardpoints: 0,
         email: req.body.email,
         stripe_id: `${customer.id}`,
@@ -89,7 +90,7 @@ api.post('/api/users/addhours', (req, res) => {
 })
 
 api.post('/api/users/getEmployees', (req, res) => {
-  User.findAll({ where: { accountType: 0 } }).then(users => {
+  User.findAll({ where: { accountType: 1 } }).then(users => {
    res.send({employees: users});
   })
 })
@@ -145,6 +146,7 @@ api.post('/api/users/clockIn', (req, res) => {
     }
   })
 })
+
 api.post('/api/users/clockOut', (req, res) => {
   var employee = req.body.username;
   User.findOne({ where: { username: req.body.username } }).then(user => {
@@ -204,3 +206,32 @@ api.post('/api/users/clockOut', (req, res) => {
   })
 })
 
+
+api.post('/api/users/export_payroll', (req, res) => {
+  var mailOptions = {
+    from: 'TurboYums',
+    to: req.body.email,
+    subject: 'Payroll',
+    text: 'Attached is this weeks payroll\n'
+  }
+  User.findAll({ where: { accountType: 1 } }).then(users => {
+    let payroll = 'employee,employee_id,hoursWorked,hourlyRate,totalGrossPay\n'
+    for(let employee of users){
+      payroll += employee.firstname + " " + employee.lastname +", "+ employee.stripe_id+", "+employee.hoursWorked+", "+employee.hourlyRate+", "+employee.hoursWorked*employee.hourlyRate+"\n"  
+    }
+    mailOptions.attachments = [
+      {
+        filename: 'payroll.csv',
+        content: payroll
+      }
+    ]
+    api.transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error)
+      } else {
+        console.log('Email sent: ' + info.response)
+      }
+    }); 
+    res.send({payroll: payroll});
+   })
+})

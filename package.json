@@ -8,6 +8,7 @@
     "test": "mocha --timeout 10000"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.0.1",
     "@google-cloud/translate": "^3.0.1",
     "babel-preset-expo": "^5.1.1",
     "bcrypt": "^3.0.5",
