@@ -526,6 +526,25 @@ class ManagerPortalScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => alert('Pressed.')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value={pings}
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+      />
+      </View>
+      </TouchableOpacity>
+    )
   }
 
   render() {
