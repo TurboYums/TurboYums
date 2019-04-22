@@ -215,7 +215,6 @@ api.post('/api/users/export_payroll', (req, res) => {
     text: 'Attached is this weeks payroll\n'
   }
   User.findAll({ where: { accountType: 1 } }).then(users => {
-    
     let payroll = 'employee,employee_id,hoursWorked,hourlyRate,totalGrossPay\n'
     for(let employee of users){
       payroll += employee.firstname + " " + employee.lastname +", "+ employee.stripe_id+", "+employee.hoursWorked+", "+employee.hourlyRate+", "+employee.hoursWorked*employee.hourlyRate+"\n"  

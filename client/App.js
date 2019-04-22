@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 
-const API_URL = 'http://172.31.123.5:5000/'
+const API_URL = 'http://172.31.202.159:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
 let tip
@@ -458,22 +458,15 @@ class EmployeePortalScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> View Tables </Text>
             </TouchableOpacity>
-
+            
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!')
+                this.props.navigation.navigate('OrderQueue')
               }} >
-              <Text style={styles.buttonText}> View Schedule </Text>
+              <Text style={styles.buttonText}>Order Queue</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.tButton}
-              onPress={() => {
-                this.props.navigation.navigate('Staff')
-              }} >
-              <Text style={styles.buttonText}> View Staff </Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
