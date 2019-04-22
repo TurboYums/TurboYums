@@ -324,21 +324,34 @@ class LogInScreen extends React.Component {
 
 
 class ClockInOutScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-  }
-  state = {
-    compHours: '',
-    latitude: null,
-    longitude: null,
-    animating: false
-  }
-
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('AddPingEmp')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+    />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
   _clockIn = () => {
     this.setState({ animating: true })
     navigator.geolocation.getCurrentPosition(
@@ -434,36 +447,38 @@ class ClockInOutScreen extends React.Component {
   }
 }
 
+
 class EmployeePortalScreen extends React.Component {
   
-  static navigationOptions = {
+static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
-    headerTitle: 'Welcome, Employee!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
     headerRight: (
-    <TouchableOpacity
-    onPress={() => this.props.navigation.navigate('AddPingEmp')}
-    style={{paddingRight: 15}}
-    >
-    <View>
-    <Image
-    style={{ height: 30, width: 30,}}
-    source={require('./assets/notif.png')}
-    resizeMode="contain"
+      <TouchableOpacity
+      onPress={() => navigation.navigate('AddPingEmp')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
     />
-    <Badge
-    value={pings}
-    status="error"
-    containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-    </View>
-    </TouchableOpacity>
-  )
-  }
-
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
+  
   render() {
     return (
       <View style={styles.container}>
@@ -477,14 +492,6 @@ class EmployeePortalScreen extends React.Component {
               }
               } >
               <Text style={styles.buttonText}> View Tables </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.tButton}
-              onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!')
-              }} >
-              <Text style={styles.buttonText}> View Schedule </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -953,16 +960,17 @@ class ReceiptScreen extends React.Component {
 
 
 class DineInOutScreen extends React.Component {
-  static navigationOptions = {
+
+   static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
-    headerTitle: 'Welcome to our Fine Dining!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('AddPingCusty')}
+      onPress={() => navigation.navigate('AddPingCusty')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -974,8 +982,8 @@ class DineInOutScreen extends React.Component {
       </View>
       </TouchableOpacity>
     )
-  }
-
+   }
+   )
 
 
   _onPressButton(navigate) {
@@ -1045,7 +1053,7 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -1054,7 +1062,7 @@ class MenuScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('AddPingCusty')}
+      onPress={() => navigation.navigate('AddPingCusty')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -1066,8 +1074,8 @@ class MenuScreen extends React.Component {
       </View>
       </TouchableOpacity>
     )
-  }
-
+   }
+   )
   constructor(props) {
     super(props)
     this.state = {
@@ -1518,7 +1526,9 @@ class AddPingScreenCust extends React.Component {
                 }).then((res) => res.json()).then(resJson => {
                   if (resJson.creationSuccess) {
                     Alert.alert('Ping Sent!')
-                    pings++
+                    pings = parseInt(pings, 10)
+                    pings = pings + 1
+                    pings = pings.toString()
                   } else {
                     Alert.alert('Error, please contact a staff member.')
                   }
@@ -1886,14 +1896,34 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 }
 
 class StaffScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-  }
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('AddPingEmp')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+    />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
 
   constructor(props) {
     super(props)
