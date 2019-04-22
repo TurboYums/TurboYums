@@ -89,7 +89,7 @@ api.post('/api/users/addhours', (req, res) => {
 })
 
 api.post('/api/users/getEmployees', (req, res) => {
-  User.findAll({ where: { accountType: 0 } }).then(users => {
+  User.findAll({ where: { accountType: 1 } }).then(users => {
    res.send({employees: users});
   })
 })
