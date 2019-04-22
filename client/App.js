@@ -9,7 +9,7 @@ import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
 
-const API_URL = 'http://192.168.1.17:5000/'
+const API_URL = 'http://192.168.1.206:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
 let pings = 0

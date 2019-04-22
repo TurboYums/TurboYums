@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize.js');
 
-Notifications = sequelize.define('notifications', {
+Notification = sequelize.define('notification', {
   from: Sequelize.STRING,
   description: Sequelize.STRING,
 })
 
 module.exports = (sequelize, DataTypes) => {
-  return Notifications;
+  return Notification;
 }

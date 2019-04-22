@@ -1,14 +1,12 @@
 const api = require('./api.js');
 const sequelize = require('../models/sequelize.js');
-const Notification = sequelize.import('../models/item.js');
+const Notification = sequelize.import('../models/notification.js');
 
 
 api.post('/api/notifications/create', (req, res) => {
   Notification.create({
-
     from: req.body.from,
     description: req.body.description,
-
   }).then(newPing => {
     res.send({
       creationSuccess: true,
