@@ -19,7 +19,7 @@ import Table10 from './Table10';
 import Table11 from './Table11';
 import Table12 from './Table12';
 
-const API_URL = 'http://172.31.18.222:5000/';
+const API_URL = 'http://172.31.251.16:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -1171,8 +1171,9 @@ class StaffScreen extends React.Component {
         <View>
           <FlatList
             data={this.state.employees}
-            renderItem={({ item }) => <Text style = {styles.viewItem} {item.firstname + " " + item.lastname} onPress={this.SelectEmployee.bind(this, item)}>
-            </Text>
+            renderItem={({ item }) => <Text style = {styles.viewItem} onPress={this.SelectEmployee.bind(this, item)}>
+            {item.firstname + " " + item.lastname}
+            </Text>}
           />
         </View>
       </View>
@@ -2755,16 +2756,6 @@ class ViewEmployee extends React.Component {
         <Text style={styles.itemPrice}>{'ID: ' + currentEmployee.stripe_id}</Text>
         <Text style={styles.itemPrice}>{'Email: ' + currentEmployee.email}</Text>
         <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentEmployee.totalHoursWorked}</Text>
-        <ScrollView>
-          <SectionList
-            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index}> {item.timeClockedIn + " - " + "" + item.timeClockedOut} </Text>}
-            renderSectionHeader={({ section: { category } }) => (
-              <Text style={styles.sectionHeader}>{category}</Text>
-            )}
-            sections={this.state.items}
-            keyExtractor={(item, index) => item + index}
-          />
-        </ScrollView>
       </View>
     );
   }
