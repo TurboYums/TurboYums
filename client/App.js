@@ -1146,7 +1146,7 @@ class StaffScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/users/npm -g eoyees', {//fetch start
+    fetch(API_URL + 'api/users/getEmployees', {//fetch start
       method: 'POST',
       headers: {//header start
         Accept: 'application/json',
@@ -1171,7 +1171,8 @@ class StaffScreen extends React.Component {
         <View>
           <FlatList
             data={this.state.employees}
-            renderItem={({ item }) => <Text>{item.firstname + " " + item.lastname} onPress={this.SelectEmployee.bind(this, item)}</Text>}
+            renderItem={({ item }) => <Text style = {styles.viewItem} {item.firstname + " " + item.lastname} onPress={this.SelectEmployee.bind(this, item)}>
+            </Text>
           />
         </View>
       </View>
@@ -2720,6 +2721,32 @@ class ViewEmployee extends React.Component {
     },
     headerTintColor: '#000000',
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      clocks: null
+    };
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/users/getClockLogs', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      this.setState({ clocks: resJson.clocks });;
+    })
+  }
+
+  GetSectionListItem = (item) => {
+    currentEmployee = item;
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -2728,6 +2755,16 @@ class ViewEmployee extends React.Component {
         <Text style={styles.itemPrice}>{'ID: ' + currentEmployee.stripe_id}</Text>
         <Text style={styles.itemPrice}>{'Email: ' + currentEmployee.email}</Text>
         <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentEmployee.totalHoursWorked}</Text>
+        <ScrollView>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index}> {item.timeClockedIn + " - " + "" + item.timeClockedOut} </Text>}
+            renderSectionHeader={({ section: { category } }) => (
+              <Text style={styles.sectionHeader}>{category}</Text>
+            )}
+            sections={this.state.items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </ScrollView>
       </View>
     );
   }

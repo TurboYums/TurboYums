@@ -204,3 +204,8 @@ api.post('/api/users/clockOut', (req, res) => {
   })
 })
 
+api.post('/api/users/getClockLogs', (req, res) => {
+  ClockLogs.findAll({ where: { username: req.body.username } }).then(clocks => {
+   res.send({clocks: clocks});
+  })
+})
