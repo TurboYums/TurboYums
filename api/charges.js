@@ -59,7 +59,7 @@ api.post('/api/charges/create', (req, res) => {
               user.save().then(() => {
                 order.status = "Paid";
                 order.active = 1;
-                order.save().then(() => {
+                order.save().then( () => {
                   res.send({ user: user, charge: newChargeModel });
                 });
               });
