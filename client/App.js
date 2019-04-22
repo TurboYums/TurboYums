@@ -27,8 +27,7 @@ let items = '';
 let employees = '';
 let currentItem = '';
 let currentTable = '';
-
-
+let currentEmployee = '';
 
 class LogoTitle extends React.Component {
   render() {
@@ -1146,11 +1145,6 @@ class StaffScreen extends React.Component {
     };
   }
 
-  GetSectionListItem = (item) => {
-    currentItem = item;
-    //this.props.navigation.navigate('ViewEmployee', { order: order, takeOut: '1' })
-  }
-
   componentWillMount() {
     fetch(API_URL + 'api/users/npm -g eoyees', {//fetch start
       method: 'POST',
@@ -1165,6 +1159,11 @@ class StaffScreen extends React.Component {
     })
   }
 
+  SelectEmployee = (item) => {
+    currentEmployee = item;
+    this.props.navigation.navigate('ViewEmployee', { order: order, takeOut: '1' })
+  }
+
   render() {
     return (
       <View>
@@ -1172,7 +1171,7 @@ class StaffScreen extends React.Component {
         <View>
           <FlatList
             data={this.state.employees}
-            renderItem={({ item }) => <Text>{item.firstname + " " + item.lastname}</Text>}
+            renderItem={({ item }) => <Text>{item.firstname + " " + item.lastname} onPress={this.SelectEmployee.bind(this, item)}</Text>}
           />
         </View>
       </View>
@@ -2702,6 +2701,28 @@ class Table extends React.Component {
   }
 }
 
+class ViewEmployee extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentEmployee.firstname + ' ' + currentEmployee.lastname}</Text>
+        <Text style={styles.itemPrice}>{'ID: ' + currentEmployee.stripe_id}</Text>
+        <Text style={styles.itemPrice}>{'Email: ' + currentEmployee.email}</Text>
+        <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentEmployee.totalHoursWorked}</Text>
+      </View>
+    );
+  }
+}
+
 const RootStack = createStackNavigator(
   {
     Welcome: WelcomeScreen,
@@ -2719,7 +2740,8 @@ const RootStack = createStackNavigator(
     ViewItem: ViewItemScreen,
     Staff: StaffScreen,
     TableLayout: TableLayout,
-    Table: Table
+    Table: Table,
+    ViewEmployee: ViewEmployee
 
   },
   {
