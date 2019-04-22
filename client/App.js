@@ -521,7 +521,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.TablesButton}
               onPress={() => {
-                this.props.navigation.navigate('Table');
+                this.props.navigation.navigate('TableLayout');
               }
               } >
               <Text style={styles.buttonText}> View Tables </Text>
@@ -1207,7 +1207,7 @@ class TableLayout extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getTables', {//fetch start
+    fetch(API_URL + 'api/tables/getAll', {//fetch start
       method: 'POST',
       headers: {//header start
         Accept: 'application/json',
@@ -1217,9 +1217,19 @@ class TableLayout extends React.Component {
 
       }),//body end
     }).then((res) => res.json()).then(resJson => {
-      table = resJson.table
-      this.setState({ table: resJson.table })
-    })
+      tables = resJson.tables      
+      this.setState({ table1: tables[0].status })
+      this.setState({ table2: tables[1].status })
+      this.setState({ table3: tables[2].status })
+      this.setState({ table4: tables[3].status })
+      this.setState({ table5: tables[4].status })
+      this.setState({ table6: tables[5].status })
+      this.setState({ table7: tables[6].status })
+      this.setState({ table8: tables[7].status })
+      this.setState({ table9: tables[8].status })
+      this.setState({ table10: tables[9].status })
+      this.setState({ table11: tables[10].status })
+      this.setState({ table12: tables[11].status })    })
     
   }
 
