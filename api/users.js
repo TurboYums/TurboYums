@@ -94,6 +94,14 @@ api.post('/api/users/getEmployees', (req, res) => {
   })
 })
 
+api.post('/api/users/getEmployee', (req, res) => {
+  console.log('hello')
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    console.log(user.username)
+   res.send({employee: user});
+  })
+})
+
 today = new Date();
 var minutesIn;
 var hoursIn;
@@ -204,8 +212,10 @@ api.post('/api/users/clockOut', (req, res) => {
   })
 })
 
+/*
 api.post('/api/users/getClockLogs', (req, res) => {
   ClockLogs.findAll({ where: { username: req.body.username } }).then(clocks => {
    res.send({clocks: clocks});
   })
 })
+*/

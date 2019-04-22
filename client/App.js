@@ -448,6 +448,14 @@ class EmployeePortalScreen extends React.Component {
     headerTintColor: '#000000',
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      employee: null
+    };
+  }
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -466,9 +474,9 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!');
+                this.props.navigation.navigate('ViewEmployee');
               }} >
-              <Text style={styles.buttonText}> View Schedule </Text>
+              <Text style={styles.buttonText}> View Employee Profile </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -1141,7 +1149,8 @@ class StaffScreen extends React.Component {
     super(props);
     this.state = {
       order: order,
-      employees: null
+      employees: null,
+      employee: null
     };
   }
 
@@ -1171,8 +1180,8 @@ class StaffScreen extends React.Component {
         <View>
           <FlatList
             data={this.state.employees}
-            renderItem={({ item }) => <Text style = {styles.viewItem} onPress={this.SelectEmployee.bind(this, item)}>
-            {item.firstname + " " + item.lastname}
+            renderItem={({ item }) => <Text style={styles.viewItem} onPress={this.SelectEmployee.bind(this, item)}>
+              {item.firstname + " " + item.lastname}
             </Text>}
           />
         </View>
@@ -1219,7 +1228,7 @@ class TableLayout extends React.Component {
 
       }),//body end
     }).then((res) => res.json()).then(resJson => {
-      tables = resJson.tables      
+      tables = resJson.tables
       this.setState({ table1: tables[0].status })
       this.setState({ table2: tables[1].status })
       this.setState({ table3: tables[2].status })
@@ -1231,8 +1240,9 @@ class TableLayout extends React.Component {
       this.setState({ table9: tables[8].status })
       this.setState({ table10: tables[9].status })
       this.setState({ table11: tables[10].status })
-      this.setState({ table12: tables[11].status })    })
-    
+      this.setState({ table12: tables[11].status })
+    })
+
   }
 
 
@@ -2726,11 +2736,14 @@ class ViewEmployee extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clocks: null
+      clocks: null,
+      employee: null,
+      username: ''
     };
   }
 
   componentWillMount() {
+    /*
     fetch(API_URL + 'api/users/getClockLogs', {//fetch start
       method: 'POST',
       headers: {//header start
@@ -2742,6 +2755,20 @@ class ViewEmployee extends React.Component {
     }).then((res) => res.json()).then(resJson => {
       this.setState({ clocks: resJson.clocks });;
     })
+    */
+   fetch(API_URL + 'api/users/getEmployee', {//fetch start
+    method: 'POST',
+    headers: {//header start
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },//header end
+    body: JSON.stringify({//body start
+      username: currentUser.username,
+    }),//body end
+  }).then((res) => res.json()).then(resJson => {
+    currentEmployee = resJson.employee
+    this.setState({ employee: resJson.employee });;
+  })
   }
 
   GetSectionListItem = (item) => {
