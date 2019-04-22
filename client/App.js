@@ -6,8 +6,20 @@ import { Header } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { Ionicons } from '@expo/vector-icons';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+import Table1 from './Table1';
+import Table2 from './Table2';
+import Table3 from './Table3';
+import Table4 from './Table4';
+import Table5 from './Table5';
+import Table6 from './Table6';
+import Table7 from './Table7';
+import Table8 from './Table8';
+import Table9 from './Table9';
+import Table10 from './Table10';
+import Table11 from './Table11';
+import Table12 from './Table12';
 
-const API_URL = 'http://192.168.1.218:5000/';
+const API_URL = 'http://172.31.18.222:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -53,7 +65,7 @@ class WelcomeScreen extends React.Component {
             <TouchableOpacity
               style={styles.logInMenuButton}
               onPress={() => {
-                this.props.navigation.navigate('TableLayout');
+                this.props.navigation.navigate('LogIn');
               }
               } >
               <Text style={styles.buttonText}> Login </Text>
@@ -921,7 +933,7 @@ class DineInOutScreen extends React.Component {
           items.push({ category: item.category, data: [item] });
         }
       }
-      this.props.navigation.navigate('Menu');
+      this.props.navigation.navigate('TableLayout');
     });
   }
 
@@ -1191,7 +1203,7 @@ class TableLayout extends React.Component {
       legDirty: 'coral',
       legReady: 'green',
       tables: null,
-    
+      conjoin: false
     };
   }
 
@@ -1203,339 +1215,931 @@ class TableLayout extends React.Component {
         'Content-Type': 'application/json',
       },//header end
       body: JSON.stringify({//body start
-       // table_id: table.id
-        //tables: tables,
+
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       table = resJson.table
       this.setState({ table: resJson.table })
     })
-
+    
   }
-  
+
 
   table1Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 1,
-        status: this.state.table1,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table1: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table1: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table1: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 1,
+            status: this.state.table1,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table1: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table1: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table1: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table1 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 1,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table1: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table1 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 1,
+              status: this.state.table1,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table1: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table2Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 2,
-        status: this.state.table2,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table2: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table2: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table2: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 2,
+            status: this.state.table2,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table2: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table2: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table2: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table2 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 2,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table2: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table2 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 2,
+              status: this.state.table2,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table2: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table3Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 3,
-        status: this.state.table3,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table3: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table3: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table3: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 3,
+            status: this.state.table3,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table3: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table3: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table3: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table3 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 3,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table3: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table3 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 3,
+              status: this.state.table3,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table3: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table4Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 4,
-        status: this.state.table4,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table4: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table4: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table4: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 4,
+            status: this.state.table4,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table4: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table4: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table4: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table4 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 4,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table4: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table4 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 4,
+              status: this.state.table4,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table4: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table5Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 5,
-        status: this.state.table5,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table5: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table5: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table5: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 5,
+            status: this.state.table5,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table5: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table5: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table5: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table5 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 5,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table5: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table5 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 5,
+              status: this.state.table5,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table5: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table6Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 6,
-        status: this.state.table6,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table6: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table6: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table6: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 6,
+            status: this.state.table6,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table6: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table6: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table6: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table6 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 6,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table6: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table6 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 6,
+              status: this.state.table6,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table6: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table7Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 7,
-        status: this.state.table7,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table7: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table7: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table7: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 7,
+            status: this.state.table7,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table7: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table7: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table7: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table7 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 7,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table7: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table7 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 7,
+              status: this.state.table7,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table7: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table8Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 8,
-        status: this.state.table8,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table8: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table8: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table8: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 8,
+            status: this.state.table8,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table8: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table8: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table8: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });  }
+      case 2: {
+        if (this.state.table8 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 8,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table8: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table8 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 8,
+              status: this.state.table8,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table8: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
+  }
 
   table9Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 9,
-        status: this.state.table9,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table9: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table9: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table9: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 9,
+            status: this.state.table9,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table9: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table9: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table9: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table9 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 9,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table9: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table9 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 9,
+              status: this.state.table9,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table9: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table10Select = () => {
-    
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 10,
-        status: this.state.table10,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table10: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table10: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table10: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 10,
+            status: this.state.table10,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table10: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table10: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table10: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table10 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 10,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table10: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table10 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 10,
+              status: this.state.table10,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table10: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table11Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 11,
-        status: this.state.table11,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table11: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table11: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table11: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 11,
+            status: this.state.table11,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table11: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table11: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table11: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table11 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 11,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table11: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table11 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 11,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table11: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
   }
 
   table12Select = () => {
-    fetch(API_URL + 'api/tables/changeStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        table_id: 12,
-        status: this.state.table12,
-        orderId:order.id
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      currentTable = resJson.table;
-      if (resJson.table.status == 'green') {
-          this.setState({ table12: 'green' })
-          Alert.alert("Table with table ID " + currentTable.id + " is clean.");
-      } else if (resJson.table.status == 'red') {
-          this.setState({ table12: 'red' })
-          Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
-      } else if (resJson.table.status == 'coral') {
-          this.setState({ table12: 'coral' })
-          Alert.alert("Table with table ID " + currentTable.id + " is dirty.");
+    switch (currentUser.accountType) {
+      case 1: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 12,
+            status: this.state.table12,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table12: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table12: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table12: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
       }
-    });
+      case 2: {
+        if (this.state.table12 == "green" && this.state.conjoin == true) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 12,
+              status: this.state.table11,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table12: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+            }
+            this.setState({ conjoin: false })
+            console.log(this.state.conjoin)
+          });
+        }
+        else if (this.state.table12 == "green" && this.state.conjoin == false) {
+          fetch(API_URL + 'api/tables/changeStatus', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              table_id: 12,
+              status: this.state.table12,
+              orderId: order.id
+            }),
+          }).then((res) => res.json()).then(resJson => {
+            currentTable = resJson.table;
+            if (resJson.table.status == 'red') {
+              this.setState({ table12: 'red' })
+              Alert.alert("Selected valid table with table ID " + currentTable.id + ".");
+              this.props.navigation.navigate('Menu');
+            }
+          });
+        }
+      }
+    }
+  }
+
+  conjoinButton = () => {
+    this.setState({ conjoin: true })
+    console.log(this.state.conjoin)
   }
 
   render() {
@@ -1556,6 +2160,15 @@ class TableLayout extends React.Component {
         <View style={styles.legOcc}>
           <Text style={{ color: 'white' }}>    Occupied</Text>
         </View>
+
+        <View style={styles.conjoin}>
+          <Button
+            color='black'
+            title='  Conjoin  '
+            onPress={this.conjoinButton.bind(this)}
+          />
+        </View>
+
 
         <View style={styles.table1}>
           <Button
@@ -1756,6 +2369,26 @@ class SummaryScreen extends React.Component {
 
   }
 }
+class Table extends React.Component {
+  render() {
+    return (
+      <View style={styles.tableBackground}>
+        <Table1 />
+        <Table2 />
+        <Table3 />
+        <Table4 />
+        <Table5 />
+        <Table6 />
+        <Table7 />
+        <Table8 />
+        <Table9 />
+        <Table10 />
+        <Table11 />
+        <Table12 />
+      </View>
+    );
+  }
+}
 
 const RootStack = createStackNavigator(
   {
@@ -1773,7 +2406,9 @@ const RootStack = createStackNavigator(
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
     Staff: StaffScreen,
-    TableLayout: TableLayout
+    TableLayout: TableLayout,
+    Table: Table
+
   },
   {
     initialRouteName: 'Welcome',
@@ -2187,6 +2822,22 @@ const styles = StyleSheet.create({
     bottom: 355,
     left: 200,
     height: 80,
+    width: 90,
+    backgroundColor: 'black',
+    aspectRatio: 2,
+    flexDirection: 'row'
+  },
+  tableBackground: {
+    flex: 1,
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  conjoin: {
+    position: 'absolute',
+    bottom: 450,
+    left: 140,
+    height: 45,
     width: 90,
     backgroundColor: 'black',
     aspectRatio: 2,
