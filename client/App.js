@@ -7,11 +7,12 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
+import { Badge, Icon, withBadge } from 'react-native-elements'
 
-const API_URL = 'http://192.168.1.253:5000/'
+const API_URL = 'http://192.168.1.206:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
-
+let pings = 0
 
 class LogoTitle extends React.Component {
   render() {
@@ -434,6 +435,7 @@ class ClockInOutScreen extends React.Component {
 }
 
 class EmployeePortalScreen extends React.Component {
+  
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: 'Welcome, Employee!',
@@ -441,6 +443,25 @@ class EmployeePortalScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+    <TouchableOpacity
+    onPress={() => alert('Pressed.')}
+    style={{paddingRight: 15}}
+    >
+    <View>
+    <Image
+    style={{ height: 30, width: 30,}}
+    source={require('./assets/notif.png')}
+    resizeMode="contain"
+    />
+    <Badge
+    value={pings}
+    status="error"
+    containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+    />
+    </View>
+    </TouchableOpacity>
+  )
   }
 
   render() {
@@ -505,6 +526,25 @@ class ManagerPortalScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => alert('Pressed.')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value={pings}
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+      />
+      </View>
+      </TouchableOpacity>
+    )
   }
 
   render() {
@@ -1080,12 +1120,12 @@ class MenuScreen extends React.Component {
     const { order_message } = "Order Count is:" + order_count
     return (
       <View>
+        <ScrollView>
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => { this.props.navigation.navigate("Summary") }}>
           <Text style={styles.submitButtonText}> Pay </Text>
         </TouchableOpacity>
-        <ScrollView>
           <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
             renderSectionHeader={({ section: { category } }) => (
