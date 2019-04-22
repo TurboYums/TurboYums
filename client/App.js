@@ -2,17 +2,25 @@ import React from 'react'
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation' // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native'
-import { Header } from 'react-native-elements'
+import { Header, CheckBox } from 'react-native-elements'
 import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
 
+<<<<<<< HEAD
+const API_URL = 'http://172.31.202.159:5000/'
+let currentUser = ''
+let order, token, items, employees, currentItem = ''
+let tip
+
+=======
 const API_URL = 'http://192.168.1.206:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
 let pings = 0
+>>>>>>> master
 
 class LogoTitle extends React.Component {
   render() {
@@ -478,22 +486,15 @@ class EmployeePortalScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> View Tables </Text>
             </TouchableOpacity>
-
+            
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!')
+                this.props.navigation.navigate('OrderQueue')
               }} >
-              <Text style={styles.buttonText}> View Schedule </Text>
+              <Text style={styles.buttonText}>Order Queue</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.tButton}
-              onPress={() => {
-                this.props.navigation.navigate('Staff')
-              }} >
-              <Text style={styles.buttonText}> View Staff </Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -547,6 +548,21 @@ class ManagerPortalScreen extends React.Component {
     )
   }
 
+  exportPayroll = () => {
+    fetch(API_URL + "api/users/export_payroll", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: currentUser.email
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      Alert.alert("Payroll exported and emailed to " + currentUser)
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -565,9 +581,9 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!')
+                this.exportPayroll()
               }} >
-              <Text style={styles.buttonText}>Schedule</Text>
+              <Text style={styles.buttonText}>Export Payroll</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -642,7 +658,7 @@ class PaymentChoicesScreen extends React.Component {
     cvc: '',
     postalCode: '',
     sources: '',
-    tip: '2'
+    tip: tip
   }
   handlecardNumber = (text) => {
     this.setState({ cardNumber: text })
@@ -681,7 +697,7 @@ class PaymentChoicesScreen extends React.Component {
         customer: currentUser.stripe_id
       }),
     }).then((res) => res.json()).then(resJson => {
-      this.props.navigation.navigate('Receipt', {tip: this.state.tip})
+      this.props.navigation.navigate('Receipt', { tip: this.state.tip })
     })
   }
 
@@ -724,6 +740,8 @@ class PaymentChoicesScreen extends React.Component {
             onPress={() => { this.props.navigation.navigate('NewPayment') }}>
             <Text style={styles.submitButtonText}> Cash </Text>
           </TouchableOpacity>
+
+
         </View>
       </View>
     )
@@ -836,7 +854,8 @@ class NewPaymentScreen extends React.Component {
                         currency: 'usd',
                         source: resJson.source,
                         description: 'Charge for order #' + order.id,
-                        customer: currentUser.stripe_id
+                        customer: currentUser.stripe_id,
+                        order_id: order.id
                       }),
                     }).then((res) => res.json()).then(resJson => {
                       this.props.navigation.navigate('Receipt')
@@ -874,7 +893,7 @@ class ReceiptScreen extends React.Component {
     super(props)
     this.state = {
       order: order,
-      tip: null,
+      tip: tip,
       items: null
     }
   }
@@ -882,6 +901,22 @@ class ReceiptScreen extends React.Component {
   GetSectionListItem = (item) => {
     currentItem = item
     this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  emailReceipt = () => {
+    fetch(API_URL + 'api/order/email', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: order.id,
+        email: currentUser.email
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      Alert.alert("Emailed!");
+    })
   }
 
   componentWillMount() {
@@ -910,7 +945,7 @@ class ReceiptScreen extends React.Component {
         }
         this.setState({ items: items })
       }
-      this.setState({tip: 2});
+      this.setState({ tip: tip });
     })
 
   }
@@ -933,11 +968,16 @@ class ReceiptScreen extends React.Component {
         <Text style={styles.receiptFooter}>Subtotal: ${order.totalPrice / 100}</Text>
         <Text style={styles.receiptFooter}>Tax: ${order.totalPrice * .07 / 100}</Text>
         <Text style={styles.receiptFooter}>Tip: ${this.state.tip}</Text>
-        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100}</Text>
+        <Text style={styles.receiptFooter}>Total: ${order.totalPrice * 1.07 / 100 + parseFloat(this.state.tip)}</Text>
         <View>
           <Text style={styles.text}>
             You have: {currentUser.rewardpoints}
           </Text>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => this.emailReceipt()}>
+            <Text style={styles.submitButtonText}> Email </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
@@ -955,7 +995,7 @@ class ReceiptScreen extends React.Component {
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Welcome to our Fine Dining!',
+    headerTitle: '',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -1938,11 +1978,12 @@ class SummaryScreen extends React.Component {
 
   handleTip = (text) => {
     this.setState({ tip: parseFloat(text) })
-    this.setState({tax: order.totalPrice * .07 / 100})
-    this.setState({ total: (order.totalPrice * 1.07)/100 +  parseFloat(text)})
-    this.setState({ total: (order.totalPrice * 1.07)/100 +  parseFloat(text)})
+    this.setState({ tax: order.totalPrice * .07 / 100 })
+    this.setState({ total: (order.totalPrice * 1.07) / 100 + parseFloat(text) })
+    this.setState({ total: (order.totalPrice * 1.07) / 100 + parseFloat(text) })
+    tip = parseFloat(text)
     this.forceUpdate()
-    
+
   }
 
   GetSectionListItem = (item) => {
@@ -1975,9 +2016,9 @@ class SummaryScreen extends React.Component {
           items.push({ category: item.category, data: [item] })
         }
         this.setState({ items: items })
-        this.setState({ subtotal: order.totalPrice / 100})
-        this.setState({ tax: (order.totalPrice * .07 / 100)})
-        this.setState({ total: order.totalPrice * 1.07/ 100})
+        this.setState({ subtotal: order.totalPrice / 100 })
+        this.setState({ tax: (order.totalPrice * .07 / 100) })
+        this.setState({ total: order.totalPrice * 1.07 / 100 })
       }
 
     }, err => {
@@ -2021,9 +2062,7 @@ class SummaryScreen extends React.Component {
           <Text style={styles.submitButtonText}> Pay </Text>
         </TouchableOpacity>
       </View>
-
     )
-
   }
 }
 
