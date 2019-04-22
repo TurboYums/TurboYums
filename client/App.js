@@ -9,7 +9,7 @@ import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
 
-const API_URL = 'http://192.168.1.206:5000/'
+const API_URL = 'http://172.31.207.33:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
 let pings = 0
@@ -445,7 +445,7 @@ class EmployeePortalScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
     <TouchableOpacity
-    onPress={() => alert('Pressed.')}
+    onPress={() => this.props.navigation.navigate('AddPingEmp')}
     style={{paddingRight: 15}}
     >
     <View>
@@ -528,7 +528,7 @@ class ManagerPortalScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => alert('Pressed.')}
+      onPress={() => this.props.navigation.navigate('AddPingEmp')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -960,7 +960,24 @@ class DineInOutScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => this.props.navigation.navigate('AddPingCusty')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      </View>
+      </TouchableOpacity>
+    )
   }
+
+
+
   _onPressButton(navigate) {
     fetch(API_URL + 'api/order/create', {
       method: 'POST',
@@ -1035,7 +1052,20 @@ class MenuScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    //headerRight: <EditButton/>,
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => this.props.navigation.navigate('AddPingCusty')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      </View>
+      </TouchableOpacity>
+    )
   }
 
   constructor(props) {
@@ -1429,6 +1459,155 @@ class AddItemScreen extends React.Component {
     )
   }
 }
+
+class AddPingScreenCust extends React.Component {
+  state = {
+    description: '',
+    from: 'Customer'
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+            <Text style={styles.SignUpText}>
+              Send a Notification
+          </Text>
+            <Text style={styles.text}>
+              Enter your description below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Description:"
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.description) {
+                Alert.alert('Please fill in your description!')
+              } else {
+                fetch(API_URL + 'api/pings/create', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    from: this.state.from,
+                    description: this.state.description,                
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Ping Sent!')
+                    pings++
+                  } else {
+                    Alert.alert('Error, please contact a staff member.')
+                  }
+                })
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Send </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    )
+  }
+}
+
+class AddPingScreenEmp extends React.Component {
+  state = {
+    description: '',
+    from: 'Employee'
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+            <Text style={styles.SignUpText}>
+              Send a Notification
+          </Text>
+            <Text style={styles.text}>
+              Enter your description below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Description:"
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.description) {
+                Alert.alert('Please fill in your description!')
+              } else {
+                fetch(API_URL + 'api/pings/create', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    from: this.state.from,
+                    description: this.state.description,                
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Ping Sent!')
+                    pings++
+                  } else {
+                    Alert.alert('Error, please contact the owner.')
+                  }
+                })
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Send </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    )
+  }
+}
+
 
 class RemoveItemScreen extends React.Component {
   state = {
@@ -2050,6 +2229,8 @@ const RootStack = createStackNavigator(
     EditItem: EditItemScreen,
     AddItem: AddItemScreen,
     RemoveItem: RemoveItemScreen,
+    AddPingCusty: AddPingScreenCust,
+    AddPingEmp: AddPingScreenEmp,
   },
   {
     initialRouteName: 'Welcome',
