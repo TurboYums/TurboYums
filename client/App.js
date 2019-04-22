@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 
-const API_URL = 'http://192.168.1.253:5000/'
+const API_URL = 'http://192.168.1.17:5000/'
 let currentUser = ''
 let order, token, items, employees, currentItem = ''
 
@@ -1080,12 +1080,12 @@ class MenuScreen extends React.Component {
     const { order_message } = "Order Count is:" + order_count
     return (
       <View>
+        <ScrollView>
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => { this.props.navigation.navigate("Summary") }}>
           <Text style={styles.submitButtonText}> Pay </Text>
         </TouchableOpacity>
-        <ScrollView>
           <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
             renderSectionHeader={({ section: { category } }) => (
