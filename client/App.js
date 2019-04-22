@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-import { Header, ListItem } from 'react-native-elements';
+import { Header, ListItem, Avatar, Badge, Icon, withBadge } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
 //AppRegistry.registerComponent('RNNavigators', () => Drawer );
@@ -225,14 +225,23 @@ class LogInScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-        onPress={() => alert('This is a button!')}
+        onPress={() => alert('Fuck my hole!')}
         style={{paddingRight: 15}}
       >
+      <View>
        <Image
-        style={{ height: 30, width: 30,}}
-        source={require('./assets/menu.png')}
-        resizeMode="contain"
-      />
+         style={{ height: 30, width: 30,}}
+         source={require('./assets/notif.png')}
+         resizeMode="contain"
+        />
+        <Badge
+        value="69"
+        status="error"
+        containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+        />
+      </View>
+
+       
       </TouchableOpacity>
       ),
   };
