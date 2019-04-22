@@ -38,16 +38,13 @@ Table.create({
   })
 
   Table.create({
-
     status: 'green'
   })
 
   Table.create({
-
     status: 'green'
   })
   Table.create({
-
     status: 'green'
   })
 .then(function(user) {

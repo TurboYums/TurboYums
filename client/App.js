@@ -19,7 +19,7 @@ import Table10 from './Table10';
 import Table11 from './Table11';
 import Table12 from './Table12';
 
-const API_URL = 'http://172.31.18.222:5000/';
+const API_URL = 'http://172.31.202.159:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -522,7 +522,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.TablesButton}
               onPress={() => {
-                Alert.alert('We have not yet implemented the Table interface!')
+                this.props.navigation.navigate('TableLayout')
               }
               } >
               <Text style={styles.buttonText}> View Tables </Text>
@@ -625,15 +625,15 @@ class PaymentChoicesScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/sources/get', {//fetch start
+    fetch(API_URL + 'api/sources/get', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
         user: currentUser,
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
       this.setState({ sources: resJson.sources })
     })
@@ -822,15 +822,15 @@ class ReceiptScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/order/getItems', {//fetch start
+    fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
         orderId: order.id,
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       this.setState({ order: resJson.order })
@@ -990,15 +990,15 @@ class MenuScreen extends React.Component {
   }
 
   _onPressOrder = (item) => {
-    fetch(API_URL + 'api/order/getItems', {//fetch start
+    fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
         orderId: order.id,
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       let tempItems = resJson.items;
@@ -1083,16 +1083,16 @@ class ViewItemScreen extends React.Component {
   };
 
   _onPressAddOrder = () => {
-    fetch(API_URL + 'api/order/add', {//fetch start
+    fetch(API_URL + 'api/order/add', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
         orderId: order.id,
         itemId: currentItem.id
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       let tempItems = resJson.items;
@@ -1152,14 +1152,14 @@ class StaffScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/users/npm -g eoyees', {//fetch start
+    fetch(API_URL + 'api/users/npm -g eoyees', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-      }),//body end
+      },
+      body: JSON.stringify({
+      }),
     }).then((res) => res.json()).then(resJson => {
       this.setState({ employees: resJson.employees });;
     })
@@ -1208,18 +1208,30 @@ class TableLayout extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getTables', {//fetch start
+    fetch(API_URL + 'api/tables/getAll', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
 
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
-      table = resJson.table
-      this.setState({ table: resJson.table })
+      tables = resJson.tables
+      this.setState({ table1: tables[0].status })
+      this.setState({ table2: tables[1].status })
+      this.setState({ table3: tables[2].status })
+      this.setState({ table4: tables[3].status })
+      this.setState({ table5: tables[4].status })
+      this.setState({ table6: tables[5].status })
+      this.setState({ table7: tables[6].status })
+      this.setState({ table8: tables[7].status })
+      this.setState({ table9: tables[8].status })
+      this.setState({ table10: tables[9].status })
+      this.setState({ table11: tables[10].status })
+      this.setState({ table12: tables[11].status })
+
     })
     
   }
@@ -2306,15 +2318,15 @@ class SummaryScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/order/getItems', {//fetch start
+    fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
-      headers: {//header start
+      headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
+      },
+      body: JSON.stringify({
         orderId: order.id,
-      }),//body end
+      }),
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       this.setState({ order: resJson.order })
