@@ -19,7 +19,7 @@ import Table10 from './Table10';
 import Table11 from './Table11';
 import Table12 from './Table12';
 
-const API_URL = 'http://172.31.202.159:5000/';
+const API_URL = 'http://172.31.18.222:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -522,7 +522,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.TablesButton}
               onPress={() => {
-                this.props.navigation.navigate('TableLayout')
+                this.props.navigation.navigate('Table');
               }
               } >
               <Text style={styles.buttonText}> View Tables </Text>
@@ -625,15 +625,15 @@ class PaymentChoicesScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/sources/get', {
+    fetch(API_URL + 'api/sources/get', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
         user: currentUser,
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       this.setState({ sources: resJson.sources })
     })
@@ -822,15 +822,15 @@ class ReceiptScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/order/getItems', {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
         orderId: order.id,
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       this.setState({ order: resJson.order })
@@ -990,15 +990,15 @@ class MenuScreen extends React.Component {
   }
 
   _onPressOrder = (item) => {
-    fetch(API_URL + 'api/order/getItems', {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
         orderId: order.id,
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       let tempItems = resJson.items;
@@ -1083,16 +1083,16 @@ class ViewItemScreen extends React.Component {
   };
 
   _onPressAddOrder = () => {
-    fetch(API_URL + 'api/order/add', {
+    fetch(API_URL + 'api/order/add', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
         orderId: order.id,
         itemId: currentItem.id
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       let tempItems = resJson.items;
@@ -1152,14 +1152,14 @@ class StaffScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/users/npm -g eoyees', {
+    fetch(API_URL + 'api/users/npm -g eoyees', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-      }),
+      },//header end
+      body: JSON.stringify({//body start
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       this.setState({ employees: resJson.employees });;
     })
@@ -1208,30 +1208,18 @@ class TableLayout extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/tables/getAll', {
+    fetch(API_URL + 'api/tables/getTables', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
 
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
-      tables = resJson.tables
-      this.setState({ table1: tables[0].status })
-      this.setState({ table2: tables[1].status })
-      this.setState({ table3: tables[2].status })
-      this.setState({ table4: tables[3].status })
-      this.setState({ table5: tables[4].status })
-      this.setState({ table6: tables[5].status })
-      this.setState({ table7: tables[6].status })
-      this.setState({ table8: tables[7].status })
-      this.setState({ table9: tables[8].status })
-      this.setState({ table10: tables[9].status })
-      this.setState({ table11: tables[10].status })
-      this.setState({ table12: tables[11].status })
-
+      table = resJson.table
+      this.setState({ table: resJson.table })
     })
     
   }
@@ -1239,6 +1227,32 @@ class TableLayout extends React.Component {
 
   table1Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 1,
+            status: this.state.table1,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table1: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table1: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table1: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1315,6 +1329,32 @@ class TableLayout extends React.Component {
 
   table2Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 2,
+            status: this.state.table2,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table2: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table2: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table2: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1391,6 +1431,32 @@ class TableLayout extends React.Component {
 
   table3Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 3,
+            status: this.state.table3,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table3: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table3: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table3: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1467,6 +1533,32 @@ class TableLayout extends React.Component {
 
   table4Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 4,
+            status: this.state.table4,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table4: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table4: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table4: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1543,6 +1635,32 @@ class TableLayout extends React.Component {
 
   table5Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 5,
+            status: this.state.table5,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table5: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table5: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table5: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1619,6 +1737,32 @@ class TableLayout extends React.Component {
 
   table6Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 6,
+            status: this.state.table6,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table6: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table6: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table6: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1695,6 +1839,32 @@ class TableLayout extends React.Component {
 
   table7Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 7,
+            status: this.state.table7,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table7: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table7: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table7: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1771,6 +1941,32 @@ class TableLayout extends React.Component {
 
   table8Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 8,
+            status: this.state.table8,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table8: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table8: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table8: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1847,6 +2043,32 @@ class TableLayout extends React.Component {
 
   table9Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 9,
+            status: this.state.table9,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table9: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table9: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table9: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1923,6 +2145,32 @@ class TableLayout extends React.Component {
 
   table10Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 10,
+            status: this.state.table10,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table10: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table10: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table10: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -1999,6 +2247,32 @@ class TableLayout extends React.Component {
 
   table11Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 11,
+            status: this.state.table11,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table11: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table11: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table11: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -2075,6 +2349,32 @@ class TableLayout extends React.Component {
 
   table12Select = () => {
     switch (currentUser.accountType) {
+      case 0: {
+        fetch(API_URL + 'api/tables/changeStatus', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            table_id: 12,
+            status: this.state.table12,
+            orderId: order.id
+          }),
+        }).then((res) => res.json()).then(resJson => {
+          currentTable = resJson.table;
+          if (resJson.table.status == 'green') {
+            this.setState({ table12: 'green' })
+            Alert.alert("Table with table ID " + currentTable.id + " is clean");
+          } else if (resJson.table.status == 'red') {
+            this.setState({ table12: 'red' })
+            Alert.alert("Selected valid table with table ID " + currentTable.id);
+          } else if (resJson.table.status == 'coral') {
+            this.setState({ table12: 'coral' })
+            Alert.alert("Table with table ID " + currentTable.id + " is dirty");
+          }
+        });
+      }
       case 1: {
         fetch(API_URL + 'api/tables/changeStatus', {
           method: 'POST',
@@ -2318,15 +2618,15 @@ class SummaryScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/order/getItems', {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
-      headers: {
+      headers: {//header start
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      },//header end
+      body: JSON.stringify({//body start
         orderId: order.id,
-      }),
+      }),//body end
     }).then((res) => res.json()).then(resJson => {
       order = resJson.order
       this.setState({ order: resJson.order })

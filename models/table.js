@@ -11,3 +11,4 @@ Table.belongsTo(Order);
 module.exports = (sequelize, DataTypes) => {
   return Table;
 }
+
