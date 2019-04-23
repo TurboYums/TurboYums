@@ -16,13 +16,10 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "express": "^4.16.4",
-<<<<<<< HEAD
     "lodash": "^4.17.11",
     "lodash.clonedeep": "^4.5.0",
-=======
     "google-translate": "^2.2.0",
     "google-translate-api": "^2.3.0",
->>>>>>> origin/master
     "mocha": "^6.0.2",
     "mysql2": "^1.5.2",
     "nodemailer": "^6.1.1",
@@ -31,12 +28,9 @@
     "react-native-easy-checkbox": "^1.0.1",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.1.0",
-<<<<<<< HEAD
     "react-native-icon-checkbox": "^1.2.0",
     "react-native-multiple-choice": "0.0.8",
-=======
     "react-native-material-dropdown": "^0.11.1",
->>>>>>> origin/master
     "react-native-scalable-image": "^0.5.0",
     "react-native-stripe": "^1.2.2",
     "react-navigation": "^3.5.1",
