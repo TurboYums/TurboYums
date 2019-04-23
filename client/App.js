@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch } from 'react-native';
+import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch, Platform } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header, ListItem, Avatar, Badge, Icon, withBadge} from 'react-native-elements';
@@ -44,10 +44,27 @@ class EditButton extends React.Component{
   }
 }
 
+class SplashScreen extends React.Component{
+  render() {
+    return (
+      <View style={styles.container}>
+      <ImageBackground source={require('./assets/splash_1.png')} style={{ width: '100%', height: '100%' }}></ImageBackground>
+      </View>
+    )
+  }
+}
+
+
+
 class WelcomeScreen extends React.Component {
 
   static navigationOptions = {
-    header: null,
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    headerLeft: null
   };
   render() {
     /*const shadowStyle = {
@@ -243,13 +260,11 @@ class LogInScreen extends React.Component {
          resizeMode="contain"
         />
         <Badge
-        value="69"
+        value="2"
         status="error"
         containerStyle={{ position: 'absolute', top: -4, right: -4 }}
         />
       </View>
-
-       
       </TouchableOpacity>
       ),
   };
@@ -283,7 +298,7 @@ class LogInScreen extends React.Component {
               Sign in
           </Text>
             <Text style={styles.text}>
-              Welcome to your TurboYums account
+              to your TurboYums account
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
@@ -675,9 +690,13 @@ class PaymentChoicesScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-          <Text style={styles.text}>
-            Choose Method of Payment:
+          <Text style={styles.SignUpText}>
+            Choose
           </Text>
+          <Text style={styles.text}>
+             Method of Payment:
+          </Text>
+         
           <FlatList
             data={this.state.sources}
             renderItem={({ item }) => <Text style={styles.menuItem} onPress={() => this.submitPayment(item)}>{item.firstname + " " + item.lastname + " - " + item.last4}</Text>}
@@ -1002,7 +1021,7 @@ class FilterSelectionScreen extends React.Component{
     },
     headerTintColor: '#000000',
     headerRight: (<Button
-      color='#000000'
+      color={Platform.OS === 'ios' ? '#000000' : null}
       title="Skip"
       style={{marginRight: 30}}
       onPress={() => {
@@ -1398,11 +1417,12 @@ class SummaryScreen extends React.Component {
   deleteItem = (item) => console.log('Deleted '+ item.itemName)
   renderItem = ({ item }) => (
     <ListItem
+      style={{marginLeft: 17}}
       title={item.itemName+ "        $"+ item.itemPrice/100 }
       rightIcon={
           <Image
           source={require('./assets/delete.png')}
-          style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
+          style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0, marginRight: 12 }}
         />
       }
       onPressRightIcon = {() => console.log('Pressed !')}
@@ -1520,6 +1540,7 @@ class SummaryScreen extends React.Component {
 
 const RootStack = createStackNavigator(
   {
+    Splash: SplashScreen,
     Welcome: WelcomeScreen,
     LogIn: LogInScreen,
     ClockInOut: ClockInOutScreen,
@@ -1597,6 +1618,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 2,
+    marginRight: 20,
     fontSize: 14,
     textAlign: 'right',
   },
@@ -1667,13 +1689,11 @@ const styles = StyleSheet.create({
   },
 
   logInMenuButton: {
+    alignSelf: 'center',
     borderRadius: 100,
     marginBottom: 20,
-    //paddingTop:10,
     paddingBottom: 10,
     marginTop: 310,
-    marginLeft: 68,
-    //marginBottom: 10,
     height: 50,
     width: 260,
     alignItems: 'center',
@@ -1689,26 +1709,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signUpButton: {
+    alignSelf:'center',
     borderRadius: 100,
     marginBottom: 20,
-    //paddingTop:10,
     paddingBottom: 10,
     marginTop: 10,
-    marginLeft: 68,
-    //marginBottom: 10,
     height: 50,
     width: 260,
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
   guestbutton: {
+    alignSelf:'center',
     borderRadius: 100,
     marginBottom: 20,
-    //paddingTop:10,
     paddingBottom: 10,
     marginTop: 10,
-    marginLeft: 68,
-    //marginBottom: 10,
     height: 60,
     width: 260,
     alignItems: 'center',
