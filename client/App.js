@@ -11,7 +11,7 @@ import { Badge, Icon, withBadge } from 'react-native-elements'
 
 const API_URL = 'http://172.31.207.33:5000/'
 let currentUser = ''
-let order, token, items, employees, currentItem = ''
+let order, token, items, employees, currentItem, currentPing = ''
 let pings = 0
 
 class LogoTitle extends React.Component {
@@ -333,7 +333,7 @@ class ClockInOutScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('AddPingEmp')}
+      onPress={() => navigation.navigate('ViewPings')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -459,7 +459,7 @@ static navigationOptions = ({navigation, screenProps}) =>({
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('AddPingEmp')}
+      onPress={() => navigation.navigate('ViewPings')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -526,16 +526,16 @@ static navigationOptions = ({navigation, screenProps}) =>({
 }
 
 class ManagerPortalScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
-    headerTitle: 'Welcome, Manager!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('AddPingEmp')}
+      onPress={() => navigation.navigate('ViewPings')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -545,14 +545,15 @@ class ManagerPortalScreen extends React.Component {
       resizeMode="contain"
       />
       <Badge
-      value={pings}
+      value = " "
       status="error"
       containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-      />
+    />
       </View>
       </TouchableOpacity>
     )
-  }
+   }
+   )
 
   render() {
     return (
@@ -567,14 +568,6 @@ class ManagerPortalScreen extends React.Component {
               }
               } >
               <Text style={styles.buttonText}>Tables</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.tButton}
-              onPress={() => {
-                Alert.alert('We have not yet implemented the Schedule interface!')
-              }} >
-              <Text style={styles.buttonText}>Schedule</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -1184,6 +1177,83 @@ class MenuScreen extends React.Component {
   }
 }
 
+class ViewPingScreen extends React.Component {
+  static navigationOptions = ({navigation, screenProps}) =>({
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+   }
+   )
+  constructor(props) {
+    super(props)
+    this.state = {
+      pings: []
+    }
+  }
+
+  /*_onConfirm(navigate, state) {
+    navigate('Summary')
+  }*/
+  GetSectionListPing = (ping) => {
+    currentPing = ping
+    this.props.navigation.navigate('DelPing')
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/pings/getAll', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempPings = resJson.pings
+      pings = []
+
+      for (let ping of tempPings) {
+        console.log(ping)
+        if (pings[pings.length - 1] && ping.from == pings[pings.length - 1].from) {
+          pings[pings.length - 1].data.push(ping)
+        }
+        else {
+          pings.push({ from: ping.from, data: [ping] })
+        }
+
+        this.setState({ pings: pings })
+      }
+    })
+  }
+
+  render() {
+    const { navigate } = this.props.navigation
+  
+    return (
+      <View>
+        <ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this.props.navigation.navigate("AddPingEmp") }}>
+          <Text style={styles.submitButtonText}> Send a Ping </Text>
+        </TouchableOpacity>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListPing.bind(this, item)}> {item.description} </Text>}
+            renderSectionHeader={({ section: { from } }) => (
+              <Text style={styles.sectionHeader}>{from}</Text>
+            )}
+            sections={this.state.pings}
+            keyExtractor={(ping, index) => ping + index}
+          />
+        </ScrollView>
+
+      </View>
+
+    )
+  }
+}
+
 class ManagerMenu extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1736,6 +1806,47 @@ class ViewItemScreen extends React.Component {
   }
 }
 
+class DelPingScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+
+  _onPressDelPing = () => {
+    fetch(API_URL + 'api/pings/clear', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        description: currentPing.description
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      Alert.alert('Ping Removed!')
+    })
+
+  }
+  render() {
+    const { navigate } = this.props.navigation
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{'Ping'}</Text>
+        <Text style={styles.itemPrice}>{currentPing.from + ": "  + currentPing.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDelPing() }}>
+          <Text style={styles.submitButtonText}> Delete Ping </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+}
+
 class EditItemScreen extends React.Component { //This is where we gotta make changes to edit items @Holly :)
   static navigationOptions = {
     // headerTitle instead of title
@@ -1905,7 +2016,7 @@ class StaffScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('AddPingEmp')}
+      onPress={() => navigation.navigate('ViewPings')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -2261,6 +2372,8 @@ const RootStack = createStackNavigator(
     RemoveItem: RemoveItemScreen,
     AddPingCusty: AddPingScreenCust,
     AddPingEmp: AddPingScreenEmp,
+    ViewPings: ViewPingScreen,
+    DelPing: DelPingScreen
   },
   {
     initialRouteName: 'Welcome',
