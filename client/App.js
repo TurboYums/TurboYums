@@ -368,7 +368,7 @@ class LogInScreen extends React.Component {
 class ClockInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: <LogoTitle />,
+    headerTitle: <LogoTitle/>,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -457,7 +457,7 @@ class ClockInOutScreen extends React.Component {
           <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
             <TextInput style={styles.hourViewer} placeholder="Total Hours Worked This Pay Period: " editable={false} ref={component => this._MyComponent = component} />
             <TouchableOpacity
-              style={styles.ClockInButton}
+              style={styles.topButton}
               onPress={() => { this._clockIn() }} >
               <Text style={styles.buttonText}> Clock In </Text>
             </TouchableOpacity>
@@ -478,8 +478,8 @@ class ClockInOutScreen extends React.Component {
 
 class EmployeePortalScreen extends React.Component {
   static navigationOptions = {
-    // headerTitle instead of title
-    headerTitle: 'Welcome, Employee!',
+    //headerTitle: 'Welcome, Employee!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -493,7 +493,7 @@ class EmployeePortalScreen extends React.Component {
           <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
 
             <TouchableOpacity
-              style={styles.TablesButton}
+              style={styles.topButton}
               onPress={() => {
                 Alert.alert('We have not yet implemented the Table interface!')
               }
@@ -937,7 +937,6 @@ class ReceiptScreen extends React.Component {
   }
 }
 
-//ADD NAV BAR
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -992,8 +991,13 @@ class DineInOutScreen extends React.Component {
     console.log(this.props.navigation.state)
     return (
       <View style={styles.container}>
-        <View>
           <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
+            <Text style={styles.SignUpText1}>
+                Choose
+            </Text>
+            <Text style={styles.text2}>
+               your prefered dining option
+            </Text>
             <TouchableOpacity
               style={styles.topButton}
               onPress={() => { this._onPressButton() }}>
@@ -1005,7 +1009,6 @@ class DineInOutScreen extends React.Component {
               <Text style={styles.buttonText}> Take Out </Text>
             </TouchableOpacity>
           </ImageBackground>
-        </View>
       </View>
     );
   }
@@ -1023,7 +1026,7 @@ class FilterSelectionScreen extends React.Component{
     headerRight: (<Button
       color={Platform.OS === 'ios' ? '#000000' : null}
       title="Skip"
-      style={{marginRight: 30}}
+      style={{paddingRight: 30}}
       onPress={() => {
         this.props.navigation.navigate('Menu');//doesnt work yet
         }}>
@@ -1057,6 +1060,7 @@ class FilterSelectionScreen extends React.Component{
     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30}}>
       <Text style={styles.item}>{item.key}</Text>
       <Switch
+       trackColor={{true: '#fff44f'}}
        onValueChange={(value) => !this.setSwitchValue(value, index)}
        value={item.switch}
       />
@@ -1390,13 +1394,11 @@ class StaffScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>Employees: </Text>
-        <View>
+        <Text styles={styles.SignUpText}>Employees: </Text>
           <FlatList
             data={this.state.employees}
             renderItem={({ item }) => <Text>{item.firstname + " " + item.lastname}</Text>}
           />
-        </View>
       </View>
 
     );
@@ -1630,6 +1632,12 @@ const styles = StyleSheet.create({
     //marginLeft: 30,
     textAlign: 'right',
   },
+  text2: {
+    marginLeft: 30,
+    color: '#fff44f',
+    //marginTop: 2,
+    fontSize: 18,
+  },
   text: {
     marginLeft: 30,
     color: '#5b5b5b',
@@ -1643,6 +1651,16 @@ const styles = StyleSheet.create({
     //marginTop: 2,
     fontSize: 18,
   },
+  SignUpText1: {
+    marginTop: 10,
+    fontSize: 30,
+    marginLeft: 30,
+    marginTop: 30,
+    // fontStyle: 'bold',
+    color: '#fff44f',
+    margin: 10,
+  },
+  
   SignUpText: {
     marginTop: 10,
     fontSize: 30,
@@ -1742,13 +1760,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff44f'
   },
   tButton: {
+    alignSelf:'center',
     borderRadius: 100,
     marginBottom: 20,
-    //paddingTop:10,
     paddingBottom: 10,
-    // marginTop: 250,
-    marginLeft: 68,
-    //marginBottom: 10,
     height: 50,
     width: 260,
     alignItems: 'center',
@@ -1790,13 +1805,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff44f',
   },
   topButton: {
+    alignSelf:'center',
     borderRadius: 100,
     marginTop: 120,
     marginBottom: 20,
     //paddingTop:10,
     paddingBottom: 10,
     // marginTop: 250,
-    marginLeft: 68,
+    //marginLeft: 68,
     //marginBottom: 10,
     height: 50,
     width: 260,
