@@ -2,16 +2,18 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-import { Header, ListItem, Avatar, Badge, Icon, withBadge } from 'react-native-elements';
+import { Header, ListItem, Avatar, Badge, Icon, withBadge,CheckBox } from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
+import { Font } from 'expo';
 //AppRegistry.registerComponent('RNNavigators', () => Drawer );
-
-const API_URL = 'http://192.168.1.193:5000/';
 //=======
 //const API_URL = 'http://10.0.1.85:5000/';
 // const API_URL = 'http://127.0.0.1:5000/';
 //>>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
+const API_URL = 'http://192.168.1.193:5000/';
+//const API_URL = 'http://10.0.1.85:5000/';
+// const API_URL = 'http://127.0.0.1:5000/';
 let currentUser = '';
 let order = '';
 let token = '';
@@ -54,7 +56,6 @@ class WelcomeScreen extends React.Component {
               } >
               <Text style={styles.buttonText}> Login </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.signUpButton}
               onPress={() => {
@@ -905,11 +906,12 @@ class ReceiptScreen extends React.Component {
 class DineInOutScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    //headerTitle: 'Welcome to our Fine Dining!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerLeft: null
   };
   _onPressButton(navigate) {
     fetch(API_URL + 'api/order/create', {
@@ -947,7 +949,7 @@ class DineInOutScreen extends React.Component {
           items.push({ category: item.category, data: [item] });
         }
       }
-      this.props.navigation.navigate('Menu');
+      this.props.navigation.navigate('FilterSelection');
     });
   }
 
@@ -976,6 +978,44 @@ class DineInOutScreen extends React.Component {
     );
   }
 }
+class FilterSelectionScreen extends React.Component{
+ 
+ async componentWillMount() {
+    await Font.loadAsync({
+      'Font Awesome': require('./assets/fonts/fontawesome.ttf')
+    });
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    headerLeft: null
+  };
+  render(){
+    const { navigate } = this.props.navigation;
+    console.log(this.props.navigation.state)
+    
+    return (
+      <View>
+          <Text style={{fontSize: 20 }}>&#xf164;</Text>
+          <CheckBox
+            title='Click Here'
+            //  checked={this.state.checked}
+          />
+
+          <CheckBox
+            center
+            title='Click Here'
+            // checked={this.state.checked}
+          />
+      </View>
+    );
+  }
+}
+
 
 class MenuScreen extends React.Component {
   static navigationOptions = {
@@ -1422,6 +1462,7 @@ const RootStack = createStackNavigator(
     EmployeePortal: EmployeePortalScreen,
     ManagerPortal: ManagerPortalScreen,
     DineInOut: DineInOutScreen,
+    FilterSelection: FilterSelectionScreen, 
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
