@@ -238,7 +238,7 @@ class LogInScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-        onPress={() => alert('Fuck my hole!')}
+        onPress={() => alert('(͠≖ ͜ʖ͠≖)')}
         style={{paddingRight: 15}}
       >
       <View>
@@ -1009,10 +1009,13 @@ class FilterSelectionScreen extends React.Component{
     },
     headerTintColor: '#000000',
     headerRight: (<Button
-      title="Menu"
+      color='#000000'
+      title="Skip"
+      style={{marginRight: 30}}
       onPress={() => {
-        this.props.navigation.navigate('Menu');
-      }}/>
+        this.props.navigation.navigate('Menu');//doesnt work yet
+        }}>
+      </Button>
       )
   };
   constructor() {
@@ -1036,13 +1039,22 @@ class FilterSelectionScreen extends React.Component{
       tempData[ind].switch = val;
       this.setState({ listKeys: tempData });
   }
+  state = {
+    taskCreated: false,
+  };
+
+  onChangeFunction(newState) {
+    this.setState(newState, () => Alert.alert("Changed", "==> " + this.state));
+  }
 
   listItem = ({item, index}) => (
     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30, marginTop: 20}}>
       <Text style={styles.item}>{item.key}</Text>
       <Switch
-        onValueChange={(value) => this.setSwitchValue(value, index)}
-        value={item.switch}
+      onValueChange={(value) => this.onChangeFunction({taskCreated: value})}
+      value={this.state.taskCreated}
+       // onValueChange={(value) => !this.setSwitchValue(value, index)}
+        //value={item.switch}
       />
     </View>
   );
@@ -1055,26 +1067,26 @@ class FilterSelectionScreen extends React.Component{
     
     return (
       <View>
-       <Text style={styles.SignUpText}>
+        <Text style={styles.SignUpText}>
               Select
-          </Text>
-            <Text style={styles.text}>
+        </Text>
+        <Text style={styles.text}>
               your allergies
+        </Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => {
+          this.props.navigation.navigate('Menu');
+            }}>
+          <Text style={styles.submitButtonText}>
+             Menu
           </Text>
-    <TouchableOpacity
-      style={styles.submitButton}
-      onPress={() => {
-        this.props.navigation.navigate('Menu');
-        }}>
-      <Text style={styles.submitButtonText}> Menu </Text>
-    </TouchableOpacity>
-      <FlatList
-        data={this.state.listKeys}
-        renderItem={this.listItem}
-      />
-      
+        </TouchableOpacity>
+        <FlatList
+          data={this.state.listKeys}
+          renderItem={this.listItem}
+        />
       </View>
-     
     );
   }
 }
@@ -2048,7 +2060,6 @@ const styles = StyleSheet.create({
 
 export default class App extends React.Component {
   render() {
-
     return <AppContainer />;
   }
 };
