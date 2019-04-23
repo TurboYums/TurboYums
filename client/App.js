@@ -70,8 +70,6 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-
-
             <TouchableOpacity
               style={styles.logInMenuButton}
               onPress={() => {
@@ -1320,8 +1318,205 @@ class ViewPingScreen extends React.Component {
     )
   }
 }
-
 class ManagerMenu extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    /*headerRight: (
+      <Button
+        onPress={() => alert('This is a button!')}
+        title="Edit"
+        color="#000000"
+      />
+    ),*/
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      order: order,
+      items: []
+    }
+  }
+
+  _onConfirm(navigate, state) {
+    navigate('Summary')
+  }
+  GetSectionListItem = (item) => {
+    currentItem = item
+    this.props.navigation.navigate('EditItem', { order: order, takeOut: '1' })
+  }
+
+  _onPressOrder = (item) => {
+    fetch(API_URL + 'api/order/getItems', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item)
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item)
+        }
+        else {
+          items.push({ category: item.category, data: [item] })
+        }
+      }
+
+      this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
+    })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item)
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item)
+        }
+        else {
+          items.push({ category: item.category, data: [item] })
+        }
+
+        this.setState({ items: items })
+      }
+    })
+  }
+
+  render() {
+    const { navigate } = this.props.navigation
+    console.log("ARRIVED")
+    console.log(this.props.navigation.state)
+    const { order_count } = 0
+    const { order_message } = "Order Count is:" + order_count
+    return (
+      <View>
+        <ScrollView>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
+            renderSectionHeader={({ section: { category } }) => (
+              <Text style={styles.sectionHeader}>{category}</Text>
+            )}
+            sections={this.state.items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressOrder() }}>
+          <Text style={styles.submitButtonText}> View Order </Text>
+        </TouchableOpacity>
+      </View>
+
+    )
+  }
+}
+
+
+class DeleteItemScreen extends React.Component {
+  static navigationOptions = {
+    
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  _onPressAddOrder = () => {
+    fetch(API_URL + 'api/order/add', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+      this.props.navigation.state.params.refresh();
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+
+  }
+  _onPressDeleteOrder = () => {
+    fetch(API_URL + 'api/order/remove', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+        itemId: currentItem.id
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
+    });
+  }
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentItem.itemName}</Text>
+        <Text style={styles.itemPrice}>{'Price: $' + currentItem.itemPrice / 100}</Text>
+        <Text style={styles.itemPrice}>{'Description: ' + currentItem.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressAddOrder() }}>
+          <Text style={styles.submitButtonText}> Add To Order </Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDeleteOrder() }}>
+          <Text style={styles.submitButtonText}> Delete Item </Text>
+          
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+
+class StaffScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -3816,10 +4011,18 @@ class SummaryScreen extends React.Component {
     headerTintColor: '#000000',
   }
   keyExtractor = (item, index) => index.toString()
+  deleteItem = (item) => console.log('Deleted '+ item.itemName)
   renderItem = ({ item }) => (
     <ListItem
-      title={item.title}
-      subtitle={item.price}
+      title={item.itemName+ "        $"+ item.itemPrice/100 }
+      rightIcon={
+          <Image
+          source={require('./assets/delete.png')}
+          style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
+        />
+      }
+      onPressRightIcon = {() => console.log('Pressed !')}
+      onPress = {this.GetSectionListItem.bind(this, item)}
     />
   )
   constructor(props) {
@@ -3844,10 +4047,38 @@ class SummaryScreen extends React.Component {
   }
 
   GetSectionListItem = (item) => {
-    currentItem = item
-    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+    currentItem = item;
+    this.props.navigation.navigate('DeleteItem', { order: order, takeOut: '1' })
   }
+  componentDidMount(){
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      this.setState({ order: resJson.order })
+      let tempItems = resJson.items;
+      items = []
 
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+        this.setState({ items: items });;
+      }
+
+    })
+  }
   componentWillMount() {
     fetch(API_URL + 'api/order/getItems', {
       method: 'POST',
@@ -3891,9 +4122,11 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item, index, section }) => <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-              {item.itemName + "       $" + item.itemPrice / 100}
-            </Text>
+            renderItem={({ item, index, section }) => this.renderItem({item})
+            
+            // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+            //   {item.itemName + "       $" + item.itemPrice / 100}
+            // </Text>
               //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
             }
             sections={items}
@@ -3953,6 +4186,7 @@ const RootStack = createStackNavigator(
     TableLayout: TableLayout,
     ViewEmployee: ViewEmployee,
     Table: Table
+    DeleteItem: DeleteItemScreen,
   },
   {
     initialRouteName: 'Welcome',
