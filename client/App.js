@@ -1039,22 +1039,13 @@ class FilterSelectionScreen extends React.Component{
       tempData[ind].switch = val;
       this.setState({ listKeys: tempData });
   }
-  state = {
-    taskCreated: false,
-  };
-
-  onChangeFunction(newState) {
-    this.setState(newState, () => Alert.alert("Changed", "==> " + this.state));
-  }
 
   listItem = ({item, index}) => (
     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30, marginTop: 20}}>
       <Text style={styles.item}>{item.key}</Text>
       <Switch
-      onValueChange={(value) => this.onChangeFunction({taskCreated: value})}
-      value={this.state.taskCreated}
-       // onValueChange={(value) => !this.setSwitchValue(value, index)}
-        //value={item.switch}
+       onValueChange={(value) => !this.setSwitchValue(value, index)}
+       value={item.switch}
       />
     </View>
   );
