@@ -932,7 +932,12 @@ class DineInOutScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    headerLeft: null
+    headerRight: (<Button
+      title="Menu"
+      onPress={() => {
+        this.props.navigation.navigate('Menu');
+      }}/>
+      )
   };
   _onPressButton(navigate) {
     fetch(API_URL + 'api/order/create', {
@@ -1057,12 +1062,20 @@ class FilterSelectionScreen extends React.Component{
             <Text style={styles.text}>
               your allergies
           </Text>
+    <TouchableOpacity
+      style={styles.submitButton}
+      onPress={() => {
+        this.props.navigation.navigate('Menu');
+        }}>
+      <Text style={styles.submitButtonText}> Menu </Text>
+    </TouchableOpacity>
       <FlatList
         data={this.state.listKeys}
         renderItem={this.listItem}
       />
-      </View>
       
+      </View>
+     
     );
   }
 }
