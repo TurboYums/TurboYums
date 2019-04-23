@@ -1,5 +1,6 @@
 const config = require('../config.json');
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op
 
 module.exports = new Sequelize({
     database: config.mysql.database || 'turboyums',

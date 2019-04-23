@@ -1,19 +1,9 @@
 {
-  "devToolsPort": 19002,
   "expoServerPort": 19000,
-<<<<<<< HEAD
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-=======
-  "expoServerNgrokUrl": "https://47-zut.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.47-zut.anonymous.client.exp.direct",
-  "ngrokPid": 64714,
+  "expoServerNgrokUrl": "https://ad-er3.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.ad-er3.anonymous.client.exp.direct",
+  "ngrokPid": 66534,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 64700,
->>>>>>> a674c5b... delete working
-  "webpackServerPort": null
+  "packagerPid": 66520
 }
