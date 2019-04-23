@@ -932,7 +932,7 @@ class DineInOutScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    headerRight: (<Button
+*    headerRight: (<Button
       title="Menu"
       onPress={() => {
         this.props.navigation.navigate('Menu');
