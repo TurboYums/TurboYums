@@ -7,6 +7,7 @@ User = sequelize.define('user', {
   lastname: Sequelize.STRING,
   password: Sequelize.STRING,
   rewardpoints: Sequelize.INTEGER,
+  rewardBalance: Sequelize.DOUBLE,
   accountType: Sequelize.INTEGER,
   addressId: Sequelize.INTEGER,
   email: Sequelize.STRING,
@@ -17,6 +18,7 @@ User = sequelize.define('user', {
   hoursOut: Sequelize.DOUBLE,
   hoursWorked: Sequelize.INTEGER,
   totalHoursWorked: Sequelize.INTEGER,
+  hourlyRate: Sequelize.DOUBLE,
   stripe_id: { type: Sequelize.STRING, primaryKey: true },
 })
 
