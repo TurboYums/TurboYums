@@ -58,8 +58,6 @@ class WelcomeScreen extends React.Component {
           <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
-
-
             <TouchableOpacity
               style={styles.logInMenuButton}
               onPress={() => {
