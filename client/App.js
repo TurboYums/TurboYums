@@ -527,6 +527,14 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
+                this.props.navigation.navigate('ViewSelf')
+              }} >
+              <Text style={styles.buttonText}> View Profile </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
 
                 this.props.navigation.navigate('OrderQueue')
               }} >
@@ -549,6 +557,7 @@ class EmployeePortalScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> Clock In/Out </Text>
             </TouchableOpacity>
+
 
           </ImageBackground>
         </View>
@@ -3696,71 +3705,6 @@ class Table extends React.Component {
   }
 }
 
-class ViewEmployee extends React.Component {
-  static navigationOptions = {
-    // headerTitle instead of title
-    headerTitle: <LogoTitle />,
-    headerStyle: {
-      backgroundColor: '#fff44f',
-    },
-    headerTintColor: '#000000',
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      clocks: null,
-      employee: null,
-      username: ''
-    };
-  }
-
-  componentWillMount() {
-    /*
-    fetch(API_URL + 'api/users/getClockLogs', {//fetch start
-      method: 'POST',
-      headers: {//header start
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      this.setState({ clocks: resJson.clocks });;
-    })
-    */
-    fetch(API_URL + 'api/users/getEmployee', {//fetch start
-      method: 'POST',
-      headers: {//header start
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-        username: currentUser.username,
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      currentEmployee = resJson.employee
-      this.setState({ employee: resJson.employee });;
-    })
-  }
-
-  GetSectionListItem = (item) => {
-    currentEmployee = item;
-  }
-
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <View>
-        <Text style={styles.SignUpText}>{currentEmployee.firstname + ' ' + currentEmployee.lastname}</Text>
-        <Text style={styles.itemPrice}>{'ID: ' + currentEmployee.stripe_id}</Text>
-        <Text style={styles.itemPrice}>{'Email: ' + currentEmployee.email}</Text>
-        <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentEmployee.totalHoursWorked}</Text>
-      </View>
-    );
-  }
-}
-
 
 class OrderQueueScreen extends React.Component {
   static navigationOptions = {
@@ -3910,6 +3854,97 @@ class OrderSummaryStaffScreen extends React.Component {
 
   }
 }
+
+class ViewEmployee extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      clocks: null,
+      employee: null,
+      username: ''
+    };
+  }
+
+  componentWillMount() {
+
+    fetch(API_URL + 'api/users/getEmployee', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        username: currentUser.username,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      currentEmployee = resJson.employee
+      this.setState({ employee: resJson.employee });;
+    })
+  }
+
+  GetSectionListItem = (item) => {
+    currentEmployee = item;
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentEmployee.firstname + ' ' + currentEmployee.lastname}</Text>
+        <Text style={styles.itemPrice}>{'ID: ' + currentEmployee.stripe_id}</Text>
+        <Text style={styles.itemPrice}>{'Email: ' + currentEmployee.email}</Text>
+        <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentEmployee.totalHoursWorked}</Text>
+      </View>
+    );
+  }
+}
+
+
+class ViewSelf extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      clocks: null,
+      employee: null,
+      username: ''
+    };
+  }
+
+  GetSectionListItem = (item) => {
+    currentEmployee = item;
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{currentUser.firstname + ' ' + currentUser.lastname}</Text>
+        <Text style={styles.itemPrice}>{'ID: ' + currentUser.stripe_id}</Text>
+        <Text style={styles.itemPrice}>{'Email: ' + currentUser.email}</Text>
+        <Text style={styles.itemPrice}>{'Total Hours Worked: ' + currentUser.totalHoursWorked}</Text>
+      </View>
+    );
+  }
+}
+
 
 class SummaryScreen extends React.Component {
   static navigationOptions = {
@@ -4095,6 +4130,7 @@ const RootStack = createStackNavigator(
     DelPing: DelPingScreen,
     TableLayout: TableLayout,
     ViewEmployee: ViewEmployee,
+    ViewSelf: ViewSelf,
     Table: Table,
     DeleteItem: DeleteItemScreen
   },
