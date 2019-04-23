@@ -1306,6 +1306,122 @@ class ViewPingScreen extends React.Component {
     )
   }
 }
+class ManagerMenu extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    /*headerRight: (
+      <Button
+        onPress={() => alert('This is a button!')}
+        title="Edit"
+        color="#000000"
+      />
+    ),*/
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      order: order,
+      items: []
+    }
+  }
+
+  _onConfirm(navigate, state) {
+    navigate('Summary')
+  }
+  GetSectionListItem = (item) => {
+    currentItem = item
+    this.props.navigation.navigate('EditItem', { order: order, takeOut: '1' })
+  }
+
+  _onPressOrder = (item) => {
+    fetch(API_URL + 'api/order/getItems', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item)
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item)
+        }
+        else {
+          items.push({ category: item.category, data: [item] })
+        }
+      }
+
+      this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
+    })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item)
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item)
+        }
+        else {
+          items.push({ category: item.category, data: [item] })
+        }
+
+        this.setState({ items: items })
+      }
+    })
+  }
+
+  render() {
+    const { navigate } = this.props.navigation
+    console.log("ARRIVED")
+    console.log(this.props.navigation.state)
+    const { order_count } = 0
+    const { order_message } = "Order Count is:" + order_count
+    return (
+      <View>
+        <ScrollView>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
+            renderSectionHeader={({ section: { category } }) => (
+              <Text style={styles.sectionHeader}>{category}</Text>
+            )}
+            sections={this.state.items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressOrder() }}>
+          <Text style={styles.submitButtonText}> View Order </Text>
+        </TouchableOpacity>
+      </View>
+
+    )
+  }
+}
+
 
 class DeleteItemScreen extends React.Component {
   static navigationOptions = {
