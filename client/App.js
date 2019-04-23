@@ -452,7 +452,6 @@ class ClockInOutScreen extends React.Component {
               <Text style={styles.buttonText}> Clock Out </Text>
             </TouchableOpacity>
 
-            <ActivityIndicator animating={this.state.animating} size="large" color="#fff44f" />
           </ImageBackground>
         </View>
       </View>
