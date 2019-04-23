@@ -217,7 +217,7 @@ class SignUpScreen extends React.Component {
     );
   }
 }
-
+//hello
 class LogInScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
