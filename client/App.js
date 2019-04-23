@@ -1,11 +1,10 @@
 import React from 'react';
-import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-import { Header, ListItem, Avatar, Badge, Icon, withBadge,CheckBox } from 'react-native-elements';
+import { Header, ListItem, Avatar, Badge, Icon, withBadge} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
-import { Font } from 'expo';
 //AppRegistry.registerComponent('RNNavigators', () => Drawer );
 //=======
 //const API_URL = 'http://10.0.1.85:5000/';
@@ -978,13 +977,9 @@ class DineInOutScreen extends React.Component {
     );
   }
 }
+
 class FilterSelectionScreen extends React.Component{
  
- async componentWillMount() {
-    await Font.loadAsync({
-      'Font Awesome': require('./assets/fonts/fontawesome.ttf')
-    });
-  }
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
@@ -994,24 +989,58 @@ class FilterSelectionScreen extends React.Component{
     headerTintColor: '#000000',
     headerLeft: null
   };
+  constructor() {
+    super();
+    this.state = {
+       listKeys: [
+      {key: 'Basketball', switch : false},
+      {key: 'Football', switch : false},
+      {key: 'Baseball', switch : false},
+      {key: 'Soccer', switch : false},
+      {key: 'Running', switch : false},
+      {key: 'Cross Training', switch : false},
+      {key: 'Gym Workout', switch : false},
+      {key: 'Swimming', switch : false},
+    ]
+    }
+  }
+
+  setSwitchValue = (val, ind) => {
+      const tempData = _.cloneDeep(this.state.listKeys);
+      tempData[ind].switch = val;
+      this.setState({ listKeys: tempData });
+  }
+
+  listItem = ({item, index}) => (
+    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30, marginTop: 20}}>
+      <Text style={styles.item}>{item.key}</Text>
+      <Switch
+        onValueChange={(value) => this.setSwitchValue(value, index)}
+        value={item.switch}
+      />
+    </View>
+  );
+
+
+  
   render(){
     const { navigate } = this.props.navigation;
     console.log(this.props.navigation.state)
     
     return (
       <View>
-          <Text style={{fontSize: 20 }}>&#xf164;</Text>
-          <CheckBox
-            title='Click Here'
-            //  checked={this.state.checked}
-          />
-
-          <CheckBox
-            center
-            title='Click Here'
-            // checked={this.state.checked}
-          />
+       <Text style={styles.SignUpText}>
+              Select
+          </Text>
+            <Text style={styles.text}>
+              your allergies
+          </Text>
+      <FlatList
+        data={this.state.listKeys}
+        renderItem={this.listItem}
+      />
       </View>
+      
     );
   }
 }
@@ -1534,6 +1563,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 10,
+    marginLeft: 20,
     fontSize: 18,
     height: 44,
     //marginLeft: 30,
@@ -1715,6 +1745,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+
 });
 
 
