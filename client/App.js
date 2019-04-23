@@ -7,7 +7,7 @@ import MenuItem from './components/MenuItem'
 import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
-import { Badge, Icon, withBadge } from 'react-native-elements'
+import { Badge, Icon, withBadge, ListItem } from 'react-native-elements'
 import Table1 from './Table1';
 import Table2 from './Table2';
 import Table3 from './Table3';
@@ -337,7 +337,7 @@ class LogInScreen extends React.Component {
 
 
 class ClockInOutScreen extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -346,25 +346,25 @@ class ClockInOutScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('ViewPings')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('ViewPings')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      <Badge
-      value = " "
-      status="error"
-      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+          <Badge
+            value=" "
+            status="error"
+            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
+  }
+  )
   _clockIn = () => {
     this.setState({ animating: true })
     navigator.geolocation.getCurrentPosition(
@@ -461,8 +461,8 @@ class ClockInOutScreen extends React.Component {
 
 
 class EmployeePortalScreen extends React.Component {
-  
-static navigationOptions = ({navigation, screenProps}) =>({
+
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -471,26 +471,44 @@ static navigationOptions = ({navigation, screenProps}) =>({
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('ViewPings')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('ViewPings')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      <Badge
-      value = " "
-      status="error"
-      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+          <Badge
+            value=" "
+            status="error"
+            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
-  
+  }
+  )
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPrice: '0',
+        specialRequest: 'None',
+        userId: currentUser.stripe_id
+
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -505,7 +523,7 @@ static navigationOptions = ({navigation, screenProps}) =>({
               } >
               <Text style={styles.buttonText}> View Tables </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -540,7 +558,7 @@ static navigationOptions = ({navigation, screenProps}) =>({
 }
 
 class ManagerPortalScreen extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -549,25 +567,25 @@ class ManagerPortalScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('ViewPings')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('ViewPings')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      <Badge
-      value = " "
-      status="error"
-      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+          <Badge
+            value=" "
+            status="error"
+            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
+  }
+  )
 
   exportPayroll = () => {
     fetch(API_URL + "api/users/export_payroll", {
@@ -925,7 +943,8 @@ class ReceiptScreen extends React.Component {
       },
       body: JSON.stringify({
         orderId: order.id,
-        email: currentUser.email
+        email: currentUser.email,
+        tip: this.state.tip,
       }),//body end
     }).then((res) => res.json()).then(resJson => {
       Alert.alert("Emailed!");
@@ -1007,7 +1026,7 @@ class ReceiptScreen extends React.Component {
 
 class DineInOutScreen extends React.Component {
 
-   static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
 
     headerTitle: '',
@@ -1017,20 +1036,20 @@ class DineInOutScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('AddPingCusty')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('AddPingCusty')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
+  }
+  )
 
 
   _onPressButton(navigate) {
@@ -1100,7 +1119,7 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -1109,20 +1128,20 @@ class MenuScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('AddPingCusty')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('AddPingCusty')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
+  }
+  )
   constructor(props) {
     super(props)
     this.state = {
@@ -1206,11 +1225,11 @@ class MenuScreen extends React.Component {
     return (
       <View>
         <ScrollView>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => { this.props.navigation.navigate("Summary") }}>
-          <Text style={styles.submitButtonText}> Pay </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => { this.props.navigation.navigate("Summary") }}>
+            <Text style={styles.submitButtonText}> Pay </Text>
+          </TouchableOpacity>
           <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
             renderSectionHeader={({ section: { category } }) => (
@@ -1232,15 +1251,15 @@ class MenuScreen extends React.Component {
 }
 
 class ViewPingScreen extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-   }
-   )
+  }
+  )
   constructor(props) {
     super(props)
     this.state = {
@@ -1283,15 +1302,15 @@ class ViewPingScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation
-  
+
     return (
       <View>
         <ScrollView>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => { this.props.navigation.navigate("AddPingEmp") }}>
-          <Text style={styles.submitButtonText}> Send a Ping </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => { this.props.navigation.navigate("AddPingEmp") }}>
+            <Text style={styles.submitButtonText}> Send a Ping </Text>
+          </TouchableOpacity>
           <SectionList
             renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListPing.bind(this, item)}> {item.description} </Text>}
             renderSectionHeader={({ section: { from } }) => (
@@ -1426,7 +1445,7 @@ class ManagerMenu extends React.Component {
 
 class DeleteItemScreen extends React.Component {
   static navigationOptions = {
-    
+
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
@@ -1497,7 +1516,7 @@ class DeleteItemScreen extends React.Component {
           style={styles.submitButton}
           onPress={() => { this._onPressDeleteOrder() }}>
           <Text style={styles.submitButtonText}> Delete Item </Text>
-          
+
         </TouchableOpacity>
       </View>
     );
@@ -1726,7 +1745,7 @@ class AddPingScreenCust extends React.Component {
                   },
                   body: JSON.stringify({
                     from: this.state.from,
-                    description: this.state.description,                
+                    description: this.state.description,
                   }),
                 }).then((res) => res.json()).then(resJson => {
                   if (resJson.creationSuccess) {
@@ -1802,7 +1821,7 @@ class AddPingScreenEmp extends React.Component {
                   },
                   body: JSON.stringify({
                     from: this.state.from,
-                    description: this.state.description,                
+                    description: this.state.description,
                   }),
                 }).then((res) => res.json()).then(resJson => {
                   if (resJson.creationSuccess) {
@@ -1971,7 +1990,7 @@ class DelPingScreen extends React.Component {
     return (
       <View>
         <Text style={styles.SignUpText}>{'Ping'}</Text>
-        <Text style={styles.itemPrice}>{currentPing.from + ": "  + currentPing.description}</Text>
+        <Text style={styles.itemPrice}>{currentPing.from + ": " + currentPing.description}</Text>
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => { this._onPressDelPing() }}>
@@ -2142,7 +2161,7 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 }
 
 class StaffScreen extends React.Component {
-  static navigationOptions = ({navigation, screenProps}) =>({
+  static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
@@ -2151,25 +2170,25 @@ class StaffScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => navigation.navigate('ViewPings')}
-      style={{paddingRight: 15}}
+        onPress={() => navigation.navigate('ViewPings')}
+        style={{ paddingRight: 15 }}
       >
-      <View>
-      <Image
-      style={{ height: 30, width: 30,}}
-      source={require('./assets/notif.png')}
-      resizeMode="contain"
-      />
-      <Badge
-      value = " "
-      status="error"
-      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-      </View>
+        <View>
+          <Image
+            style={{ height: 30, width: 30, }}
+            source={require('./assets/notif.png')}
+            resizeMode="contain"
+          />
+          <Badge
+            value=" "
+            status="error"
+            containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+          />
+        </View>
       </TouchableOpacity>
     )
-   }
-   )
+  }
+  )
 
   constructor(props) {
     super(props)
@@ -2207,16 +2226,16 @@ class StaffScreen extends React.Component {
   render() {
     return (
       <View>
-      <Text>Employees: </Text>
-      <View>
-        <FlatList
-          data={this.state.employees}
-          renderItem={({ item }) => <Text style={styles.viewItem} onPress={this.SelectEmployee.bind(this, item)}>
-            {item.firstname + " " + item.lastname}
-          </Text>}
-        />
+        <Text>Employees: </Text>
+        <View>
+          <FlatList
+            data={this.state.employees}
+            renderItem={({ item }) => <Text style={styles.viewItem} onPress={this.SelectEmployee.bind(this, item)}>
+              {item.firstname + " " + item.lastname}
+            </Text>}
+          />
+        </View>
       </View>
-    </View>
 
 
     )
@@ -3692,19 +3711,19 @@ class ViewEmployee extends React.Component {
       this.setState({ clocks: resJson.clocks });;
     })
     */
-   fetch(API_URL + 'api/users/getEmployee', {//fetch start
-    method: 'POST',
-    headers: {//header start
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },//header end
-    body: JSON.stringify({//body start
-      username: currentUser.username,
-    }),//body end
-  }).then((res) => res.json()).then(resJson => {
-    currentEmployee = resJson.employee
-    this.setState({ employee: resJson.employee });;
-  })
+    fetch(API_URL + 'api/users/getEmployee', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        username: currentUser.username,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      currentEmployee = resJson.employee
+      this.setState({ employee: resJson.employee });;
+    })
   }
 
   GetSectionListItem = (item) => {
@@ -3884,18 +3903,18 @@ class SummaryScreen extends React.Component {
     headerTintColor: '#000000',
   }
   keyExtractor = (item, index) => index.toString()
-  deleteItem = (item) => console.log('Deleted '+ item.itemName)
+  deleteItem = (item) => console.log('Deleted ' + item.itemName)
   renderItem = ({ item }) => (
     <ListItem
-      title={item.itemName+ "        $"+ item.itemPrice/100 }
+      title={item.itemName + "        $" + item.itemPrice / 100}
       rightIcon={
-          <Image
+        <Image
           source={require('./assets/delete.png')}
           style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
         />
       }
-      onPressRightIcon = {() => console.log('Pressed !')}
-      onPress = {this.GetSectionListItem.bind(this, item)}
+      onPressRightIcon={() => console.log('Pressed !')}
+      onPress={this.GetSectionListItem.bind(this, item)}
     />
   )
   constructor(props) {
@@ -3923,7 +3942,7 @@ class SummaryScreen extends React.Component {
     currentItem = item;
     this.props.navigation.navigate('DeleteItem', { order: order, takeOut: '1' })
   }
-  componentDidMount(){
+  componentDidMount() {
     fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
       headers: {//header start
@@ -3995,11 +4014,11 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item, index, section }) => this.renderItem({item})
-            
-            // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-            //   {item.itemName + "       $" + item.itemPrice / 100}
-            // </Text>
+            renderItem={({ item, index, section }) => this.renderItem({ item })
+
+              // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+              //   {item.itemName + "       $" + item.itemPrice / 100}
+              // </Text>
               //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
             }
             sections={items}
