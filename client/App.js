@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
-import { ListItem, Badge} from 'react-native-elements';
 
 
 const API_URL = 'http://10.0.1.85:5000/';
@@ -2262,92 +2261,6 @@ class DeleteItemScreen extends React.Component {
 }
 
 
-class StaffScreen extends React.Component {
-  static navigationOptions = {
-    // headerTitle instead of title
-    headerTitle: <LogoTitle />,
-    headerStyle: {
-      backgroundColor: '#fff44f',
-    },
-    headerTintColor: '#000000',
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      order: order,
-      items: items
-    }
-  }
-
-  GetSectionListItem = (item) => {
-    currentItem = item
-    this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
-  }
-
-  componentWillMount() {
-    fetch(API_URL + 'api/order/getItems', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        orderId: currentOrder.id,
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      this.setState({ items: resJson.items })
-    })
-  }
-
-  SetStatus = (status) => {
-    fetch(API_URL + 'api/order/setStatus', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        orderId: currentOrder.id,
-        status: status
-      }),
-    }).then((res) => res.json()).then(resJson => {
-      this.setState({ order: resJson.order })
-    })
-  }
-
-  render() {
-    let data = [{
-      value: 'Paid',
-    }, {
-      value: 'In Progress',
-    }, {
-      value: 'Ready',
-    }, {
-      value: 'Served',
-    }]
-    return (
-      <View>
-        <Text style={styles.SignUpText}>Order Summary:</Text>
-        <View>
-          <FlatList
-            data={this.state.items}
-            renderItem={({ item }) => <Text style={styles.menuItem} onPress={() => this.GetSectionListItem(item)}>{item.itemName}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-        <Dropdown
-          label='Order Status'
-          onChangeText={this.SetStatus}
-          data={data}
-        />
-      </View>
-
-    )
-
-  }
-}
-
 class SummaryScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -2562,7 +2475,6 @@ const RootStack = createStackNavigator(
     ViewPings: ViewPingScreen,
     DelPing: DelPingScreen,
     DeleteItem: DeleteItemScreen,
-    Staff: StaffScreen
   },
   {
     initialRouteName: 'Welcome',
