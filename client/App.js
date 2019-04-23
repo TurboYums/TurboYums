@@ -20,6 +20,7 @@ let items = '';
 let employees = '';
 let currentItem = '';
 
+
 class LogoTitle extends React.Component {
   render() {
     return (
@@ -28,6 +29,18 @@ class LogoTitle extends React.Component {
         source={require('./assets/Logomono.png')}
         // width={Dimensions.get('window').width}
         resizeMode="stretch"
+      />
+    );
+  }
+}
+
+class EditButton extends React.Component{
+  render(){
+    return(
+      <EditButton
+        onPress={() => alert('This is a button!')}
+          title="Edit"
+        color="#000000"
       />
     );
   }
@@ -133,11 +146,11 @@ class SignUpScreen extends React.Component {
         <View style={styles.container}>
           <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ScrollView style={{ flex: 1 }}>
-            <Text style={styles.SignUpText}>
-              Create
+          <Text style={styles.SignUpText}>
+              Welcome!
           </Text>
-            <Text style={styles.text}>
-              your TurboYums account
+          <Text style={styles.text}>
+            Create your TurboYums account
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
@@ -275,7 +288,7 @@ class LogInScreen extends React.Component {
               Sign in
           </Text>
             <Text style={styles.text}>
-              with your TurboYums account
+              Welcome to your TurboYums account
           </Text>
             <TextInput style={styles.input}
               underlineColorAndroid="transparent"
@@ -557,12 +570,21 @@ class ManagerPortalScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> View Staff </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
-                this.props.navigation.navigate('Menu');
+                this.props.navigation.navigate('Menu'); //will change this to Menu when I have the edit button showing only for manager working
               }} >
               <Text style={styles.buttonText}> View Menu </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('WhichEdit'); //will change this to Menu when I have the edit button showing only for manager working
+              }} >
+              <Text style={styles.buttonText}> Edit Menu </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -1054,6 +1076,7 @@ class MenuScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    //headerRight: <EditButton/>,
   };
 
   constructor(props) {
@@ -1070,6 +1093,128 @@ class MenuScreen extends React.Component {
   GetSectionListItem = (item) => {
     currentItem = item;
     this.props.navigation.navigate('ViewItem', { order: order, takeOut: '1' })
+  }
+
+  _onPressOrder = (item) => {
+    fetch(API_URL + 'api/order/getItems', {//fetch start
+      method: 'POST',
+      headers: {//header start
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },//header end
+      body: JSON.stringify({//body start
+        orderId: order.id,
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+      }
+
+      this.props.navigation.navigate('Summary', { order: resJson.order, takeOut: '1' })
+    });
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items;
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item);
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item);
+        }
+        else {
+          items.push({ category: item.category, data: [item] });
+        }
+
+        this.setState({ items: items });;
+      }
+    });
+  }
+
+  render() {
+    const { navigate } = this.props.navigation;
+    if(currentUser.accountType==0){
+      button = <EditButton />;
+    }
+    else{
+      button=null;
+    }
+    console.log("ARRIVED")
+    console.log(this.props.navigation.state)
+    const { order_count } = 0
+    const { order_message } = "Order Count is:" + order_count
+    return (
+      <View>
+        <ScrollView>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}> {item.itemName + " - " + "$" + item.itemPrice / 100} </Text>}
+            renderSectionHeader={({ section: { category } }) => (
+              <Text style={styles.sectionHeader}>{category}</Text>
+            )}
+            sections={this.state.items}
+            keyExtractor={(item, index) => item + index}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressOrder() }}>
+          <Text style={styles.submitButtonText}> View Order </Text>
+        </TouchableOpacity>
+      </View>
+
+    );
+  }
+}
+
+class ManagerMenu extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+    headerRight: (
+      <Button
+        onPress={() => alert('This is a button!')}
+        title="Edit"
+        color="#000000"
+      />
+    ),
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: order,
+      items: []
+    };
+  }
+
+  _onConfirm(navigate, state) {
+    navigate('Summary')
+  }
+  GetSectionListItem = (item) => {
+    currentItem = item;
+    this.props.navigation.navigate('EditItem', { order: order, takeOut: '1' })
   }
 
   _onPressOrder = (item) => {
@@ -1155,6 +1300,168 @@ class MenuScreen extends React.Component {
   }
 }
 
+class WhichEditScreen extends React.Component {
+  static navigationOptions = {
+    headerTitle: 'What would you like to do?',
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View>
+          <ImageBackground source={require('./assets/dine.png')} style={{ width: '100%', height: '100%' }} blurRadius={4}>
+
+            <TouchableOpacity
+              style={styles.topButton}
+              onPress={() => {
+                this.props.navigation.navigate('AddItem');
+              }} >
+              <Text style={styles.buttonText}> Add New Item </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.tButton}
+              onPress={() => {
+                this.props.navigation.navigate('EditMenu');
+              }} >
+              <Text style={styles.buttonText}> Edit Existing Items </Text>
+            </TouchableOpacity>
+              
+
+          </ImageBackground>
+        </View>
+      </View>
+    );
+  }
+}
+
+class AddItemScreen extends React.Component {
+  state = {
+    itemName: '',
+    category: '',
+    itemPrice: '',
+    ingredient: '',
+    description: '',
+    rating: ''
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  };
+  handleitemName = (text) => {
+    this.setState({ itemName: text })
+  }
+  handlecategory = (text) => {
+    this.setState({ category: text })
+  }
+  handleitemPrice = (text) => {
+    this.setState({ itemPrice: text })
+  }
+  handleingredient = (text) => {
+    this.setState({ ingredient: text })
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+  handlerating = (text) => {
+    this.setState({ rating: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.SignUpText}>
+              Item Creation
+          </Text>
+          <Text style={styles.text}>
+            Enter details below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Item Name:"
+              autoCapitalize="words"
+              onChangeText={this.handleitemName} />
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Category:"
+              autoCapitalize="words"
+              onChangeText={this.handlecategory} />
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Item Price (in cents):"
+              autoCapitalize="words"
+              onChangeText={this.handleitemPrice} />
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              secureTextEntry={true}
+              placeholder="   Ingredients (Comma Seperated):"
+              autoCapitalize="words"
+              onChangeText={this.handleingredient} />
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Description:"
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Rating:"
+              autoCapitalize="words"
+              onChangeText={this.handlerating} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.itemName || !this.state.category || !this.state.itemPrice || !this.state.ingredient || !this.state.description || !this.state.rating) {
+                Alert.alert('Please fill in all fields');
+              } else {
+                fetch(API_URL + 'api/items/create', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    itemName: this.state.itemName,
+                    category: this.state.category,
+                    itemPrice: this.state.itemPrice,
+                    ingredient: this.state.ingredient,
+                    description: this.state.description,
+                    rating: this.state.rating,
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Succesfully Created Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  } else {
+                    Alert.alert('Error Creating Item!');
+                    this.props.navigation.navigate('ManagerPortal');
+                  }
+                });
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Create </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+}
+
 class ViewItemScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
@@ -1211,9 +1518,9 @@ class ViewItemScreen extends React.Component {
   }
 }
 
-class DeleteItemScreen extends React.Component {
+class EditItemScreen extends React.Component { //This is where we gotta make changes to edit items @Holly :)
   static navigationOptions = {
-
+    // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
@@ -1246,26 +1553,9 @@ class DeleteItemScreen extends React.Component {
           items.push({ category: item.category, data: [item] });
         }
       }
-      this.props.navigation.state.params.refresh();
       this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
     });
 
-  }
-  _onPressDeleteOrder = () => {
-    fetch(API_URL + 'api/order/remove', {//fetch start
-      method: 'POST',
-      headers: {//header start
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },//header end
-      body: JSON.stringify({//body start
-        orderId: order.id,
-        itemId: currentItem.id
-      }),//body end
-    }).then((res) => res.json()).then(resJson => {
-      order = resJson.order
-      this.props.navigation.navigate('Summary', { order: order, takeOut: '1' })
-    });
   }
   render() {
     const { navigate } = this.props.navigation;
@@ -1278,19 +1568,11 @@ class DeleteItemScreen extends React.Component {
           style={styles.submitButton}
           onPress={() => { this._onPressAddOrder() }}>
           <Text style={styles.submitButtonText}> Add To Order </Text>
-
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => { this._onPressDeleteOrder() }}>
-          <Text style={styles.submitButtonText}> Delete Item </Text>
-
         </TouchableOpacity>
       </View>
     );
   }
 }
-
 
 class StaffScreen extends React.Component {
   static navigationOptions = {
@@ -1495,8 +1777,11 @@ const RootStack = createStackNavigator(
     Menu: MenuScreen,
     Summary: SummaryScreen,
     ViewItem: ViewItemScreen,
-    DeleteItem: DeleteItemScreen,
-    Staff: StaffScreen
+    Staff: StaffScreen,
+    EditMenu: ManagerMenu,
+    WhichEdit: WhichEditScreen,
+    EditItem: EditItemScreen,
+    AddItem: AddItemScreen,
   },
   {
     initialRouteName: 'Welcome',

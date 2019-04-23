@@ -1,10 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://47-zut.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.47-zut.anonymous.client.exp.direct",
-  "ngrokPid": 90928,
   "devToolsPort": 19002,
+  "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 90911,
-  "webpackServerPort": null
+  "packagerPid": 18500,
+  "expoServerNgrokUrl": "https://gd-esk.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.gd-esk.anonymous.client.exp.direct",
+  "ngrokPid": 21212
 }
