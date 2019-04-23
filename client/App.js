@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+<<<<<<< HEAD
 import { Header, ListItem, Avatar, Badge, Icon, withBadge} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
 import { unregisterTaskAsync } from 'expo-background-fetch';
@@ -12,6 +13,17 @@ import { unregisterTaskAsync } from 'expo-background-fetch';
 //>>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
 const API_URL = 'http://192.168.1.193:5000/';
 //const API_URL = 'http://10.0.1.85:5000/';
+=======
+import { Header, ListItem} from 'react-native-elements';
+import MenuItem from './components/MenuItem';
+import { unregisterTaskAsync } from 'expo-background-fetch';
+import { Font } from 'expo';
+
+import { CheckBox } from 'react-native-elements'
+
+
+const API_URL = 'http://10.0.1.85:5000/';
+>>>>>>> c52733dc8b7333d5412e173a631f20cc00a9d7d6
 // const API_URL = 'http://127.0.0.1:5000/';
 let currentUser = '';
 let order = '';
@@ -932,7 +944,7 @@ class DineInOutScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-*    headerRight: (<Button
+    headerRight: (<Button
       title="Menu"
       onPress={() => {
         this.props.navigation.navigate('Menu');
