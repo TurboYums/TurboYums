@@ -6,9 +6,10 @@ const sequelize = require('./models/sequelize.js');
 const users = require('./api/users.js');
 const charges = require('./api/charges.js');
 const sources = require('./api/sources.js');
-const items = require('./api/items.js').then;
+const items = require('./api/items.js');
 const orders = require('./api/orders.js');
 const pings = require('./api/pings.js');
+const tables = require('./api/tables.js');
 //sync sequelize
 sequelize.sync();
 if (process.env.NODE_ENV != "test") {
