@@ -10,7 +10,7 @@ Managment Interface:
   - edit the handler to bring a page where you can edit menu item
 - edit page:
   - delete button
-  - cadd new menu item
+  - add new menu item
 - Schedule interface:
   - can we actually do this? lets discuss
 - Export Payroll
@@ -45,6 +45,7 @@ Missing Features:
 - Menu Filtering
 - Orders need to be associated with a server
 - Fix the menu items
+- make clock in clock out a single button
 
 New Restaurant Setup:
 

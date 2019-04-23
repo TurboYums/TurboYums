@@ -6,11 +6,14 @@ const OrderItem = sequelize.import('../models/orderitem.js');
 
 Order = sequelize.define('order', {
   totalPrice: Sequelize.DOUBLE,
-  specialReuest: Sequelize.STRING
+  specialRequest: Sequelize.STRING,
+  status: Sequelize.STRING,
+  active: Sequelize.INTEGER
 })
 
 Order.belongsTo(User);
 Order.belongsToMany(Item, { through: {model: OrderItem, unique: false}});
+
 module.exports = (sequelize, DataTypes) => {
   return Order;
 }

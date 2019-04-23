@@ -8,6 +8,7 @@ const charges = require('./api/charges.js');
 const sources = require('./api/sources.js');
 const items = require('./api/items.js').then;
 const orders = require('./api/orders.js');
+const pings = require('./api/pings.js');
 //sync sequelize
 sequelize.sync();
 if (process.env.NODE_ENV != "test") {
