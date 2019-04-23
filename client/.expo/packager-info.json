@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://yt-9kc.anonymous.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.yt-9kc.anonymous.client.exp.direct",
-  "ngrokPid": 62060,
+  "expoServerPort": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 61953
+  "packagerPort": null,
+  "packagerPid": null
 }

@@ -42,6 +42,62 @@ api.get('/api/items/getAll', (req, res) => {
   })
 })
 
+api.post('/api/items/filterCheese',(req,res)=> {
+  const opN = sequelize.Op.notLike;
+  const opA = sequelize.Op.any;
+  filters= req.body.filters
+  Item.findAll({where:{
+    ingredient:{
+      [opN]:'%cheese%'
+    }
+  }, group:['category','id']}).then(items=>{
+    res.send({items:items})
+  })
+}) 
+
+
+api.post('/api/items/filterItem',(req,res)=> {
+  const opN = sequelize.Op.notLike;
+  const opA = sequelize.Op.any;
+  filters= req.body.filters
+  Item.findAll({where:{
+    ingredient:{
+      [opN]:{
+        [opA]:req.body.filters
+      }
+    }
+  }, group:['category','id']}).then(items=>{
+    res.send({items:items})
+  })
+}) 
+
+api.post('/api/items/filter',(req,res)=> {
+  const opN = sequelize.Op.notLike;
+  const opA = sequelize.Op.any;
+  filters= req.body.filters
+  var query = "SELECT * FROM turboyums.items WHERE"
+  // WHERE ingredient NOT LIKE '%basil%'
+  //   AND ingredient NOT LIKE '%nuts%'
+  //   AND ingredient NOT LIKE '%soy%' "
+  if(filters.length>0){
+    for(var index in filters){
+      if(index==0){
+        query+= " ingredient NOT LIKE "+" \'%"+filters[index]+"%\'";
+      }else{
+        query+= " AND ingredient NOT LIKE "+" \'%"+filters[index]+"%\'";
+      }
+    }
+    query+"GROUP BY category, id;"
+    sequelize.query(query).then(items=>{
+      res.send({items:items})
+    })
+  }else{ //no filters
+    Item.findAll({group: ['category', 'id']}).then(items => {
+      res.send({items: items})
+    })
+  }
+}) 
+
 
 //filter
 /*api.post('/api/items/filter', (req, res) => {

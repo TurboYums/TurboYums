@@ -1012,12 +1012,14 @@ class FilterSelectionScreen extends React.Component{
       {key: 'Fish', switch : false},
       {key: 'Meat', switch : false},
       {key: 'Shellfish', switch : false},
-      {key: 'Milk', switch : false},
-      {key: 'Soy', switch : false},
+      {key: 'Cheese', switch : false},
+      {key: 'Basil', switch : false},
       {key: 'Wheat', switch : false},
       {key: 'Gluten', switch : false},
     ]
     }
+    this.food_filter = [];
+    this.cheese  = 0;
   }
 
   setSwitchValue = (val, ind) => {
@@ -1036,7 +1038,50 @@ class FilterSelectionScreen extends React.Component{
       />
     </View>
   );
+  
+  foodFilter(listKeys) {
+    var cheese =0
+    console.log('FOOD FILTER\n'+listKeys)
+    for (var list in listKeys){
+      console.log(list)
+      if(listKeys[list].switch){
+        console.log('LK '+listKeys[list].key)
+        if(listKeys[list].key=='Cheese'){
+          this.cheese = 1;
+        }
+        this.food_filter.push(listKeys[list].key)
+      }
+    }
+  }
 
+  get_proper_food(){
+    var lo = require('lodash');
+    fetch(API_URL + 'api/items/filterCheese', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({filters:lo.cloneDeep(this.food_filter)}),
+    }).then((res) => res.json()).then(resJson => {
+      menuItems = resJson.items;
+      console.log('filter '+ this.food_filter);
+      console.log('menu Items'+menuItems);
+      for(var m in menuItems){
+        console.log('ITEM: '+menuItems[m])
+      }
+    })
+    this.props.navigation.navigate('Menu',{filters:lo.cloneDeep(this.food_filter), cheese:this.cheese});
+  }
+
+  filter_stuff = (listKeys) => {
+    var lo = require('lodash');
+    const tempData = lo.cloneDeep(listKeys)
+    console.log('TESTING\n'+tempData)
+    this.foodFilter(tempData)
+    this.get_proper_food()
+      
+  };
 
   
   render(){
@@ -1053,7 +1098,7 @@ class FilterSelectionScreen extends React.Component{
     <TouchableOpacity
       style={styles.submitButton}
       onPress={() => {
-        this.props.navigation.navigate('Menu');
+            this.filter_stuff(this.state.listKeys)
         }}>
       <Text style={styles.submitButtonText}> Menu </Text>
     </TouchableOpacity>
@@ -1126,28 +1171,36 @@ class MenuScreen extends React.Component {
   }
 
   componentWillMount() {
-    fetch(API_URL + 'api/items/getAll', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((res) => res.json()).then(resJson => {
-      let tempItems = resJson.items;
-      items = []
-
-      for (let item of tempItems) {
-        console.log(item);
-        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
-          items[items.length - 1].data.push(item);
+    var filters = []
+    filters = this.props.navigation.state.params.filters
+    cheese  = this.props.navigation.state.params.cheese
+    console.log('CHEESE '+ cheese)
+    if(cheese==null || cheese==0){
+      fetch(API_URL + 'api/items/getAll', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         }
-        else {
-          items.push({ category: item.category, data: [item] });
-        }
+      }).then((res) => res.json()).then(resJson => {
+        let tempItems = resJson.items;
+        items = []
 
-        this.setState({ items: items });;
-      }
-    });
+        for (let item of tempItems) {
+          console.log(item);
+          if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+            items[items.length - 1].data.push(item);
+          }
+          else {
+            items.push({ category: item.category, data: [item] });
+          }
+
+          this.setState({ items: items });;
+        }
+      });
+    }else{
+      //nothing
+    }
   }
 
   render() {
