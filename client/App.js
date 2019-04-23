@@ -6,7 +6,7 @@ import { Alert, Image, StyleSheet, SectionList, TextInput, ImageBackground, Touc
 import { ListItem, Badge} from 'react-native-elements';
 
 
-const API_URL = 'http://10.0.1.85:5000/';
+const API_URL = 'http://172.31.143.40:5000/';
 // const API_URL = 'http://127.0.0.1:5000/';
 let currentUser = '';
 let order = '';
@@ -228,7 +228,7 @@ class LogInScreen extends React.Component {
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-        onPress={() => alert('Fuck my hole!')}
+        onPress={() => alert('LUL')}
         style={{paddingRight: 15}}
       >
       <View>
@@ -238,7 +238,7 @@ class LogInScreen extends React.Component {
          resizeMode="contain"
         />
         <Badge
-        value="69"
+        value="9"
         status="error"
         containerStyle={{ position: 'absolute', top: -4, right: -4 }}
         />
@@ -922,12 +922,6 @@ class DineInOutScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    headerRight: (<Button
-      title="Menu"
-      onPress={() => {
-        this.props.navigation.navigate('Menu');
-      }}/>
-      )
   };
   _onPressButton() {
     fetch(API_URL + 'api/order/create', {
@@ -1002,7 +996,6 @@ class FilterSelectionScreen extends React.Component{
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    headerLeft: null
   };
   constructor() {
     super();
