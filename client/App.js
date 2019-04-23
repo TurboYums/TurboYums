@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView, Switch } from 'react-native';
 import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
@@ -13,16 +12,6 @@ import { unregisterTaskAsync } from 'expo-background-fetch';
 //>>>>>>> a674c5b635a6a7884895faea27bede2c24df0da2
 const API_URL = 'http://192.168.1.193:5000/';
 //const API_URL = 'http://10.0.1.85:5000/';
-=======
-import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, KeyboardAvoidingView, Switch } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { Alert, Image, StyleSheet, SectionList, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
-
-import { ListItem, Badge} from 'react-native-elements';
-
-
-const API_URL = 'http://10.0.1.85:5000/';
->>>>>>> ed3cb4e634079950caf805230928daf3dff6dbc2
 // const API_URL = 'http://127.0.0.1:5000/';
 let currentUser = '';
 let order = '';
