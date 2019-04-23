@@ -1035,7 +1035,7 @@ class FilterSelectionScreen extends React.Component{
   }
 
   listItem = ({item, index}) => (
-    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30, marginTop: 20}}>
+    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 30}}>
       <Text style={styles.item}>{item.key}</Text>
       <Switch
        onValueChange={(value) => !this.setSwitchValue(value, index)}
@@ -1054,9 +1054,15 @@ class FilterSelectionScreen extends React.Component{
         <Text style={styles.SignUpText}>
               Select
         </Text>
-        <Text style={styles.text}>
+        <Text style={styles.textFilter}>
               your allergies
         </Text>
+        
+        <ScrollView>
+                  <FlatList
+          data={this.state.listKeys}
+          renderItem={this.listItem}
+        />
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => {
@@ -1066,10 +1072,8 @@ class FilterSelectionScreen extends React.Component{
              Menu
           </Text>
         </TouchableOpacity>
-        <FlatList
-          data={this.state.listKeys}
-          renderItem={this.listItem}
-        />
+        </ScrollView>
+
       </View>
     );
   }
@@ -1606,6 +1610,13 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 30,
+    color: '#5b5b5b',
+    //marginTop: 2,
+    fontSize: 18,
+  },
+  textFilter: {
+    marginLeft: 30,
+    marginBottom: 30,
     color: '#5b5b5b',
     //marginTop: 2,
     fontSize: 18,
