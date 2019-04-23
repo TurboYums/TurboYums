@@ -993,14 +993,14 @@ class FilterSelectionScreen extends React.Component{
     super();
     this.state = {
        listKeys: [
-      {key: 'Basketball', switch : false},
-      {key: 'Football', switch : false},
-      {key: 'Baseball', switch : false},
-      {key: 'Soccer', switch : false},
-      {key: 'Running', switch : false},
-      {key: 'Cross Training', switch : false},
-      {key: 'Gym Workout', switch : false},
-      {key: 'Swimming', switch : false},
+      {key: 'Nuts', switch : false},
+      {key: 'Fish', switch : false},
+      {key: 'Meat', switch : false},
+      {key: 'Shellfish', switch : false},
+      {key: 'Milk', switch : false},
+      {key: 'Soy', switch : false},
+      {key: 'Wheat', switch : false},
+      {key: 'Gluten', switch : false},
     ]
     }
   }
