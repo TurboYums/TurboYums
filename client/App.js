@@ -22,7 +22,7 @@ import Table11 from './Table11';
 import Table12 from './Table12';
 
 
-const API_URL = 'http://192.168.1.253:5000/'
+const API_URL = 'http://172.31.130.218:5000/'
 let currentUser = ''
 let tip
 let order, token, items, employees, currentItem, currentTable, currentEmployee, currentPing = ''
@@ -599,6 +599,24 @@ class ManagerPortalScreen extends React.Component {
       }),
     }).then((res) => res.json()).then(resJson => {
       Alert.alert("Payroll exported and emailed to " + currentUser.email)
+    })
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/order/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPrice: '0',
+        specialRequest: 'None',
+        userId: currentUser.stripe_id
+
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
     })
   }
 
