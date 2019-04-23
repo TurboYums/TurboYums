@@ -8,18 +8,6 @@ import { Ionicons } from '@expo/vector-icons'
 import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
-import Table1 from './Table1';
-import Table2 from './Table2';
-import Table3 from './Table3';
-import Table4 from './Table4';
-import Table5 from './Table5';
-import Table6 from './Table6';
-import Table7 from './Table7';
-import Table8 from './Table8';
-import Table9 from './Table9';
-import Table10 from './Table10';
-import Table11 from './Table11';
-import Table12 from './Table12';
 
 
 const API_URL = 'http://192.168.1.253:5000/'
