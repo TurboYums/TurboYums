@@ -9,18 +9,13 @@ import { unregisterTaskAsync } from 'expo-background-fetch'
 import { Dropdown } from 'react-native-material-dropdown'
 import { Badge, Icon, withBadge } from 'react-native-elements'
 
-<<<<<<< HEAD
+
 const API_URL = 'http://172.31.202.159:5000/'
 let currentUser = ''
-let order, token, items, employees, currentItem = ''
 let tip
-
-=======
-const API_URL = 'http://192.168.1.206:5000/'
-let currentUser = ''
-let order, token, items, employees, currentItem = ''
+let order, token, items, employees, currentItem, currentPing = ''
 let pings = 0
->>>>>>> master
+
 
 class LogoTitle extends React.Component {
   render() {
@@ -332,21 +327,34 @@ class LogInScreen extends React.Component {
 
 
 class ClockInOutScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-  }
-  state = {
-    compHours: '',
-    latitude: null,
-    longitude: null,
-    animating: false
-  }
-
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('ViewPings')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+    />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
   _clockIn = () => {
     this.setState({ animating: true })
     navigator.geolocation.getCurrentPosition(
@@ -442,36 +450,38 @@ class ClockInOutScreen extends React.Component {
   }
 }
 
+
 class EmployeePortalScreen extends React.Component {
   
-  static navigationOptions = {
+static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
-    headerTitle: 'Welcome, Employee!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
     headerRight: (
-    <TouchableOpacity
-    onPress={() => alert('Pressed.')}
-    style={{paddingRight: 15}}
-    >
-    <View>
-    <Image
-    style={{ height: 30, width: 30,}}
-    source={require('./assets/notif.png')}
-    resizeMode="contain"
+      <TouchableOpacity
+      onPress={() => navigation.navigate('ViewPings')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
     />
-    <Badge
-    value={pings}
-    status="error"
-    containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-    />
-    </View>
-    </TouchableOpacity>
-  )
-  }
-
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
+  
   render() {
     return (
       <View style={styles.container}>
@@ -490,6 +500,7 @@ class EmployeePortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
+
                 this.props.navigation.navigate('OrderQueue')
               }} >
               <Text style={styles.buttonText}>Order Queue</Text>
@@ -520,16 +531,16 @@ class EmployeePortalScreen extends React.Component {
 }
 
 class ManagerPortalScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
-    headerTitle: 'Welcome, Manager!',
+    headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
     headerRight: (
       <TouchableOpacity
-      onPress={() => alert('Pressed.')}
+      onPress={() => navigation.navigate('ViewPings')}
       style={{paddingRight: 15}}
       >
       <View>
@@ -539,14 +550,15 @@ class ManagerPortalScreen extends React.Component {
       resizeMode="contain"
       />
       <Badge
-      value={pings}
+      value = " "
       status="error"
       containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-      />
+    />
       </View>
       </TouchableOpacity>
     )
-  }
+   }
+   )
 
   exportPayroll = () => {
     fetch(API_URL + "api/users/export_payroll", {
@@ -581,6 +593,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
+
                 this.exportPayroll()
               }} >
               <Text style={styles.buttonText}>Export Payroll</Text>
@@ -589,6 +602,7 @@ class ManagerPortalScreen extends React.Component {
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
+
                 this.props.navigation.navigate('ClockInOut')
               }} >
               <Text style={styles.buttonText}>Timesheets</Text>
@@ -993,14 +1007,33 @@ class ReceiptScreen extends React.Component {
 
 
 class DineInOutScreen extends React.Component {
-  static navigationOptions = {
+
+   static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
+
     headerTitle: '',
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-  }
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('AddPingCusty')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
+
+
   _onPressButton(navigate) {
     fetch(API_URL + 'api/order/create', {
       method: 'POST',
@@ -1068,16 +1101,29 @@ class DineInOutScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-    //headerRight: <EditButton/>,
-  }
-
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('AddPingCusty')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
   constructor(props) {
     super(props)
     this.state = {
@@ -1180,6 +1226,83 @@ class MenuScreen extends React.Component {
           onPress={() => { this._onPressOrder() }}>
           <Text style={styles.submitButtonText}> View Order </Text>
         </TouchableOpacity>
+      </View>
+
+    )
+  }
+}
+
+class ViewPingScreen extends React.Component {
+  static navigationOptions = ({navigation, screenProps}) =>({
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+   }
+   )
+  constructor(props) {
+    super(props)
+    this.state = {
+      pings: []
+    }
+  }
+
+  /*_onConfirm(navigate, state) {
+    navigate('Summary')
+  }*/
+  GetSectionListPing = (ping) => {
+    currentPing = ping
+    this.props.navigation.navigate('DelPing')
+  }
+
+  componentWillMount() {
+    fetch(API_URL + 'api/pings/getAll', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempPings = resJson.pings
+      pings = []
+
+      for (let ping of tempPings) {
+        console.log(ping)
+        if (pings[pings.length - 1] && ping.from == pings[pings.length - 1].from) {
+          pings[pings.length - 1].data.push(ping)
+        }
+        else {
+          pings.push({ from: ping.from, data: [ping] })
+        }
+
+        this.setState({ pings: pings })
+      }
+    })
+  }
+
+  render() {
+    const { navigate } = this.props.navigation
+  
+    return (
+      <View>
+        <ScrollView>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this.props.navigation.navigate("AddPingEmp") }}>
+          <Text style={styles.submitButtonText}> Send a Ping </Text>
+        </TouchableOpacity>
+          <SectionList
+            renderItem={({ item, index, section }) => <Text style={styles.menuItem} key={index} onPress={this.GetSectionListPing.bind(this, item)}> {item.description} </Text>}
+            renderSectionHeader={({ section: { from } }) => (
+              <Text style={styles.sectionHeader}>{from}</Text>
+            )}
+            sections={this.state.pings}
+            keyExtractor={(ping, index) => ping + index}
+          />
+        </ScrollView>
+
       </View>
 
     )
@@ -1470,6 +1593,157 @@ class AddItemScreen extends React.Component {
   }
 }
 
+class AddPingScreenCust extends React.Component {
+  state = {
+    description: '',
+    from: 'Customer'
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+            <Text style={styles.SignUpText}>
+              Send a Notification
+          </Text>
+            <Text style={styles.text}>
+              Enter your description below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Description:"
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.description) {
+                Alert.alert('Please fill in your description!')
+              } else {
+                fetch(API_URL + 'api/pings/create', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    from: this.state.from,
+                    description: this.state.description,                
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Ping Sent!')
+                    pings = parseInt(pings, 10)
+                    pings = pings + 1
+                    pings = pings.toString()
+                  } else {
+                    Alert.alert('Error, please contact a staff member.')
+                  }
+                })
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Send </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    )
+  }
+}
+
+class AddPingScreenEmp extends React.Component {
+  state = {
+    description: '',
+    from: 'Employee'
+  }
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+  handledescription = (text) => {
+    this.setState({ description: text })
+  }
+
+  render() {
+    const shadowStyle = {
+      shadowOpacity: .2
+    }
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.container}>
+
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
+          <ScrollView style={{ flex: 1 }}>
+            <Text style={styles.SignUpText}>
+              Send a Notification
+          </Text>
+            <Text style={styles.text}>
+              Enter your description below:
+          </Text>
+            <TextInput style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="   Description:"
+              autoCapitalize="words"
+              onChangeText={this.handledescription} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => {
+              if (!this.state.description) {
+                Alert.alert('Please fill in your description!')
+              } else {
+                fetch(API_URL + 'api/pings/create', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    from: this.state.from,
+                    description: this.state.description,                
+                  }),
+                }).then((res) => res.json()).then(resJson => {
+                  if (resJson.creationSuccess) {
+                    Alert.alert('Ping Sent!')
+                    pings++
+                  } else {
+                    Alert.alert('Error, please contact the owner.')
+                  }
+                })
+              }
+            }}>
+            <Text style={styles.submitButtonText}> Send </Text>
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    )
+  }
+}
+
+
 class RemoveItemScreen extends React.Component {
   state = {
     itemName: '',
@@ -1581,6 +1855,47 @@ class ViewItemScreen extends React.Component {
           style={styles.submitButton}
           onPress={() => { this._onPressAddOrder() }}>
           <Text style={styles.submitButtonText}> Add To Order </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+}
+
+class DelPingScreen extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
+
+  _onPressDelPing = () => {
+    fetch(API_URL + 'api/pings/clear', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        description: currentPing.description
+      }),//body end
+    }).then((res) => res.json()).then(resJson => {
+      Alert.alert('Ping Removed!')
+    })
+
+  }
+  render() {
+    const { navigate } = this.props.navigation
+    return (
+      <View>
+        <Text style={styles.SignUpText}>{'Ping'}</Text>
+        <Text style={styles.itemPrice}>{currentPing.from + ": "  + currentPing.description}</Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => { this._onPressDelPing() }}>
+          <Text style={styles.submitButtonText}> Delete Ping </Text>
         </TouchableOpacity>
       </View>
     )
@@ -1747,14 +2062,34 @@ class EditItemScreen extends React.Component { //This is where we gotta make cha
 }
 
 class StaffScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation, screenProps}) =>({
     // headerTitle instead of title
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
-  }
+    headerRight: (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('ViewPings')}
+      style={{paddingRight: 15}}
+      >
+      <View>
+      <Image
+      style={{ height: 30, width: 30,}}
+      source={require('./assets/notif.png')}
+      resizeMode="contain"
+      />
+      <Badge
+      value = " "
+      status="error"
+      containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+    />
+      </View>
+      </TouchableOpacity>
+    )
+   }
+   )
 
   constructor(props) {
     super(props)
@@ -2089,6 +2424,10 @@ const RootStack = createStackNavigator(
     EditItem: EditItemScreen,
     AddItem: AddItemScreen,
     RemoveItem: RemoveItemScreen,
+    AddPingCusty: AddPingScreenCust,
+    AddPingEmp: AddPingScreenEmp,
+    ViewPings: ViewPingScreen,
+    DelPing: DelPingScreen
   },
   {
     initialRouteName: 'Welcome',
