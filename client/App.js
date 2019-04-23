@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ActivityIndicator, FlatList, View, Text, ScrollView, Dimensions, KeyboardAvoidingView } from 'react-native';
-import { createStackNavigator, createAppContainer, Navigation } from 'react-navigation'; // Version can be specified in package.json
+import { createStackNavigator, createAppContainer, Navigation, createBottomTabNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'; // Version can be specified in package.json
 import { Alert, AppRegistry, Image, StyleSheet, SectionList, TouchableNativeFeedback, TextInput, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { Header, ListItem} from 'react-native-elements';
 import MenuItem from './components/MenuItem';
@@ -46,33 +46,33 @@ class WelcomeScreen extends React.Component {
         <View>
           <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
-                <TouchableOpacity
-                  style={styles.logInMenuButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('LogIn');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Login </Text>
-                 </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.logInMenuButton}
+              onPress={() => {
+                this.props.navigation.navigate('LogIn');
+              }
+              } >
+              <Text style={styles.buttonText}> Login </Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.signUpButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('SignUp');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signUpButton}
+              onPress={() => {
+                this.props.navigation.navigate('SignUp');
+              }
+              } >
+              <Text style={styles.buttonText}> Sign Up </Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.signUpButton}
-                  onPress={() => {
-                    this.props.navigation.navigate('Menu');
-                  }
-                  } >
-                  <Text style={styles.buttonText}> Continue As Guest </Text>
-                </TouchableOpacity>
-            
+            <TouchableOpacity
+              style={styles.signUpButton}
+              onPress={() => {
+                this.props.navigation.navigate('Menu');
+              }
+              } >
+              <Text style={styles.buttonText}> Continue As Guest </Text>
+            </TouchableOpacity>
+
 
           </ImageBackground>
         </View>
@@ -92,6 +92,13 @@ class SignUpScreen extends React.Component {
   }
   static navigationOptions = {
     // headerTitle instead of title
+    drawerLabel: 'Home',
+    drawerIcon: ({ tintColor }) => (
+      <Image
+        source={require('./assets/Logomono.png')}
+        style={[styles.icon]}
+      />
+    ),
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
@@ -124,7 +131,6 @@ class SignUpScreen extends React.Component {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.container}>
-
           <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ScrollView style={{ flex: 1 }}>
             <Text style={styles.SignUpText}>
@@ -165,6 +171,11 @@ class SignUpScreen extends React.Component {
               autoCapitalize="none"
               onChangeText={this.handleemail} />
           </ScrollView>
+          <Button
+            onPress={() => this.props.navigation.navigate('DrawerToggle')}
+            title="DrawerOpen"
+            color='#fff44f'
+          />
           <TouchableOpacity
             style={styles.submitButton}
             onPress={() => {
@@ -198,7 +209,6 @@ class SignUpScreen extends React.Component {
             }}>
             <Text style={styles.submitButtonText}> Next </Text>
           </TouchableOpacity>
-
         </View>
       </KeyboardAvoidingView>
     );
@@ -213,10 +223,31 @@ class LogInScreen extends React.Component {
       backgroundColor: '#fff44f',
     },
     headerTintColor: '#000000',
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => alert('Fuck my hole!')}
+        style={{paddingRight: 15}}
+      >
+      <View>
+       <Image
+         style={{ height: 30, width: 30,}}
+         source={require('./assets/notif.png')}
+         resizeMode="contain"
+        />
+        <Badge
+        value="69"
+        status="error"
+        containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+        />
+      </View>
+
+       
+      </TouchableOpacity>
+      ),
   };
   state = {
-    username: '  ',
-    password: '  '
+    username: '',
+    password: ''
   }
   handleusername = (text) => {
     this.setState({ username: text })
@@ -291,8 +322,8 @@ class LogInScreen extends React.Component {
 
                         //customer is 2
                         case 2:
-                        this.props.navigation.navigate('DineInOut');
-                        break;  
+                          this.props.navigation.navigate('DineInOut');
+                          break;
 
                       }
                     } else {
@@ -469,8 +500,8 @@ class EmployeePortalScreen extends React.Component {
               }} >
               <Text style={styles.buttonText}> View Menu </Text>
             </TouchableOpacity>
-              
-              
+
+
             <TouchableOpacity
               style={styles.tButton}
               onPress={() => {
@@ -1142,7 +1173,7 @@ class ViewItemScreen extends React.Component {
 
 class DeleteItemScreen extends React.Component {
   static navigationOptions = {
-    
+
     headerTitle: <LogoTitle />,
     headerStyle: {
       backgroundColor: '#fff44f',
@@ -1213,7 +1244,7 @@ class DeleteItemScreen extends React.Component {
           style={styles.submitButton}
           onPress={() => { this._onPressDeleteOrder() }}>
           <Text style={styles.submitButtonText}> Delete Item </Text>
-          
+
         </TouchableOpacity>
       </View>
     );
@@ -1285,18 +1316,18 @@ class SummaryScreen extends React.Component {
     headerTintColor: '#000000',
   };
   keyExtractor = (item, index) => index.toString()
-  deleteItem = (item) => console.log('Deleted '+ item.itemName)
+  deleteItem = (item) => console.log('Deleted ' + item.itemName)
   renderItem = ({ item }) => (
     <ListItem
-      title={item.itemName+ "        $"+ item.itemPrice/100 }
+      title={item.itemName + "        $" + item.itemPrice / 100}
       rightIcon={
-          <Image
+        <Image
           source={require('./assets/delete.png')}
           style={{ alignSelf: 'center', height: 25, width: 25, borderRadius: 0 }}
         />
       }
-      onPressRightIcon = {() => console.log('Pressed !')}
-      onPress = {this.GetSectionListItem.bind(this, item)}
+      onPressRightIcon={() => console.log('Pressed !')}
+      onPress={this.GetSectionListItem.bind(this, item)}
     />
   )
   constructor(props) {
@@ -1311,7 +1342,7 @@ class SummaryScreen extends React.Component {
     currentItem = item;
     this.props.navigation.navigate('DeleteItem', { order: order, takeOut: '1' })
   }
-  componentDidMount(){
+  componentDidMount() {
     fetch(API_URL + 'api/order/getItems', {//fetch start
       method: 'POST',
       headers: {//header start
@@ -1378,11 +1409,11 @@ class SummaryScreen extends React.Component {
         <Text style={styles.SignUpText}>Order Summary:</Text>
         <View>
           <SectionList
-            renderItem={({ item, index, section }) => this.renderItem({item})
-            
-            // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
-            //   {item.itemName + "       $" + item.itemPrice / 100}
-            // </Text>
+            renderItem={({ item, index, section }) => this.renderItem({ item })
+
+              // <Text style={styles.viewItem} key={index} onPress={this.GetSectionListItem.bind(this, item)}>
+              //   {item.itemName + "       $" + item.itemPrice / 100}
+              // </Text>
               //<Text style={rightAlignedPrice}>{"$"item.itemPrice / 100}</Text> ALIGN PRICE TO RIGHT
             }
             sections={items}
@@ -1406,6 +1437,7 @@ class SummaryScreen extends React.Component {
 
   }
 }
+
 
 const RootStack = createStackNavigator(
   {
@@ -1433,6 +1465,7 @@ const RootStack = createStackNavigator(
 
 const AppContainer = createAppContainer(RootStack);
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -1454,7 +1487,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 2,
     fontSize: 18,
-
     textAlign: 'left',
   },
   viewItem: {
@@ -1540,7 +1572,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     //justifyContent: 'flex-end',
     //marginBottom: 0
-    
+
   },
   submitButtonText: {
     padding: 2,
@@ -1668,11 +1700,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff44f',
   },
-})
+  icon: {
+    width: 24,
+    height: 24,
+  },
+});
 
 
 export default class App extends React.Component {
   render() {
+
     return <AppContainer />;
   }
-}
+};
+
