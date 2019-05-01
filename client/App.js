@@ -32,12 +32,15 @@ let pings = 0
 class LogoTitle extends React.Component {
   render() {
     return (
+      <View 
+      style={{ alignSelf: 'center'}}>
       <Image
         style={{ alignSelf: 'center', height: 30, width: 30, borderRadius: 0 }}
         source={require('./assets/Logomono.png')}
         // width={Dimensions.get('window').width}
         resizeMode="stretch"
       />
+      </View>
     )
   }
 }
@@ -67,7 +70,7 @@ class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-          <StatusBar barStyle="light-content" animated={true} backgroundColor='#fff44f' />
+          <StatusBar barStyle="dark-content" animated={true} backgroundColor='#fff44f' />
           <ImageBackground source={require('./assets/splash.png')} style={{ width: '100%', height: '100%' }}>
 
             <TouchableOpacity
@@ -1056,7 +1059,7 @@ class DineInOutScreen extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     // headerTitle instead of title
 
-    headerTitle: '',
+    headerTitle: <LogoTitle/>,
     headerStyle: {
       backgroundColor: '#fff44f',
     },
@@ -1119,6 +1122,47 @@ class DineInOutScreen extends React.Component {
     })
   }
 
+
+  _onPressTakeout(navigate) {
+    fetch(API_URL + 'api/order/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        totalPrice: '0',
+        specialRequest: 'None',
+        userId: currentUser.stripe_id
+
+      }),
+    }).then((res) => res.json()).then(resJson => {
+      order = resJson.order
+    })
+
+    fetch(API_URL + 'api/items/getAll', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => res.json()).then(resJson => {
+      let tempItems = resJson.items
+      items = []
+
+      for (let item of tempItems) {
+        console.log(item)
+        if (items[items.length - 1] && item.category == items[items.length - 1].category) {
+          items[items.length - 1].data.push(item)
+        }
+        else {
+          items.push({ category: item.category, data: [item] })
+        }
+      }
+      this.props.navigation.navigate('Menu')
+    })
+  }
+
   render() {
     const { navigate } = this.props.navigation
     const { state } = this.props.navigation.state
@@ -1135,7 +1179,7 @@ class DineInOutScreen extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.tButton}
-              onPress={() => { this._onPressButton() }}>
+              onPress={() => { this._onPressTakeout() }}>
               <Text style={styles.buttonText}> Take Out </Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -2271,6 +2315,14 @@ class StaffScreen extends React.Component {
 }
 
 class TableLayout extends React.Component {
+  static navigationOptions = {
+    // headerTitle instead of title
+    headerTitle: <LogoTitle />,
+    headerStyle: {
+      backgroundColor: '#fff44f',
+    },
+    headerTintColor: '#000000',
+  }
   constructor(props) {
     super(props);
     this.state = {
