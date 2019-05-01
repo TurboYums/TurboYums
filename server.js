@@ -13,8 +13,8 @@ const tables = require('./api/tables.js');
 //sync sequelize
 sequelize.sync();
 if (process.env.NODE_ENV != "test") {
-    //const genItems = require('./models/genItems.js');
-    //const genTables = require('./models/genTables.js');
+    const genItems = require('./models/genItems.js');
+    const genTables = require('./models/genTables.js');
 }
 
 api.listen(api.port, () => console.log(`Listening on port ${api.port}`));

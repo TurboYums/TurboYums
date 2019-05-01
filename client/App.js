@@ -22,7 +22,7 @@ import Table11 from './Table11';
 import Table12 from './Table12';
 
 
-const API_URL = 'http://172.31.130.218:5000/'
+const API_URL = 'http://192.168.1.14:5000/'
 let currentUser = ''
 let tip
 let order, token, items, employees, currentItem, currentTable, currentEmployee, currentPing = ''
