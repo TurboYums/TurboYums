@@ -31,9 +31,7 @@
     "sequelize": "^4.43.0",
     "stripe": "^6.27.0",
     "tipsi-stripe": "^7.4.0",
-    "yarn": "^1.13.0"
-  },
-  "devDependencies": {
+    "yarn": "^1.13.0",
     "concurrently": "^4.1.0"
   }
 }
